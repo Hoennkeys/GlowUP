@@ -20,6 +20,8 @@ export type Lead = {
   responsavelId: string;
   criadoEm: string;
   timeline: TimelineItem[];
+  /** Vincula lead a conta do portal do cliente, quando aplicável. */
+  clientId?: string;
 };
 
 export type Tarefa = {
@@ -81,6 +83,8 @@ export type Proposta = {
   itens: ItemProposta[];
   condicoes: string;
   observacoes: string;
+  /** Lead de origem no funil comercial. */
+  leadId?: string;
 };
 
 export type StatusChamado = "Aberto" | "Em andamento" | "Resolvido" | "Fechado";

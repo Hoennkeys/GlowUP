@@ -2,44 +2,15 @@ import { eq } from "drizzle-orm";
 
 import { MOCK_USERS } from "@/lib/auth/mock-users";
 import { hashPassword } from "@/lib/auth/password.server";
-import { DEFAULT_WHITE_LABELS } from "@/lib/tenant/defaults";
-import {
-  chamadosMock,
-  faturasMock,
-  pipelineItemsMock,
-  propostasMock,
-  vendedoresMock,
-} from "@/lib/mock-data";
+import { buildMockSnapshotForTenant } from "@/lib/mock-data";
+import { getPlatformSeedTenants } from "@/lib/platform-mock-data";
 
 import { getDb } from "./client.server";
 import { ensureSchema } from "./migrate.server";
 import { tenantCrmState, tenantMemberships, tenants, users } from "./schema";
-import type { TenantCrmSnapshot } from "./types";
 
 function nowIso() {
   return new Date().toISOString();
-}
-
-function filterPipelineItemsForTenant(tenantId: string) {
-  const clientIds = new Set(
-    propostasMock.filter((p) => p.tenantId === tenantId).map((p) => p.clientId),
-  );
-  chamadosMock.filter((c) => c.tenantId === tenantId).forEach((c) => clientIds.add(c.clientId));
-  return pipelineItemsMock.filter((item) => item.clientId && clientIds.has(item.clientId));
-}
-
-function buildTenantSnapshotFixed(tenantId: string): TenantCrmSnapshot {
-  return {
-    leads: [],
-    tarefas: [],
-    emails: [],
-    conversas: [],
-    propostas: propostasMock.filter((p) => p.tenantId === tenantId),
-    chamados: chamadosMock.filter((c) => c.tenantId === tenantId),
-    faturas: faturasMock.filter((f) => f.tenantId === tenantId),
-    pipelineItems: filterPipelineItemsForTenant(tenantId),
-    usuarios: vendedoresMock,
-  };
 }
 
 export async function seedDatabaseIfEmpty() {
@@ -51,24 +22,29 @@ export async function seedDatabaseIfEmpty() {
 
   const createdAt = nowIso();
 
-  for (const wl of Object.values(DEFAULT_WHITE_LABELS)) {
+  for (const tenant of getPlatformSeedTenants()) {
     db.insert(tenants)
       .values({
-        id: wl.tenantId,
-        slug: wl.slug,
-        nome: wl.nome,
-        status: "active",
-        plan: wl.slug === "acme" ? "pro" : "starter",
-        whiteLabelJson: JSON.stringify(wl),
-        isSystem: true,
+        id: tenant.id,
+        slug: tenant.slug,
+        nome: tenant.nome,
+        status: tenant.status,
+        plan: tenant.plan,
+        whiteLabelJson: JSON.stringify(tenant.whiteLabel),
+        isSystem: tenant.isSystem ?? false,
         createdAt,
       })
       .run();
 
+    const snapshot =
+      tenant.id === "tenant-demo" || tenant.id === "tenant-acme"
+        ? buildMockSnapshotForTenant(tenant.id)
+        : { leads: [], tarefas: [], emails: [], conversas: [], propostas: [], chamados: [], faturas: [], pipelineItems: [], usuarios: [] };
+
     db.insert(tenantCrmState)
       .values({
-        tenantId: wl.tenantId,
-        stateJson: JSON.stringify(buildTenantSnapshotFixed(wl.tenantId)),
+        tenantId: tenant.id,
+        stateJson: JSON.stringify(snapshot),
         updatedAt: createdAt,
       })
       .run();

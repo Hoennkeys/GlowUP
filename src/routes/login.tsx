@@ -3,12 +3,12 @@ import { createFileRoute, redirect, useRouter } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { LogIn, Zap } from "lucide-react";
 
+import { LoginDevMode } from "@/components/login/login-dev-mode";
+import { LoginPipelinePanel } from "@/components/login/login-pipeline-panel";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth/auth-store";
-import { MOCK_LOGIN_HINTS } from "@/lib/auth/mock-users";
 import { getDefaultPortalPath } from "@/lib/auth/session";
 
 type LoginSearch = {
@@ -74,21 +74,27 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-muted/30 p-4">
-      <div className="grid w-full max-w-4xl gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card>
-          <CardHeader>
-            <div className="mb-2 flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                <Zap className="h-4 w-4" />
+    <div className="grid min-h-svh lg:grid-cols-[42fr_58fr]">
+      <div className="relative flex flex-col bg-background">
+        <div className="flex flex-1 flex-col justify-center px-8 py-10 sm:px-12 lg:px-16">
+        <div className="mx-auto w-full max-w-sm space-y-8">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-lg shadow-primary/20">
+                {/* Ícone representando o Albatroz / Voo Alto */}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="h-5 w-5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9s2.015-9 4.5-9m0 0a9.015 9.015 0 0 1 8.716 6.747M12 3a9.015 9.015 0 0 0-8.716 6.747M3.75 14.25h16.5" />
+                </svg>
               </div>
               <div>
-                <CardTitle>VendaPro CRM</CardTitle>
-                <CardDescription>Login unificado para todos os portais</CardDescription>
+                <h1 className="text-xl font-black tracking-wider uppercase text-foreground">
+                  Albatross™
+                </h1>
+                <p className="text-xs text-muted-foreground">
+                Inteligência comercial de ponta a ponta.
+                </p>
               </div>
             </div>
-          </CardHeader>
-          <CardContent>
+
             <form className="space-y-4" onSubmit={(e) => void handleSubmit(e)}>
               <div className="space-y-2">
                 <Label htmlFor="email">E-mail</Label>
@@ -100,6 +106,7 @@ function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="seu@email.com"
                   required
+                  className="focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
                 />
               </div>
               <div className="space-y-2">
@@ -111,6 +118,7 @@ function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  className="focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary"
                 />
               </div>
               <Button type="submit" className="w-full" disabled={loading}>
@@ -118,30 +126,17 @@ function LoginPage() {
                 Entrar
               </Button>
             </form>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Contas mock (Fase 2)</CardTitle>
-            <CardDescription>Clique para entrar direto no portal correto</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {MOCK_LOGIN_HINTS.map((hint) => (
-              <button
-                key={hint.email}
-                type="button"
-                disabled={loading}
-                onClick={() => void handleQuickLogin(hint.email, hint.password)}
-                className="w-full rounded-lg border bg-background p-3 text-left transition-colors hover:bg-accent disabled:opacity-50"
-              >
-                <p className="text-sm font-medium">{hint.nome}</p>
-                <p className="text-xs text-muted-foreground">{hint.email}</p>
-                <p className="mt-1 text-xs text-primary">Portal: {hint.tipo}</p>
-              </button>
-            ))}
-          </CardContent>
-        </Card>
+        <footer className="flex items-center justify-between px-8 pb-6 sm:px-12 lg:px-16">
+          <LoginDevMode loading={loading} onSelectProfile={(e, p) => void handleQuickLogin(e, p)} />
+          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} VendaPro</p>
+        </footer>
+      </div>
+
+      <div className="hidden border-l border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
+        <LoginPipelinePanel />
       </div>
     </div>
   );

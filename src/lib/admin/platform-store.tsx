@@ -24,6 +24,7 @@ import {
   listPlatformTenants,
   updatePlatformTenant,
 } from "./tenant-registry";
+import { countPlatformUsers } from "@/lib/platform-mock-data";
 import type {
   CreateTenantInput,
   PlatformMetrics,
@@ -71,7 +72,7 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
 
     const localTenants = listPlatformTenants();
     setTenants(localTenants);
-    setMetrics(computePlatformMetrics(5, localTenants));
+    setMetrics(computePlatformMetrics(countPlatformUsers(), localTenants));
   }, [useServerApi]);
 
   useEffect(() => {

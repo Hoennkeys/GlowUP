@@ -115,12 +115,12 @@ function PipelinePage() {
           }
         />
       ) : (
-        <div className="rounded-lg border border-dashed p-12 text-center text-muted-foreground">
-          <p className="font-medium">Pipeline em configuração</p>
-          <p className="mt-1 text-sm">
-            Este pipeline estará disponível em uma próxima atualização.
-          </p>
-        </div>
+        <PipelineBoard
+          pipeline={pipeline}
+          items={items}
+          onMoveItem={(itemId, stageId) => moverPipelineItem(pipeline.id, itemId, stageId)}
+          onItemClick={setSelecionado}
+        />
       )}
 
       {isSales && (

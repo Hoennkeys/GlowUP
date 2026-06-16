@@ -82,10 +82,13 @@ test("seed inicial contém demo e acme como sistema", () => {
   resetRegistry();
 
   const tenants = listPlatformTenants();
-  assert.equal(tenants.length, 2);
-  assert.ok(tenants.every((t) => t.isSystem));
+  assert.equal(tenants.length, 4);
+  assert.ok(getPlatformTenantBySlug("demo")?.isSystem);
+  assert.ok(getPlatformTenantBySlug("acme")?.isSystem);
   assert.ok(getPlatformTenantBySlug("demo"));
   assert.ok(getPlatformTenantBySlug("acme"));
+  assert.equal(getPlatformTenantBySlug("techstart")?.status, "trial");
+  assert.equal(getPlatformTenantBySlug("nordic")?.status, "suspended");
   assert.equal(getPlatformTenantById("tenant-demo")?.nome, "Demo Corp");
 
   removeBrowserGlobals();
@@ -105,7 +108,7 @@ test("createPlatformTenant persiste e sincroniza white label", () => {
   assert.equal(created.slug, "tech-solutions");
   assert.equal(created.status, "trial");
   assert.equal(created.plan, "pro");
-  assert.equal(listPlatformTenants().length, 3);
+  assert.equal(listPlatformTenants().length, 5);
 
   const wlRaw = memoryStore.get("vendapro_tenant_tech-solutions_v1");
   assert.ok(wlRaw);
@@ -173,7 +176,7 @@ test("deletePlatformTenant remove custom mas bloqueia sistema", () => {
   deletePlatformTenant(custom.id);
   assert.equal(getPlatformTenantBySlug("temp-co"), null);
   assert.equal(memoryStore.get("vendapro_tenant_temp-co_v1"), undefined);
-  assert.equal(listPlatformTenants().length, 2);
+  assert.equal(listPlatformTenants().length, 4);
 
   assert.throws(
     () => deletePlatformTenant("tenant-demo"),
@@ -190,15 +193,17 @@ test("computePlatformMetrics calcula MRR apenas de tenants ativos", () => {
   listPlatformTenants();
 
   const metrics = computePlatformMetrics(5);
-  assert.equal(metrics.totalTenants, 2);
+  assert.equal(metrics.totalTenants, 4);
   assert.equal(metrics.activeTenants, 2);
+  assert.equal(metrics.trialTenants, 1);
+  assert.equal(metrics.suspendedTenants, 1);
   assert.equal(metrics.totalUsers, 5);
   assert.equal(metrics.mrrEstimate, 99 + 299);
 
   createPlatformTenant({ nome: "Trial Co", slug: "trial-co", status: "trial" });
   const afterTrial = computePlatformMetrics(5);
-  assert.equal(afterTrial.totalTenants, 3);
-  assert.equal(afterTrial.trialTenants, 1);
+  assert.equal(afterTrial.totalTenants, 5);
+  assert.equal(afterTrial.trialTenants, 2);
   assert.equal(afterTrial.mrrEstimate, 99 + 299);
 
   removeBrowserGlobals();
@@ -226,7 +231,7 @@ test("registry corrompido no localStorage é re-seedado", () => {
   memoryStore.set(REGISTRY_KEY, "not-json");
 
   const tenants = listPlatformTenants();
-  assert.equal(tenants.length, 2);
+  assert.equal(tenants.length, 4);
   assert.ok(getPlatformTenantBySlug("demo"));
 
   removeBrowserGlobals();

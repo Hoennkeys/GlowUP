@@ -13,6 +13,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { usePlatform } from "@/lib/admin/platform-store";
+import {
+  PLATFORM_ACTIVITIES,
+  PLATFORM_INVOICES,
+  countPaidPlatformInvoices,
+} from "@/lib/platform-mock-data";
 import type { TenantPlan } from "@/lib/admin/types";
 
 export const Route = createFileRoute("/admin/billing")({
@@ -81,10 +86,11 @@ function BillingPage() {
               <FileText className="h-4 w-4" />
               Faturas
             </CardTitle>
-            <CardDescription>Placeholder — emissão automática futura</CardDescription>
+            <CardDescription>Assinaturas SaaS emitidas para tenants</CardDescription>
           </CardHeader>
           <CardContent>
-            <Badge variant="secondary">Em breve</Badge>
+            <p className="text-3xl font-bold">{countPaidPlatformInvoices()}</p>
+            <p className="text-xs text-muted-foreground">pagas este ciclo</p>
           </CardContent>
         </Card>
       </div>
@@ -132,7 +138,58 @@ function BillingPage() {
         </CardContent>
       </Card>
 
-      <Card className="border-dashed">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Faturas da plataforma</CardTitle>
+          <CardDescription>
+            Correlacionadas com plano e status de cada tenant (demo, acme, trial, suspenso).
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Número</TableHead>
+                <TableHead>Tenant</TableHead>
+                <TableHead>Descrição</TableHead>
+                <TableHead>Vencimento</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Valor</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {PLATFORM_INVOICES.map((inv) => (
+                <TableRow key={inv.id}>
+                  <TableCell className="font-mono text-sm">{inv.numero}</TableCell>
+                  <TableCell>{inv.tenantNome}</TableCell>
+                  <TableCell className="text-muted-foreground">{inv.descricao}</TableCell>
+                  <TableCell>
+                    {new Date(inv.vencimento).toLocaleDateString("pt-BR")}
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
+                        inv.status === "Paga"
+                          ? "default"
+                          : inv.status === "Vencida"
+                            ? "destructive"
+                            : "secondary"
+                      }
+                    >
+                      {inv.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {inv.valor > 0 ? formatCurrency(inv.valor) : "—"}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      <Card>
         <CardContent className="flex flex-col items-center gap-3 py-10 text-center">
           <CreditCard className="h-10 w-10 text-muted-foreground" />
           <div>

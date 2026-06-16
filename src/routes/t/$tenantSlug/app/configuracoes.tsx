@@ -76,7 +76,8 @@ function QrCodeSimulado() {
 }
 
 function Configuracoes() {
-  const { usuarios, adicionarUsuario, alternarUsuarioAtivo } = useCrm();
+  const { usuarios, configuracoes, adicionarUsuario, alternarUsuarioAtivo, atualizarConfiguracoes } =
+    useCrm();
   const [novo, setNovo] = React.useState(false);
   const [form, setForm] = React.useState({
     nome: "",
@@ -84,13 +85,35 @@ function Configuracoes() {
     papel: "Vendedor" as Papel,
     ativo: true,
   });
+  const [geral, setGeral] = React.useState({
+    empresaNome: configuracoes?.empresaNome ?? "",
+    metaMensal: String(configuracoes?.metaMensal ?? 0),
+    timezone: configuracoes?.timezone ?? "America/Sao_Paulo",
+    moeda: configuracoes?.moeda ?? "BRL",
+  });
   const [smtp, setSmtp] = React.useState({
-    host: "",
-    porta: "",
-    usuario: "",
+    host: configuracoes?.smtpHost ?? "",
+    porta: String(configuracoes?.smtpPorta ?? 587),
+    usuario: configuracoes?.smtpUsuario ?? "",
     senha: "",
     ssl: true,
   });
+
+  React.useEffect(() => {
+    if (!configuracoes) return;
+    setGeral({
+      empresaNome: configuracoes.empresaNome,
+      metaMensal: String(configuracoes.metaMensal),
+      timezone: configuracoes.timezone,
+      moeda: configuracoes.moeda,
+    });
+    setSmtp((prev) => ({
+      ...prev,
+      host: configuracoes.smtpHost,
+      porta: String(configuracoes.smtpPorta),
+      usuario: configuracoes.smtpUsuario,
+    }));
+  }, [configuracoes]);
 
   return (
     <div className="space-y-4">
@@ -190,8 +213,17 @@ function Configuracoes() {
                   <li>Aponte a câmera para o QR Code ao lado.</li>
                 </ol>
                 <div className="flex items-center gap-2 pt-2">
-                  <Badge variant="outline" className="text-amber-600 border-amber-600">
-                    Aguardando conexão...
+                  <Badge
+                    variant="outline"
+                    className={
+                      configuracoes?.whatsappConectado
+                        ? "text-emerald-600 border-emerald-600"
+                        : "text-amber-600 border-amber-600"
+                    }
+                  >
+                    {configuracoes?.whatsappConectado
+                      ? `Conectado — ${configuracoes.whatsappNumero}`
+                      : "Aguardando conexão..."}
                   </Badge>
                   <Button
                     variant="outline"
@@ -276,7 +308,18 @@ function Configuracoes() {
                 </div>
               </div>
               <div className="md:col-span-2 flex justify-end">
-                <Button onClick={() => toast.success("Configurações salvas!")}>Salvar</Button>
+                <Button
+                  onClick={() => {
+                    atualizarConfiguracoes({
+                      smtpHost: smtp.host,
+                      smtpPorta: Number(smtp.porta) || 587,
+                      smtpUsuario: smtp.usuario,
+                    });
+                    toast.success("Configurações salvas!");
+                  }}
+                >
+                  Salvar
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -294,15 +337,32 @@ function Configuracoes() {
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl">
               <div>
                 <Label>Nome da empresa</Label>
-                <Input placeholder="Sua empresa" />
+                <Input
+                  value={geral.empresaNome}
+                  onChange={(e) => setGeral({ ...geral, empresaNome: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label>Meta mensal da equipe (R$)</Label>
+                <Input
+                  type="number"
+                  value={geral.metaMensal}
+                  onChange={(e) => setGeral({ ...geral, metaMensal: e.target.value })}
+                />
               </div>
               <div>
                 <Label>Fuso horário</Label>
-                <Input placeholder="America/Sao_Paulo" />
+                <Input
+                  value={geral.timezone}
+                  onChange={(e) => setGeral({ ...geral, timezone: e.target.value })}
+                />
               </div>
               <div>
                 <Label>Moeda</Label>
-                <Select defaultValue="BRL">
+                <Select
+                  value={geral.moeda}
+                  onValueChange={(v) => setGeral({ ...geral, moeda: v })}
+                >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
@@ -313,7 +373,19 @@ function Configuracoes() {
                 </Select>
               </div>
               <div className="md:col-span-2 flex justify-end">
-                <Button onClick={() => toast.success("Preferências salvas!")}>Salvar</Button>
+                <Button
+                  onClick={() => {
+                    atualizarConfiguracoes({
+                      empresaNome: geral.empresaNome,
+                      metaMensal: Number(geral.metaMensal) || 0,
+                      timezone: geral.timezone,
+                      moeda: geral.moeda,
+                    });
+                    toast.success("Preferências salvas!");
+                  }}
+                >
+                  Salvar
+                </Button>
               </div>
             </CardContent>
           </Card>

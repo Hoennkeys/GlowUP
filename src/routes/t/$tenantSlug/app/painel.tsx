@@ -46,7 +46,7 @@ function ultimos6Meses() {
 }
 
 function Painel() {
-  const { leads, usuarios, filtroVendedor, setFiltroVendedor } = useCrm();
+  const { leads, usuarios, filtroVendedor, setFiltroVendedor, configuracoes } = useCrm();
 
   const leadsFiltrados = React.useMemo(
     () =>
@@ -65,7 +65,7 @@ function Painel() {
     (l) => l.etapa === "Ganho" || l.etapa === "Perdido",
   ).length;
   const conversao = fechados ? Math.round((ganhos / fechados) * 100) : 0;
-  const meta = 0;
+  const meta = configuracoes?.metaMensal ?? 0;
   const progressoMeta = meta > 0 ? Math.min(100, Math.round((faturamento / meta) * 100)) : 0;
 
   const porEtapa = etapas.map((e) => ({
