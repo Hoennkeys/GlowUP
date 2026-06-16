@@ -8,6 +8,8 @@ import {
   FileText,
   Settings,
   Zap,
+  Headphones,
+  Receipt,
 } from "lucide-react";
 import {
   Sidebar,
@@ -21,7 +23,7 @@ import {
   SidebarMenuItem,
   SidebarFooter,
 } from "@/components/ui/sidebar";
-import { SALES_PIPELINE_ID } from "@/lib/pipelines/defaults";
+import { SALES_PIPELINE_ID, PROJECTS_PIPELINE_ID } from "@/lib/pipelines/defaults";
 import { useTenant } from "@/lib/tenant/tenant-store";
 
 const navItems = [
@@ -36,6 +38,14 @@ const navItems = [
   { title: "E-mails", to: "/t/$tenantSlug/app/emails" as const, icon: Mail },
   { title: "Agenda", to: "/t/$tenantSlug/app/agenda" as const, icon: CalendarDays },
   { title: "Propostas", to: "/t/$tenantSlug/app/propostas" as const, icon: FileText },
+  { title: "Chamados", to: "/t/$tenantSlug/app/chamados" as const, icon: Headphones },
+  { title: "Faturamento", to: "/t/$tenantSlug/app/faturamento" as const, icon: Receipt },
+  {
+    title: "Projetos",
+    to: "/t/$tenantSlug/app/funil/$pipelineId" as const,
+    icon: KanbanSquare,
+    pipelineId: PROJECTS_PIPELINE_ID,
+  },
 ];
 
 export function AppSidebar() {
@@ -65,7 +75,7 @@ export function AppSidebar() {
                 const segment = item.to.split("/").pop() ?? "";
                 const isFunil = "pipelineId" in item;
                 const isActive = isFunil
-                  ? pathname.startsWith(`/t/${tenantSlug}/app/funil`)
+                  ? pathname.includes(`/funil/${item.pipelineId}`)
                   : pathname === `/t/${tenantSlug}/app/${segment}`;
 
                 return (

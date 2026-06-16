@@ -9,17 +9,8 @@ import { useAuth } from "@/lib/auth/auth-store";
 import { isClientServerApiEnabled } from "@/lib/client/server-api";
 import { useTenant } from "@/lib/tenant/tenant-store";
 
-import {
-  vendedoresMock,
-  leadsMock,
-  tarefasMock,
-  emailsMock,
-  conversasMock,
-  propostasMock,
-  chamadosMock,
-  faturasMock,
-  pipelineItemsMock,
-} from "./mock-data";
+import { buildMockSnapshotForTenant } from "./mock-data";
+import type { CrmConfiguracoes } from "./db/types";
 import { stageIdToEtapa } from "./pipelines/adapter";
 import { SALES_PIPELINE_ID } from "./pipelines/defaults";
 import type { PipelineItem } from "./pipelines/types";
@@ -47,6 +38,7 @@ type State = {
   faturas: Fatura[];
   pipelineItems: PipelineItem[];
   usuarios: Usuario[];
+  configuracoes?: CrmConfiguracoes;
   filtroVendedor: string; // "todos" | userId
 };
 
@@ -76,24 +68,19 @@ type Ctx = State & {
   ) => Chamado;
   adicionarUsuario: (u: Omit<Usuario, "id">) => void;
   alternarUsuarioAtivo: (id: string) => void;
+  atualizarConfiguracoes: (patch: Partial<CrmConfiguracoes>) => void;
 };
 
 const CrmContext = React.createContext<Ctx | null>(null);
-const STORAGE_KEY = "vendapro_crm_state_v2";
-const LEGACY_STORAGE_KEY = "vendapro_crm_state_v1";
+const LEGACY_STORAGE_KEYS = ["vendapro_crm_state_v1", "vendapro_crm_state_v2"] as const;
 
-const initial: State = {
-  leads: leadsMock,
-  tarefas: tarefasMock,
-  emails: emailsMock,
-  conversas: conversasMock,
-  propostas: propostasMock,
-  chamados: chamadosMock,
-  faturas: faturasMock,
-  pipelineItems: pipelineItemsMock,
-  usuarios: vendedoresMock,
-  filtroVendedor: "todos",
-};
+function storageKey(tenantId: string) {
+  return `vendapro_crm_state_v3_${tenantId}`;
+}
+
+function getInitialStateForTenant(tenantId: string): State {
+  return { ...buildMockSnapshotForTenant(tenantId), filtroVendedor: "todos" };
+}
 
 function uid(prefix = "id") {
   return `${prefix}_${Math.random().toString(36).slice(2, 9)}`;
@@ -111,7 +98,7 @@ type CrmProviderProps = {
 
 export function CrmProvider({ children, tenantId }: CrmProviderProps) {
   const { session } = useAuth();
-  const [state, setState] = React.useState<State>(initial);
+  const [state, setState] = React.useState<State>(() => getInitialStateForTenant(tenantId));
   const [hydrated, setHydrated] = React.useState(false);
   const [persistEnabled, setPersistEnabled] = React.useState(false);
   const useServerApi = isClientServerApiEnabled();
@@ -119,6 +106,7 @@ export function CrmProvider({ children, tenantId }: CrmProviderProps) {
 
   React.useEffect(() => {
     let cancelled = false;
+    const tenantInitial = getInitialStateForTenant(tenantId);
 
     async function hydrate() {
       if (useServerApi) {
@@ -126,39 +114,43 @@ export function CrmProvider({ children, tenantId }: CrmProviderProps) {
           const remote = await getCrmStateServerFn({ data: { tenantId } });
           if (!cancelled) {
             setState((prev) => ({
-              ...prev,
+              ...tenantInitial,
               ...remote,
               filtroVendedor: prev.filtroVendedor,
             }));
           }
         } catch {
-          // mantém estado inicial se API falhar
+          if (!cancelled) setState(tenantInitial);
         }
         if (!cancelled) setHydrated(true);
         return;
       }
 
       try {
-        localStorage.removeItem(LEGACY_STORAGE_KEY);
-        const raw = localStorage.getItem(STORAGE_KEY);
+        for (const key of LEGACY_STORAGE_KEYS) {
+          localStorage.removeItem(key);
+        }
+        const raw = localStorage.getItem(storageKey(tenantId));
         if (raw) {
           const parsed = JSON.parse(raw) as Partial<State>;
           if (!cancelled) {
             setState({
-              ...initial,
+              ...tenantInitial,
               ...parsed,
-              chamados: parsed.chamados ?? chamadosMock,
-              faturas: parsed.faturas ?? faturasMock,
-              pipelineItems: parsed.pipelineItems ?? pipelineItemsMock,
+              filtroVendedor: parsed.filtroVendedor ?? "todos",
             });
           }
+        } else if (!cancelled) {
+          setState(tenantInitial);
         }
       } catch {
-        // localStorage indisponível ou JSON corrompido — mantém estado inicial
+        if (!cancelled) setState(tenantInitial);
       }
       if (!cancelled) setHydrated(true);
     }
 
+    setHydrated(false);
+    setPersistEnabled(false);
     void hydrate();
     return () => {
       cancelled = true;
@@ -187,7 +179,7 @@ export function CrmProvider({ children, tenantId }: CrmProviderProps) {
     }
 
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem(storageKey(tenantId), JSON.stringify(state));
     } catch {
       // quota excedida ou storage bloqueado
     }
@@ -203,12 +195,22 @@ export function CrmProvider({ children, tenantId }: CrmProviderProps) {
           leads: s.leads.map((l) => (l.id === id ? { ...l, etapa } : l)),
         })),
       moverPipelineItem: (pipelineId, itemId, stageId) => {
-        if (pipelineId !== SALES_PIPELINE_ID) return;
-        const etapa = stageIdToEtapa(stageId);
-        if (!etapa) return;
+        if (pipelineId === SALES_PIPELINE_ID) {
+          const etapa = stageIdToEtapa(stageId);
+          if (!etapa) return;
+          setState((s) => ({
+            ...s,
+            leads: s.leads.map((l) => (l.id === itemId ? { ...l, etapa } : l)),
+          }));
+          return;
+        }
         setState((s) => ({
           ...s,
-          leads: s.leads.map((l) => (l.id === itemId ? { ...l, etapa } : l)),
+          pipelineItems: s.pipelineItems.map((item) =>
+            item.id === itemId && item.pipelineId === pipelineId
+              ? { ...item, stageId }
+              : item,
+          ),
         }));
       },
       adicionarLead: (lead, opts) => {
@@ -362,6 +364,11 @@ export function CrmProvider({ children, tenantId }: CrmProviderProps) {
         setState((s) => ({
           ...s,
           usuarios: s.usuarios.map((u) => (u.id === id ? { ...u, ativo: !u.ativo } : u)),
+        })),
+      atualizarConfiguracoes: (patch) =>
+        setState((s) => ({
+          ...s,
+          configuracoes: s.configuracoes ? { ...s.configuracoes, ...patch } : undefined,
         })),
     }),
     [state, tenantId, useServerApi, isClientUser],

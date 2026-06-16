@@ -14,16 +14,16 @@ export function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b bg-background/80 px-4 backdrop-blur">
-        <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Shield className="h-4 w-4" />
+        <div className="flex items-center gap-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-fo  shadow-lg shadow-primary/20">
+            <Shield className="h-8 w-8 text-primary-foreground  stroke-2 fill-primary-foreground  stroke-2  stroke-primary-foreground " />
           </div>
           <div className="leading-tight">
-            <p className="text-sm font-semibold">VendaPro Admin</p>
+            <p className="text-sm font-semibold">Albatross™</p>
             <p className="text-xs text-muted-foreground">Plataforma</p>
           </div>
         </div>
-        <nav className="ml-6 flex items-center gap-4 text-sm">
+        <nav className="ml-7 flex items-center gap-4 text-sm">
           <Link
             to="/admin"
             className="text-muted-foreground transition-colors hover:text-foreground"
@@ -58,7 +58,13 @@ export function AdminLayout({ children }: { children: ReactNode }) {
           {initials}
         </div>
       </header>
+
       <main className="p-4 md:p-6">{children}</main>
+
+      
+      <footer className="w-full text-center pt-8 pb-6 opacity-40 text-xs tracking-wide text-muted-foreground">
+        <p>Albatross CRM is a trademark of Ferreira4Dev. &copy; 2026</p>
+      </footer>
     </div>
   );
 }

@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { usePlatform } from "@/lib/admin/platform-store";
+import { PLATFORM_ACTIVITIES } from "@/lib/platform-mock-data";
 import { useAuth } from "@/lib/auth/auth-store";
 
 export const Route = createFileRoute("/admin/")({
@@ -122,6 +123,27 @@ function AdminDashboard() {
                 <Badge variant={tenant.status === "active" ? "default" : "secondary"}>
                   {tenant.status}
                 </Badge>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Atividade recente</CardTitle>
+          <CardDescription>
+            Eventos correlacionados entre tenants, usuários mock e CRM operacional.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ul className="space-y-3">
+            {PLATFORM_ACTIVITIES.slice(0, 5).map((act) => (
+              <li key={act.id} className="flex items-start justify-between gap-4 text-sm">
+                <span>{act.texto}</span>
+                <span className="shrink-0 text-xs text-muted-foreground">
+                  {new Date(act.em).toLocaleDateString("pt-BR")}
+                </span>
               </li>
             ))}
           </ul>

@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCrm } from "@/lib/crm-store";
+import { resolveClientId } from "@/lib/clients-registry";
 import { brl, brDate } from "@/lib/format";
 import { useTenant } from "@/lib/tenant/tenant-store";
 import type { ItemProposta, Proposta, StatusProposta } from "@/lib/types";
@@ -105,7 +106,7 @@ function Propostas() {
     const validade = new Date(Date.now() + validadeDias * 86400000).toISOString();
     const nova = adicionarProposta({
       tenantId: whiteLabel.tenantId,
-      clientId: "",
+      clientId: resolveClientId({ tenantId: whiteLabel.tenantId, cliente, cnpj }),
       cliente,
       cnpj,
       valor: total,

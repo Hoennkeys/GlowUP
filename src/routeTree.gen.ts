@@ -34,9 +34,11 @@ import { Route as TTenantSlugPortalFaturamentoRouteImport } from './routes/t/$te
 import { Route as TTenantSlugPortalChamadosRouteImport } from './routes/t/$tenantSlug/portal/chamados'
 import { Route as TTenantSlugAppPropostasRouteImport } from './routes/t/$tenantSlug/app/propostas'
 import { Route as TTenantSlugAppPainelRouteImport } from './routes/t/$tenantSlug/app/painel'
+import { Route as TTenantSlugAppFaturamentoRouteImport } from './routes/t/$tenantSlug/app/faturamento'
 import { Route as TTenantSlugAppEmailsRouteImport } from './routes/t/$tenantSlug/app/emails'
 import { Route as TTenantSlugAppConfiguracoesRouteImport } from './routes/t/$tenantSlug/app/configuracoes'
 import { Route as TTenantSlugAppChatsRouteImport } from './routes/t/$tenantSlug/app/chats'
+import { Route as TTenantSlugAppChamadosRouteImport } from './routes/t/$tenantSlug/app/chamados'
 import { Route as TTenantSlugAppAgendaRouteImport } from './routes/t/$tenantSlug/app/agenda'
 import { Route as TTenantSlugAppFunilIndexRouteImport } from './routes/t/$tenantSlug/app/funil/index'
 import { Route as TTenantSlugAppFunilPipelineIdRouteImport } from './routes/t/$tenantSlug/app/funil/$pipelineId'
@@ -170,6 +172,12 @@ const TTenantSlugAppPainelRoute = TTenantSlugAppPainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => TTenantSlugAppRouteRoute,
 } as any)
+const TTenantSlugAppFaturamentoRoute =
+  TTenantSlugAppFaturamentoRouteImport.update({
+    id: '/faturamento',
+    path: '/faturamento',
+    getParentRoute: () => TTenantSlugAppRouteRoute,
+  } as any)
 const TTenantSlugAppEmailsRoute = TTenantSlugAppEmailsRouteImport.update({
   id: '/emails',
   path: '/emails',
@@ -184,6 +192,11 @@ const TTenantSlugAppConfiguracoesRoute =
 const TTenantSlugAppChatsRoute = TTenantSlugAppChatsRouteImport.update({
   id: '/chats',
   path: '/chats',
+  getParentRoute: () => TTenantSlugAppRouteRoute,
+} as any)
+const TTenantSlugAppChamadosRoute = TTenantSlugAppChamadosRouteImport.update({
+  id: '/chamados',
+  path: '/chamados',
   getParentRoute: () => TTenantSlugAppRouteRoute,
 } as any)
 const TTenantSlugAppAgendaRoute = TTenantSlugAppAgendaRouteImport.update({
@@ -223,9 +236,11 @@ export interface FileRoutesByFullPath {
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/admin/tenants/': typeof AdminTenantsIndexRoute
   '/t/$tenantSlug/app/agenda': typeof TTenantSlugAppAgendaRoute
+  '/t/$tenantSlug/app/chamados': typeof TTenantSlugAppChamadosRoute
   '/t/$tenantSlug/app/chats': typeof TTenantSlugAppChatsRoute
   '/t/$tenantSlug/app/configuracoes': typeof TTenantSlugAppConfiguracoesRoute
   '/t/$tenantSlug/app/emails': typeof TTenantSlugAppEmailsRoute
+  '/t/$tenantSlug/app/faturamento': typeof TTenantSlugAppFaturamentoRoute
   '/t/$tenantSlug/app/painel': typeof TTenantSlugAppPainelRoute
   '/t/$tenantSlug/app/propostas': typeof TTenantSlugAppPropostasRoute
   '/t/$tenantSlug/portal/chamados': typeof TTenantSlugPortalChamadosRoute
@@ -253,9 +268,11 @@ export interface FileRoutesByTo {
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/admin/tenants': typeof AdminTenantsIndexRoute
   '/t/$tenantSlug/app/agenda': typeof TTenantSlugAppAgendaRoute
+  '/t/$tenantSlug/app/chamados': typeof TTenantSlugAppChamadosRoute
   '/t/$tenantSlug/app/chats': typeof TTenantSlugAppChatsRoute
   '/t/$tenantSlug/app/configuracoes': typeof TTenantSlugAppConfiguracoesRoute
   '/t/$tenantSlug/app/emails': typeof TTenantSlugAppEmailsRoute
+  '/t/$tenantSlug/app/faturamento': typeof TTenantSlugAppFaturamentoRoute
   '/t/$tenantSlug/app/painel': typeof TTenantSlugAppPainelRoute
   '/t/$tenantSlug/app/propostas': typeof TTenantSlugAppPropostasRoute
   '/t/$tenantSlug/portal/chamados': typeof TTenantSlugPortalChamadosRoute
@@ -287,9 +304,11 @@ export interface FileRoutesById {
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/admin/tenants/': typeof AdminTenantsIndexRoute
   '/t/$tenantSlug/app/agenda': typeof TTenantSlugAppAgendaRoute
+  '/t/$tenantSlug/app/chamados': typeof TTenantSlugAppChamadosRoute
   '/t/$tenantSlug/app/chats': typeof TTenantSlugAppChatsRoute
   '/t/$tenantSlug/app/configuracoes': typeof TTenantSlugAppConfiguracoesRoute
   '/t/$tenantSlug/app/emails': typeof TTenantSlugAppEmailsRoute
+  '/t/$tenantSlug/app/faturamento': typeof TTenantSlugAppFaturamentoRoute
   '/t/$tenantSlug/app/painel': typeof TTenantSlugAppPainelRoute
   '/t/$tenantSlug/app/propostas': typeof TTenantSlugAppPropostasRoute
   '/t/$tenantSlug/portal/chamados': typeof TTenantSlugPortalChamadosRoute
@@ -322,9 +341,11 @@ export interface FileRouteTypes {
     | '/admin/tenants/$tenantId'
     | '/admin/tenants/'
     | '/t/$tenantSlug/app/agenda'
+    | '/t/$tenantSlug/app/chamados'
     | '/t/$tenantSlug/app/chats'
     | '/t/$tenantSlug/app/configuracoes'
     | '/t/$tenantSlug/app/emails'
+    | '/t/$tenantSlug/app/faturamento'
     | '/t/$tenantSlug/app/painel'
     | '/t/$tenantSlug/app/propostas'
     | '/t/$tenantSlug/portal/chamados'
@@ -352,9 +373,11 @@ export interface FileRouteTypes {
     | '/admin/tenants/$tenantId'
     | '/admin/tenants'
     | '/t/$tenantSlug/app/agenda'
+    | '/t/$tenantSlug/app/chamados'
     | '/t/$tenantSlug/app/chats'
     | '/t/$tenantSlug/app/configuracoes'
     | '/t/$tenantSlug/app/emails'
+    | '/t/$tenantSlug/app/faturamento'
     | '/t/$tenantSlug/app/painel'
     | '/t/$tenantSlug/app/propostas'
     | '/t/$tenantSlug/portal/chamados'
@@ -385,9 +408,11 @@ export interface FileRouteTypes {
     | '/admin/tenants/$tenantId'
     | '/admin/tenants/'
     | '/t/$tenantSlug/app/agenda'
+    | '/t/$tenantSlug/app/chamados'
     | '/t/$tenantSlug/app/chats'
     | '/t/$tenantSlug/app/configuracoes'
     | '/t/$tenantSlug/app/emails'
+    | '/t/$tenantSlug/app/faturamento'
     | '/t/$tenantSlug/app/painel'
     | '/t/$tenantSlug/app/propostas'
     | '/t/$tenantSlug/portal/chamados'
@@ -591,6 +616,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TTenantSlugAppPainelRouteImport
       parentRoute: typeof TTenantSlugAppRouteRoute
     }
+    '/t/$tenantSlug/app/faturamento': {
+      id: '/t/$tenantSlug/app/faturamento'
+      path: '/faturamento'
+      fullPath: '/t/$tenantSlug/app/faturamento'
+      preLoaderRoute: typeof TTenantSlugAppFaturamentoRouteImport
+      parentRoute: typeof TTenantSlugAppRouteRoute
+    }
     '/t/$tenantSlug/app/emails': {
       id: '/t/$tenantSlug/app/emails'
       path: '/emails'
@@ -610,6 +642,13 @@ declare module '@tanstack/react-router' {
       path: '/chats'
       fullPath: '/t/$tenantSlug/app/chats'
       preLoaderRoute: typeof TTenantSlugAppChatsRouteImport
+      parentRoute: typeof TTenantSlugAppRouteRoute
+    }
+    '/t/$tenantSlug/app/chamados': {
+      id: '/t/$tenantSlug/app/chamados'
+      path: '/chamados'
+      fullPath: '/t/$tenantSlug/app/chamados'
+      preLoaderRoute: typeof TTenantSlugAppChamadosRouteImport
       parentRoute: typeof TTenantSlugAppRouteRoute
     }
     '/t/$tenantSlug/app/agenda': {
@@ -656,9 +695,11 @@ const AdminRouteRouteWithChildren = AdminRouteRoute._addFileChildren(
 
 interface TTenantSlugAppRouteRouteChildren {
   TTenantSlugAppAgendaRoute: typeof TTenantSlugAppAgendaRoute
+  TTenantSlugAppChamadosRoute: typeof TTenantSlugAppChamadosRoute
   TTenantSlugAppChatsRoute: typeof TTenantSlugAppChatsRoute
   TTenantSlugAppConfiguracoesRoute: typeof TTenantSlugAppConfiguracoesRoute
   TTenantSlugAppEmailsRoute: typeof TTenantSlugAppEmailsRoute
+  TTenantSlugAppFaturamentoRoute: typeof TTenantSlugAppFaturamentoRoute
   TTenantSlugAppPainelRoute: typeof TTenantSlugAppPainelRoute
   TTenantSlugAppPropostasRoute: typeof TTenantSlugAppPropostasRoute
   TTenantSlugAppIndexRoute: typeof TTenantSlugAppIndexRoute
@@ -668,9 +709,11 @@ interface TTenantSlugAppRouteRouteChildren {
 
 const TTenantSlugAppRouteRouteChildren: TTenantSlugAppRouteRouteChildren = {
   TTenantSlugAppAgendaRoute: TTenantSlugAppAgendaRoute,
+  TTenantSlugAppChamadosRoute: TTenantSlugAppChamadosRoute,
   TTenantSlugAppChatsRoute: TTenantSlugAppChatsRoute,
   TTenantSlugAppConfiguracoesRoute: TTenantSlugAppConfiguracoesRoute,
   TTenantSlugAppEmailsRoute: TTenantSlugAppEmailsRoute,
+  TTenantSlugAppFaturamentoRoute: TTenantSlugAppFaturamentoRoute,
   TTenantSlugAppPainelRoute: TTenantSlugAppPainelRoute,
   TTenantSlugAppPropostasRoute: TTenantSlugAppPropostasRoute,
   TTenantSlugAppIndexRoute: TTenantSlugAppIndexRoute,

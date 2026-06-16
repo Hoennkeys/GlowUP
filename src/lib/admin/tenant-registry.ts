@@ -1,4 +1,5 @@
-import { DEFAULT_THEME_COLORS, DEFAULT_WHITE_LABELS } from "@/lib/tenant/defaults";
+import { DEFAULT_THEME_COLORS } from "@/lib/tenant/defaults";
+import { getPlatformSeedTenants } from "@/lib/platform-mock-data";
 import type { TenantWhiteLabel } from "@/lib/tenant/types";
 
 import type {
@@ -37,16 +38,7 @@ function isValidSlug(slug: string): boolean {
 }
 
 function seedTenants(): PlatformTenant[] {
-  return Object.values(DEFAULT_WHITE_LABELS).map((wl) => ({
-    id: wl.tenantId,
-    slug: wl.slug,
-    nome: wl.nome,
-    status: "active" as const,
-    plan: wl.slug === "acme" ? ("pro" as const) : ("starter" as const),
-    createdAt: "2025-01-01T00:00:00.000Z",
-    whiteLabel: structuredClone(wl),
-    isSystem: true,
-  }));
+  return getPlatformSeedTenants();
 }
 
 function readRegistry(): PlatformTenant[] {

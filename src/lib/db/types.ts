@@ -11,6 +11,18 @@ import type {
 } from "@/lib/types";
 
 /** Snapshot CRM persistido por tenant no banco. */
+export type CrmConfiguracoes = {
+  metaMensal: number;
+  empresaNome: string;
+  timezone: string;
+  moeda: string;
+  smtpHost: string;
+  smtpPorta: number;
+  smtpUsuario: string;
+  whatsappConectado: boolean;
+  whatsappNumero: string;
+};
+
 export type TenantCrmSnapshot = {
   leads: Lead[];
   tarefas: Tarefa[];
@@ -21,6 +33,7 @@ export type TenantCrmSnapshot = {
   faturas: Fatura[];
   pipelineItems: PipelineItem[];
   usuarios: Usuario[];
+  configuracoes?: CrmConfiguracoes;
 };
 
 export const EMPTY_CRM_SNAPSHOT: TenantCrmSnapshot = {
