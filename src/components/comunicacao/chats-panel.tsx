@@ -26,7 +26,7 @@ export type ChatsPanelProps = {
   draftMessage?: string;
 };
 
-export function ChatsPanel(_props: ChatsPanelProps = {}) {
+export function ChatsPanel({ initialChatId, draftMessage }: ChatsPanelProps = {}) {
   const {
     conversas,
     usuarios,
@@ -39,12 +39,28 @@ export function ChatsPanel(_props: ChatsPanelProps = {}) {
   const [ativaId, setAtivaId] = React.useState<string | undefined>(undefined);
   const [busca, setBusca] = React.useState("");
   const [texto, setTexto] = React.useState("");
+  const appliedBootstrapRef = React.useRef<string | null>(null);
   const ativa = ativaId ? conversas.find((c) => c.id === ativaId) : undefined;
 
   const selecionarConversa = (id: string) => {
     setAtivaId(id);
     marcarConversaLida(id);
   };
+
+  React.useEffect(() => {
+    if (!initialChatId) return;
+
+    const bootstrapKey = `${initialChatId}|${draftMessage ?? ""}`;
+    if (appliedBootstrapRef.current === bootstrapKey) return;
+    if (!conversas.some((conversa) => conversa.id === initialChatId)) return;
+
+    appliedBootstrapRef.current = bootstrapKey;
+    setAtivaId(initialChatId);
+    marcarConversaLida(initialChatId);
+    if (draftMessage) {
+      setTexto(draftMessage);
+    }
+  }, [initialChatId, draftMessage, conversas, marcarConversaLida]);
 
   const filtradas = conversas.filter(
     (c) =>

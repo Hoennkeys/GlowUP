@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Headphones } from "lucide-react";
+import { Headphones, MessageSquare } from "lucide-react";
 
 import { PortalStatusBadge } from "@/components/portal/portal-status-badge";
 import { Badge } from "@/components/ui/badge";
@@ -97,6 +97,7 @@ function AppChamados() {
                   <TableHead>Cliente</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Aberto em</TableHead>
+                  <TableHead className="w-[160px]">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -113,6 +114,22 @@ function AppChamados() {
                       <PortalStatusBadge status={c.status} />
                     </TableCell>
                     <TableCell className="text-muted-foreground">{brDateTime(c.criadoEm)}</TableCell>
+                    <TableCell>
+                      <Button variant="outline" size="sm" asChild>
+                        <Link
+                          to="/t/$tenantSlug/app/comunicacao"
+                          params={{ tenantSlug }}
+                          search={{
+                            tab: "chats",
+                            chamadoId: c.id,
+                            clientId: c.clientId,
+                          }}
+                        >
+                          <MessageSquare className="h-4 w-4" />
+                          Atender Cliente
+                        </Link>
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

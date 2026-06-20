@@ -29,6 +29,8 @@ type ChatBootstrap = {
   draftMessage: string;
 };
 
+const conversaIdByDeepLink = new Map<string, string>();
+
 function optionalSearchString(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
@@ -50,7 +52,6 @@ function Comunicacao() {
   const { session } = useAuth();
   const { conversas, emails, chamados, leads, adicionarConversa } = useCrm();
   const [chatBootstrap, setChatBootstrap] = React.useState<ChatBootstrap | null>(null);
-  const processedDeepLinkRef = React.useRef<string | null>(null);
 
   const chatsNaoLidas = conversas.reduce((acc, c) => acc + c.naoLidas, 0);
   const emailsNaoLidos = emails.filter(
@@ -62,38 +63,40 @@ function Comunicacao() {
     if (!clientId && !chatId) return;
 
     const deepLinkKey = `${chamadoId ?? ""}|${clientId ?? ""}|${chatId ?? ""}`;
-    if (processedDeepLinkRef.current === deepLinkKey) return;
 
     const agenteId = session?.user.id;
     if (!agenteId) {
       toast.error("Sessão inválida. Faça login novamente.");
-      navigate({ search: { tab: "chats" }, replace: true });
       return;
     }
 
     let conversaId = chatId;
 
     if (!conversaId && clientId) {
-      const existing = resolveConversaForClient(conversas, leads, clientId);
-      if (existing) {
-        conversaId = existing.id;
+      const remembered = conversaIdByDeepLink.get(deepLinkKey);
+      if (remembered && conversas.some((conversa) => conversa.id === remembered)) {
+        conversaId = remembered;
       } else {
-        const draftConversa = buildConversaFromClient(clientId, leads, agenteId);
-        if (!draftConversa) {
-          toast.error("Cliente não encontrado. Não foi possível iniciar o chat.");
-          navigate({ search: { tab: "chats" }, replace: true });
-          return;
+        if (remembered) conversaIdByDeepLink.delete(deepLinkKey);
+
+        const existing = resolveConversaForClient(conversas, leads, clientId);
+        if (existing) {
+          conversaId = existing.id;
+        } else {
+          const draftConversa = buildConversaFromClient(clientId, leads, agenteId);
+          if (!draftConversa) {
+            toast.error("Cliente não encontrado. Não foi possível iniciar o chat.");
+            return;
+          }
+          const nova = adicionarConversa(draftConversa);
+          conversaId = nova.id;
+          toast.success(`Conversa iniciada para ${draftConversa.contatoNome}`);
         }
-        const nova = adicionarConversa(draftConversa);
-        conversaId = nova.id;
-        toast.success(`Conversa iniciada para ${draftConversa.contatoNome}`);
+        conversaIdByDeepLink.set(deepLinkKey, conversaId);
       }
     }
 
-    if (!conversaId) {
-      navigate({ search: { tab: "chats" }, replace: true });
-      return;
-    }
+    if (!conversaId) return;
 
     const chamado = chamadoId ? chamados.find((item) => item.id === chamadoId) : undefined;
     const resolvedClientId = clientId ?? chamado?.clientId;
@@ -106,9 +109,8 @@ function Comunicacao() {
         ? buildChamadoGreetingMessage(clienteNome, chamado.titulo)
         : "";
 
-    processedDeepLinkRef.current = deepLinkKey;
-    setChatBootstrap({ initialChatId: conversaId, draftMessage });
-    navigate({ search: { tab: "chats" }, replace: true });
+    const bootstrap = { initialChatId: conversaId, draftMessage };
+    setChatBootstrap(bootstrap);
   }, [
     tab,
     chamadoId,
@@ -119,8 +121,14 @@ function Comunicacao() {
     chamados,
     session?.user.id,
     adicionarConversa,
-    navigate,
   ]);
+
+  React.useEffect(() => {
+    if (!chatBootstrap) return;
+    if (!chamadoId && !clientId && !chatId) return;
+
+    navigate({ search: { tab: "chats" }, replace: true });
+  }, [chatBootstrap, chamadoId, clientId, chatId, navigate]);
 
   const onTabChange = (value: string) => {
     navigate({
