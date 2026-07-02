@@ -2,44 +2,44 @@ import { expect, test } from "@playwright/test";
 import {
   appSidebar,
   clearAppStorage,
-  loginAsOperational,
+  loginAsMember,
   POS_VENDA_STORAGE_KEY,
 } from "./helpers";
 
 test.describe("Reforma comercial — sidebar e Comunicação", () => {
   test.beforeEach(async ({ page }) => {
     await clearAppStorage(page);
-    await loginAsOperational(page);
+    await loginAsMember(page);
   });
 
-  test("sidebar comercial prioriza vendas e oculta Propostas", async ({ page }) => {
+  test("sidebar comercial prioriza parcerias e oculta Propostas", async ({ page }) => {
     const sidebar = appSidebar(page);
 
-    await expect(sidebar.getByText("Comercial", { exact: true })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Painel" })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Funil de Vendas" })).toBeVisible();
+    await expect(sidebar.getByText("Parcerias", { exact: true })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Receita de Parcerias" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Pipeline de Parcerias" })).toBeVisible();
     await expect(sidebar.getByRole("link", { name: "Comunicação" })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Agenda" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Calendário" })).toBeVisible();
 
     await expect(sidebar.getByRole("link", { name: "Chats" })).not.toBeVisible();
     await expect(sidebar.getByRole("link", { name: "E-mails" })).not.toBeVisible();
     await expect(sidebar.getByRole("link", { name: "Propostas" })).not.toBeVisible();
   });
 
-  test("seção Pós-Venda colapsa e expande com persistência", async ({ page }) => {
+  test("seção Gestão de Conteúdo e Campanhas colapsa e expande com persistência", async ({ page }) => {
     const sidebar = appSidebar(page);
-    const trigger = sidebar.getByRole("button", { name: /Pós-Venda & Operações/i });
+    const trigger = sidebar.getByRole("button", { name: /Gestão de Conteúdo e Campanhas/i });
 
     await expect(trigger).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Chamados" })).not.toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Suporte" })).not.toBeVisible();
 
     await trigger.click();
-    await expect(sidebar.getByRole("link", { name: "Chamados" })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Faturamento" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Suporte" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Financeiro" })).toBeVisible();
     await expect(sidebar.getByRole("link", { name: "Projetos" })).toBeVisible();
 
     await page.reload();
-    await expect(sidebar.getByRole("link", { name: "Chamados" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Suporte" })).toBeVisible();
 
     const persisted = await page.evaluate(
       (key) => localStorage.getItem(key),
@@ -83,11 +83,11 @@ test.describe("Reforma comercial — sidebar e Comunicação", () => {
     await expect(page.getByRole("heading", { name: "Gerador de Propostas" })).toBeVisible();
   });
 
-  test("acesso direto a Chamados expande Pós-Venda automaticamente", async ({ page }) => {
+  test("acesso direto a Chamados expande seção automaticamente", async ({ page }) => {
     await page.goto("/t/demo/app/chamados");
     const sidebar = appSidebar(page);
 
     await expect(page.getByRole("heading", { name: /Chamados de Suporte/i })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Chamados" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Suporte" })).toBeVisible();
   });
 });

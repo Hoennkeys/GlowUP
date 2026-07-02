@@ -1,24 +1,30 @@
 /**
  * GlowUP terminology — presentation layer only.
- * Legacy identifiers (Lead, clientId, /funil, ADMIN, etc.) remain unchanged in code and data.
+ * Legacy identifiers (Lead, clientId, /funil, Administrador, etc.) remain unchanged in code and data.
  */
 
 import type { Papel } from "@/lib/types";
 import type { ParticipantRole } from "@/modules/communications/domain/entities";
 import { PAGE_TITLE_SUFFIX, PRODUCT_NAME } from "@/lib/product-branding";
 import { PROJECTS_PIPELINE_ID, SALES_PIPELINE_ID } from "@/lib/pipelines/defaults";
+import type { TenantRole } from "@/lib/auth/types";
 
 /** Canonical GlowUP terms mapped from legacy CRM concepts */
 export const CREATOR_TERMS = {
-  admin: "Creator Owner",
-  employee: "Team Member",
+  owner: "Owner",
+  member: "Membro",
+  admin: "Owner",
+  employee: "Membro",
   client: "Marca",
   lead: "Oportunidade",
   sale: "Parceria",
   funnel: "Pipeline de campanhas",
   portal: "Portal da Marca",
   proposal: "Proposta de campanha",
-  company: "Creator Business",
+  company: "Workspace",
+  workspace: "Workspace",
+  members: "Membros",
+  teamMembers: "Membros da Equipe",
 } as const;
 
 /** Legacy labels preserved for compatibility shims and tests */
@@ -44,18 +50,23 @@ export function legacyLabel(concept: CreatorConcept): string {
 
 /** CRM user role (Papel) display labels */
 export const CRM_PAPEL_CREATOR_LABELS: Record<Papel, string> = {
-  Administrador: CREATOR_TERMS.admin,
-  Vendedor: CREATOR_TERMS.employee,
+  Administrador: CREATOR_TERMS.owner,
+  Vendedor: CREATOR_TERMS.member,
 };
 
 export function labelCrmPapel(papel: Papel): string {
   return CRM_PAPEL_CREATOR_LABELS[papel];
 }
 
+/** Auth tenant role display labels */
+export function labelTenantRole(role: TenantRole): string {
+  return role === "OWNER" ? CREATOR_TERMS.owner : CREATOR_TERMS.member;
+}
+
 /** Communications participant role display labels */
 export const COMMUNICATIONS_ROLE_CREATOR_LABELS: Record<ParticipantRole, string> = {
-  admin: CREATOR_TERMS.admin,
-  employee: CREATOR_TERMS.employee,
+  admin: CREATOR_TERMS.owner,
+  employee: CREATOR_TERMS.member,
   client: CREATOR_TERMS.client,
   system: "Sistema",
   external: "Externo",
@@ -70,12 +81,12 @@ export const SIDEBAR_SECTIONS = {
   creator: PRODUCT_NAME,
   commercial: "Parcerias",
   communications: "Comunicações",
-  operations: "Operações",
+  operations: "Gestão de Conteúdo e Campanhas",
 } as const;
 
 /** Navigation item labels (GlowUP presentation over legacy routes) */
 export const NAV_LABELS = {
-  dashboard: "Dashboard",
+  dashboard: "Workspace",
   revenueDashboard: "Receita de Parcerias",
   campaignPipeline: "Pipeline de Parcerias",
   agenda: "Calendário",
@@ -84,6 +95,7 @@ export const NAV_LABELS = {
   projetos: "Projetos",
   reports: "Relatórios",
   settings: "Configurações",
+  team: "Equipe",
 } as const;
 
 export function creatorPageTitle(section: string): string {
@@ -190,6 +202,6 @@ export type BrandAccount = import("@/lib/clients-registry").ClientRecord;
 export const ENTITY_ALIASES = {
   Lead: "PartnershipOpportunity (alias — type remains Lead)",
   ClientRecord: "BrandAccount (alias — registry unchanged)",
-  PapelAdministrador: "CreatorOwner (alias — value remains Administrador)",
-  PapelVendedor: "TeamMember (alias — value remains Vendedor)",
+  PapelAdministrador: "Owner (alias — value remains Administrador)",
+  PapelVendedor: "Membro (alias — value remains Vendedor)",
 } as const;

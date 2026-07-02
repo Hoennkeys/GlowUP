@@ -8,6 +8,7 @@ import {
   labelCrmPapel,
   labelCommunicationsRole,
   labelPipelineDisplay,
+  labelTenantRole,
   portalPageTitle,
   resolveAppBreadcrumbs,
 } from "./terminology";
@@ -26,15 +27,14 @@ function test(name: string, fn: () => void) {
 console.log("creator/domain/terminology — testes unitários\n");
 
 test("CREATOR_TERMS mapeia conceitos legados", () => {
-  assert.equal(CREATOR_TERMS.admin, "Creator Owner");
-  assert.equal(CREATOR_TERMS.employee, "Team Member");
+  assert.equal(CREATOR_TERMS.owner, "Owner");
+  assert.equal(CREATOR_TERMS.member, "Membro");
+  assert.equal(CREATOR_TERMS.admin, "Owner");
+  assert.equal(CREATOR_TERMS.employee, "Membro");
   assert.equal(CREATOR_TERMS.client, "Marca");
-  assert.equal(CREATOR_TERMS.lead, "Oportunidade");
-  assert.equal(CREATOR_TERMS.sale, "Parceria");
-  assert.equal(CREATOR_TERMS.funnel, "Pipeline de campanhas");
-  assert.equal(CREATOR_TERMS.portal, "Portal da Marca");
-  assert.equal(CREATOR_TERMS.proposal, "Proposta de campanha");
-  assert.equal(CREATOR_TERMS.company, "Creator Business");
+  assert.equal(CREATOR_TERMS.company, "Workspace");
+  assert.equal(CREATOR_TERMS.workspace, "Workspace");
+  assert.equal(SIDEBAR_SECTIONS.operations, "Gestão de Conteúdo e Campanhas");
 });
 
 test("LEGACY_TERMS preserva vocabulário CRM", () => {
@@ -43,12 +43,17 @@ test("LEGACY_TERMS preserva vocabulário CRM", () => {
 });
 
 test("labelCrmPapel traduz Papel sem alterar valores", () => {
-  assert.equal(labelCrmPapel("Administrador"), CREATOR_TERMS.admin);
-  assert.equal(labelCrmPapel("Vendedor"), CREATOR_TERMS.employee);
+  assert.equal(labelCrmPapel("Administrador"), CREATOR_TERMS.owner);
+  assert.equal(labelCrmPapel("Vendedor"), CREATOR_TERMS.member);
+});
+
+test("labelTenantRole traduz roles de auth", () => {
+  assert.equal(labelTenantRole("OWNER"), "Owner");
+  assert.equal(labelTenantRole("MEMBER"), "Membro");
 });
 
 test("labelCommunicationsRole traduz roles de comms", () => {
-  assert.equal(labelCommunicationsRole("admin"), CREATOR_TERMS.admin);
+  assert.equal(labelCommunicationsRole("admin"), CREATOR_TERMS.owner);
   assert.equal(labelCommunicationsRole("client"), CREATOR_TERMS.client);
 });
 

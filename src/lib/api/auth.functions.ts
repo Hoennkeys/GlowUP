@@ -7,7 +7,7 @@ import { readAuthenticatedSession } from "@/lib/auth/read-session.server";
 import { loadSessionUserByEmail } from "@/lib/auth/resolve-user.server";
 import { getSessionConfig, type ServerSessionData } from "@/lib/auth/session-config.server";
 import type { Session } from "@/lib/auth/types";
-import { getUserByEmail, seedDatabaseIfEmpty } from "@/lib/db/seed.server";
+import { getUserByEmail, seedDatabaseIfEmpty, ensureMockUsersSynced } from "@/lib/db/seed.server";
 import { isServerDbEnabled } from "@/lib/server/feature.server";
 
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000;
@@ -27,6 +27,7 @@ export const loginServerFn = createServerFn({ method: "POST" })
     }
 
     await seedDatabaseIfEmpty();
+    await ensureMockUsersSynced();
 
     const row = getUserByEmail(data.email);
     if (!row) {

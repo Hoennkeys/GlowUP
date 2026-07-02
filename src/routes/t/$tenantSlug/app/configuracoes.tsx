@@ -1,7 +1,7 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { Plus, Smartphone, Mail, Shield, Palette } from "lucide-react";
+import { Smartphone, Mail, Palette } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -10,31 +10,20 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { TeamSection } from "@/components/settings/team-section";
+import { useAuth } from "@/lib/auth/auth-store";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+  canManageWhiteLabel,
+  canManageWorkspaceSettings,
+} from "@/lib/auth/workspace-permissions";
 import { useCrm } from "@/lib/crm-store";
-import type { Papel } from "@/lib/types";
-import { creatorPageTitle, labelCrmPapel, CREATOR_TERMS } from "@/modules/creator/domain/terminology";
+import { creatorPageTitle, CREATOR_TERMS, NAV_LABELS } from "@/modules/creator/domain/terminology";
 import { WhiteLabelSettings } from "@/components/tenant/white-label-settings";
 
 export const Route = createFileRoute("/t/$tenantSlug/app/configuracoes")({
@@ -43,7 +32,6 @@ export const Route = createFileRoute("/t/$tenantSlug/app/configuracoes")({
 });
 
 function QrCodeSimulado() {
-  // Simple SVG noise pattern as a faux QR code
   const cells = React.useMemo(() => {
     const arr: boolean[] = [];
     let seed = 7;
@@ -78,15 +66,11 @@ function QrCodeSimulado() {
 
 function Configuracoes() {
   const { tenantSlug } = Route.useParams();
-  const { usuarios, configuracoes, adicionarUsuario, alternarUsuarioAtivo, atualizarConfiguracoes } =
-    useCrm();
-  const [novo, setNovo] = React.useState(false);
-  const [form, setForm] = React.useState({
-    nome: "",
-    email: "",
-    papel: "Vendedor" as Papel,
-    ativo: true,
-  });
+  const { session } = useAuth();
+  const { configuracoes, atualizarConfiguracoes } = useCrm();
+  const isOwner = session ? canManageWorkspaceSettings(session, tenantSlug) : false;
+  const canEditWhiteLabel = session ? canManageWhiteLabel(session, tenantSlug) : false;
+
   const [geral, setGeral] = React.useState({
     empresaNome: configuracoes?.empresaNome ?? "",
     metaMensal: String(configuracoes?.metaMensal ?? 0),
@@ -120,82 +104,31 @@ function Configuracoes() {
   return (
     <div className="space-y-4">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Configurações e Canais</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{NAV_LABELS.settings}</h1>
         <p className="text-sm text-muted-foreground">
-          Gerencie usuários, permissões e integrações.
+          Gerencie seu workspace, equipe e integrações.
         </p>
       </div>
 
-      <Tabs defaultValue="usuarios">
+      <Tabs defaultValue="equipe">
         <TabsList>
-          <TabsTrigger value="usuarios">
-            <Shield className="h-4 w-4 mr-1" /> Usuários e Permissões
-          </TabsTrigger>
+          <TabsTrigger value="equipe">{NAV_LABELS.team}</TabsTrigger>
           <TabsTrigger value="whatsapp">
             <Smartphone className="h-4 w-4 mr-1" /> WhatsApp
           </TabsTrigger>
           <TabsTrigger value="email">
             <Mail className="h-4 w-4 mr-1" /> E-mail (SMTP/IMAP)
           </TabsTrigger>
-          <TabsTrigger value="whitelabel">
-            <Palette className="h-4 w-4 mr-1" /> White Label
-          </TabsTrigger>
-          <TabsTrigger value="geral">Geral</TabsTrigger>
+          {canEditWhiteLabel ? (
+            <TabsTrigger value="whitelabel">
+              <Palette className="h-4 w-4 mr-1" /> White Label
+            </TabsTrigger>
+          ) : null}
+          {isOwner ? <TabsTrigger value="geral">Geral</TabsTrigger> : null}
         </TabsList>
 
-        <TabsContent value="usuarios">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>Equipe</CardTitle>
-                <CardDescription>
-                  Defina quem é {CREATOR_TERMS.admin} ou {CREATOR_TERMS.employee}.
-                </CardDescription>
-              </div>
-              <Button onClick={() => setNovo(true)}>
-                <Plus className="h-4 w-4" /> Novo Usuário
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Nome</TableHead>
-                    <TableHead>E-mail</TableHead>
-                    <TableHead>Papel</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Ativo</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {usuarios.map((u) => (
-                    <TableRow key={u.id}>
-                      <TableCell className="font-medium">{u.nome}</TableCell>
-                      <TableCell>{u.email}</TableCell>
-                      <TableCell>
-                        <Badge variant={u.papel === "Administrador" ? "default" : "secondary"}>
-                          {labelCrmPapel(u.papel)}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        {u.ativo ? (
-                          <Badge className="bg-emerald-600 text-white">Ativo</Badge>
-                        ) : (
-                          <Badge variant="outline">Inativo</Badge>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <Switch
-                          checked={u.ativo}
-                          onCheckedChange={() => alternarUsuarioAtivo(u.id)}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
+        <TabsContent value="equipe">
+          <TeamSection tenantSlug={tenantSlug} />
         </TabsContent>
 
         <TabsContent value="whatsapp">
@@ -268,7 +201,7 @@ function Configuracoes() {
           <Card>
             <CardHeader>
               <CardTitle>Configuração de E-mail (SMTP / IMAP)</CardTitle>
-              <CardDescription>Conecte sua conta de e-mail corporativa.</CardDescription>
+              <CardDescription>Conecte sua conta de e-mail profissional.</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-3">
@@ -288,7 +221,7 @@ function Configuracoes() {
                   />
                 </div>
                 <div>
-                  <Label>Usuário</Label>
+                  <Label>Usuário SMTP</Label>
                   <Input
                     value={smtp.usuario}
                     onChange={(e) => setSmtp({ ...smtp, usuario: e.target.value })}
@@ -321,7 +254,7 @@ function Configuracoes() {
                   <Input placeholder="993" />
                 </div>
                 <div>
-                  <Label>Usuário</Label>
+                  <Label>Usuário IMAP</Label>
                   <Input placeholder="seu@email.com.br" />
                 </div>
                 <div>
@@ -351,128 +284,77 @@ function Configuracoes() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="whitelabel">
-          <WhiteLabelSettings />
-        </TabsContent>
+        {canEditWhiteLabel ? (
+          <TabsContent value="whitelabel">
+            <WhiteLabelSettings />
+          </TabsContent>
+        ) : null}
 
-        <TabsContent value="geral">
-          <Card>
-            <CardHeader>
-              <CardTitle>Geral</CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl">
-              <div>
-                <Label>Nome da empresa</Label>
-                <Input
-                  value={geral.empresaNome}
-                  onChange={(e) => setGeral({ ...geral, empresaNome: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>Meta mensal da equipe (R$)</Label>
-                <Input
-                  type="number"
-                  value={geral.metaMensal}
-                  onChange={(e) => setGeral({ ...geral, metaMensal: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>Fuso horário</Label>
-                <Input
-                  value={geral.timezone}
-                  onChange={(e) => setGeral({ ...geral, timezone: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label>Moeda</Label>
-                <Select
-                  value={geral.moeda}
-                  onValueChange={(v) => setGeral({ ...geral, moeda: v })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="BRL">Real (R$)</SelectItem>
-                    <SelectItem value="USD">Dólar (US$)</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="md:col-span-2 flex justify-end">
-                <Button
-                  onClick={() => {
-                    atualizarConfiguracoes({
-                      empresaNome: geral.empresaNome,
-                      metaMensal: Number(geral.metaMensal) || 0,
-                      timezone: geral.timezone,
-                      moeda: geral.moeda,
-                    });
-                    toast.success("Preferências salvas!");
-                  }}
-                >
-                  Salvar
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        {isOwner ? (
+          <TabsContent value="geral">
+            <Card>
+              <CardHeader>
+                <CardTitle>Workspace</CardTitle>
+                <CardDescription>Preferências gerais do seu workspace.</CardDescription>
+              </CardHeader>
+              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-2xl">
+                <div>
+                  <Label>Nome do workspace</Label>
+                  <Input
+                    value={geral.empresaNome}
+                    onChange={(e) => setGeral({ ...geral, empresaNome: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Meta mensal da equipe (R$)</Label>
+                  <Input
+                    type="number"
+                    value={geral.metaMensal}
+                    onChange={(e) => setGeral({ ...geral, metaMensal: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Fuso horário</Label>
+                  <Input
+                    value={geral.timezone}
+                    onChange={(e) => setGeral({ ...geral, timezone: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label>Moeda</Label>
+                  <Select
+                    value={geral.moeda}
+                    onValueChange={(v) => setGeral({ ...geral, moeda: v })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="BRL">Real (R$)</SelectItem>
+                      <SelectItem value="USD">Dólar (US$)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="md:col-span-2 flex justify-end">
+                  <Button
+                    onClick={() => {
+                      atualizarConfiguracoes({
+                        empresaNome: geral.empresaNome,
+                        metaMensal: Number(geral.metaMensal) || 0,
+                        timezone: geral.timezone,
+                        moeda: geral.moeda,
+                      });
+                      toast.success("Preferências salvas!");
+                    }}
+                  >
+                    Salvar
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        ) : null}
       </Tabs>
-
-      <Dialog open={novo} onOpenChange={setNovo}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Novo Usuário</DialogTitle>
-            <DialogDescription>Adicione um membro à equipe.</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-3">
-            <div>
-              <Label>Nome</Label>
-              <Input
-                value={form.nome}
-                onChange={(e) => setForm({ ...form, nome: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label>E-mail</Label>
-              <Input
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-              />
-            </div>
-            <div>
-              <Label>Papel</Label>
-              <Select
-                value={form.papel}
-                onValueChange={(v) => setForm({ ...form, papel: v as Papel })}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Administrador">{labelCrmPapel("Administrador")}</SelectItem>
-                  <SelectItem value="Vendedor">{labelCrmPapel("Vendedor")}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setNovo(false)}>
-              Cancelar
-            </Button>
-            <Button
-              onClick={() => {
-                adicionarUsuario(form);
-                setNovo(false);
-                setForm({ nome: "", email: "", papel: "Vendedor", ativo: true });
-                toast.success("Usuário criado!");
-              }}
-              disabled={!form.nome || !form.email}
-            >
-              Adicionar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

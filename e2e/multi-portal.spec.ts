@@ -71,7 +71,7 @@ test.describe("Fase 5 — Portal Admin", () => {
     await expect(page).toHaveURL(/\/admin\/billing/);
     await expect(page.getByRole("heading", { name: "Billing" })).toBeVisible();
     await expect(page.getByText("MRR estimado")).toBeVisible();
-    await expect(page.getByRole("link", { name: "Demo Corp" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Lucas Felipe" })).toBeVisible();
   });
 
   test("usuário operacional não acessa admin", async ({ page }) => {

@@ -20,6 +20,7 @@ import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as AdminRouteRouteImport } from './routes/admin/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as WorkspaceEnterRouteImport } from './routes/workspace/enter'
 import { Route as AdminBillingRouteImport } from './routes/admin/billing'
 import { Route as TTenantSlugRouteRouteImport } from './routes/t/$tenantSlug/route'
 import { Route as AdminTenantsIndexRouteImport } from './routes/admin/tenants/index'
@@ -112,6 +113,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRouteRoute,
+} as any)
+const WorkspaceEnterRoute = WorkspaceEnterRouteImport.update({
+  id: '/workspace/enter',
+  path: '/workspace/enter',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminBillingRoute = AdminBillingRouteImport.update({
   id: '/billing',
@@ -335,6 +341,7 @@ export interface FileRoutesByFullPath {
   '/propostas': typeof PropostasRoute
   '/t/$tenantSlug': typeof TTenantSlugRouteRouteWithChildren
   '/admin/billing': typeof AdminBillingRoute
+  '/workspace/enter': typeof WorkspaceEnterRoute
   '/admin/': typeof AdminIndexRoute
   '/t/$tenantSlug/app': typeof TTenantSlugAppRouteRouteWithChildren
   '/t/$tenantSlug/portal': typeof TTenantSlugPortalRouteRouteWithChildren
@@ -384,6 +391,7 @@ export interface FileRoutesByTo {
   '/propostas': typeof PropostasRoute
   '/t/$tenantSlug': typeof TTenantSlugRouteRouteWithChildren
   '/admin/billing': typeof AdminBillingRoute
+  '/workspace/enter': typeof WorkspaceEnterRoute
   '/admin': typeof AdminIndexRoute
   '/admin/tenants/$tenantId': typeof AdminTenantsTenantIdRoute
   '/admin/tenants': typeof AdminTenantsIndexRoute
@@ -431,6 +439,7 @@ export interface FileRoutesById {
   '/propostas': typeof PropostasRoute
   '/t/$tenantSlug': typeof TTenantSlugRouteRouteWithChildren
   '/admin/billing': typeof AdminBillingRoute
+  '/workspace/enter': typeof WorkspaceEnterRoute
   '/admin/': typeof AdminIndexRoute
   '/t/$tenantSlug/app': typeof TTenantSlugAppRouteRouteWithChildren
   '/t/$tenantSlug/portal': typeof TTenantSlugPortalRouteRouteWithChildren
@@ -483,6 +492,7 @@ export interface FileRouteTypes {
     | '/propostas'
     | '/t/$tenantSlug'
     | '/admin/billing'
+    | '/workspace/enter'
     | '/admin/'
     | '/t/$tenantSlug/app'
     | '/t/$tenantSlug/portal'
@@ -532,6 +542,7 @@ export interface FileRouteTypes {
     | '/propostas'
     | '/t/$tenantSlug'
     | '/admin/billing'
+    | '/workspace/enter'
     | '/admin'
     | '/admin/tenants/$tenantId'
     | '/admin/tenants'
@@ -578,6 +589,7 @@ export interface FileRouteTypes {
     | '/propostas'
     | '/t/$tenantSlug'
     | '/admin/billing'
+    | '/workspace/enter'
     | '/admin/'
     | '/t/$tenantSlug/app'
     | '/t/$tenantSlug/portal'
@@ -628,6 +640,7 @@ export interface RootRouteChildren {
   PainelRoute: typeof PainelRoute
   PropostasRoute: typeof PropostasRoute
   TTenantSlugRouteRoute: typeof TTenantSlugRouteRouteWithChildren
+  WorkspaceEnterRoute: typeof WorkspaceEnterRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -708,6 +721,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRouteRoute
+    }
+    '/workspace/enter': {
+      id: '/workspace/enter'
+      path: '/workspace/enter'
+      fullPath: '/workspace/enter'
+      preLoaderRoute: typeof WorkspaceEnterRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/billing': {
       id: '/admin/billing'
@@ -1129,6 +1149,7 @@ const rootRouteChildren: RootRouteChildren = {
   PainelRoute: PainelRoute,
   PropostasRoute: PropostasRoute,
   TTenantSlugRouteRoute: TTenantSlugRouteRouteWithChildren,
+  WorkspaceEnterRoute: WorkspaceEnterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

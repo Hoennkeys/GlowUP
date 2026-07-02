@@ -44,7 +44,7 @@ export function CreatorDashboard() {
           {PRODUCT_NAME}
         </h1>
         <p className="text-sm text-muted-foreground">
-          Gerencie suas marcas e parceiros — campanhas, comunicação e operação em um só lugar.
+          Gerencie sua carreira, campanhas, marcas e equipe em um único workspace.
         </p>
       </div>
 

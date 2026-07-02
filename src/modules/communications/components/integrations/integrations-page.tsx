@@ -11,7 +11,7 @@ export function IntegrationsPage() {
   if (!role || !canConfigureIntegrations(role)) {
     return (
       <p className="text-sm text-muted-foreground">
-        Apenas administradores podem configurar integrações.
+        Apenas o Owner pode configurar integrações.
       </p>
     );
   }

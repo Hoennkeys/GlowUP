@@ -39,7 +39,13 @@ CREATE TABLE IF NOT EXISTS tenant_crm_state (
 );
 `;
 
+const ROLE_MIGRATION = `
+UPDATE tenant_memberships SET role = 'OWNER' WHERE role = 'ADMIN';
+UPDATE tenant_memberships SET role = 'MEMBER' WHERE role = 'OPERATIONAL';
+`;
+
 export function ensureSchema() {
   const db = getDb();
   db.$client.exec(DDL);
+  db.$client.exec(ROLE_MIGRATION);
 }

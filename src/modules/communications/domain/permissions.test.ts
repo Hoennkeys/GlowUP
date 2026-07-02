@@ -32,8 +32,8 @@ const conv: Conversation = {
 
 console.log("communications permissions\n");
 
-test("ADMIN vê qualquer conversa", () => {
-  assert.ok(canViewConversation("ADMIN", conv, { userId: "x", leads: [], clientId: "y" }));
+test("OWNER vê qualquer conversa", () => {
+  assert.ok(canViewConversation("OWNER", conv, { userId: "x", leads: [], clientId: "y" }));
 });
 
 test("CLIENT só vê próprias conversas", () => {
@@ -41,14 +41,14 @@ test("CLIENT só vê próprias conversas", () => {
   assert.ok(!canViewConversation("CLIENT", conv, { userId: "c", clientId: "other", leads: [] }));
 });
 
-test("OPERATIONAL vê conversas atribuídas", () => {
-  assert.ok(canViewConversation("OPERATIONAL", conv, { userId: "emp-1", leads: [] }));
-  assert.ok(!canViewConversation("OPERATIONAL", conv, { userId: "emp-2", leads: [] }));
+test("MEMBER vê conversas atribuídas", () => {
+  assert.ok(canViewConversation("MEMBER", conv, { userId: "emp-1", leads: [] }));
+  assert.ok(!canViewConversation("MEMBER", conv, { userId: "emp-2", leads: [] }));
 });
 
-test("canConfigureIntegrations só ADMIN", () => {
-  assert.ok(canConfigureIntegrations("ADMIN"));
-  assert.ok(!canConfigureIntegrations("OPERATIONAL"));
+test("canConfigureIntegrations só OWNER", () => {
+  assert.ok(canConfigureIntegrations("OWNER"));
+  assert.ok(!canConfigureIntegrations("MEMBER"));
 });
 
 test("filterConversationsForRole CLIENT", () => {

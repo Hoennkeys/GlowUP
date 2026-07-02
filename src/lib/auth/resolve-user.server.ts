@@ -4,6 +4,7 @@ import { getDb } from "@/lib/db/client.server";
 import { users } from "@/lib/db/schema";
 import { getUserByEmail, getUserMemberships } from "@/lib/db/seed.server";
 
+import { normalizeMemberships, normalizeTenantRole } from "./tenant-role";
 import type { SessionUser, TenantMembership } from "./types";
 
 type DbUser = typeof users.$inferSelect;
@@ -27,20 +28,24 @@ export function dbUserToSessionUser(row: DbUser, memberships: TenantMembership[]
   }
 
   if (memberships.length > 0) {
-    user.tenantMemberships = memberships;
+    user.tenantMemberships = normalizeMemberships(memberships) ?? memberships;
   }
 
   return user;
 }
 
 function membershipsFromRows(userId: string): TenantMembership[] {
-  return getUserMemberships(userId).map(
-    (m): TenantMembership => ({
-      tenantId: m.tenantId,
-      tenantSlug: m.tenantSlug,
-      role: m.role as TenantMembership["role"],
-    }),
-  );
+  return getUserMemberships(userId)
+    .map((m) => {
+      const role = normalizeTenantRole(m.role);
+      if (!role) return null;
+      return {
+        tenantId: m.tenantId,
+        tenantSlug: m.tenantSlug,
+        role,
+      };
+    })
+    .filter((m): m is TenantMembership => m !== null);
 }
 
 export function loadSessionUserByEmail(email: string): SessionUser | null {

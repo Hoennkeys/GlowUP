@@ -1,4 +1,5 @@
 import { findMockUser } from "./mock-users";
+import { normalizeMemberships } from "./tenant-role";
 import type { Session, SessionUser } from "./types";
 
 const SESSION_STORAGE_KEY = "vendapro_session_v1";
@@ -12,7 +13,12 @@ function isSessionValid(session: Session): boolean {
 function parseSession(raw: string): Session | null {
   try {
     const session = JSON.parse(raw) as Session;
-    return isSessionValid(session) ? session : null;
+    if (!isSessionValid(session)) return null;
+    if (session.user.tenantMemberships) {
+      session.user.tenantMemberships =
+        normalizeMemberships(session.user.tenantMemberships) ?? session.user.tenantMemberships;
+    }
+    return session;
   } catch {
     return null;
   }
@@ -39,19 +45,70 @@ export function getSessionFromStorage(): Session | null {
   return session;
 }
 
-export function getDefaultPortalPath(session: Session): string {
-  if (session.user.platformRole === "SUPER_ADMIN") return "/admin";
+export function getDefaultPortalRedirect(session: Session) {
+  if (session.user.platformRole === "SUPER_ADMIN") {
+    return { to: "/admin" as const };
+  }
   if (session.user.clientRole === "CLIENT" && session.user.tenantSlug) {
-    return `/t/${session.user.tenantSlug}/portal`;
+    return {
+      to: "/t/$tenantSlug/portal" as const,
+      params: { tenantSlug: session.user.tenantSlug },
+    };
   }
   const membership = session.user.tenantMemberships?.[0];
-  if (membership) return `/t/${membership.tenantSlug}/app/painel`;
-  return "/login";
+  if (membership) {
+    return {
+      to: "/workspace/enter" as const,
+      search: { slug: membership.tenantSlug },
+    };
+  }
+  return { to: "/login" as const };
+}
+
+/** @deprecated Prefer getDefaultPortalRedirect for navigation with search params. */
+export function getDefaultPortalPath(session: Session): string {
+  const target = getDefaultPortalRedirect(session);
+  if (target.to === "/t/$tenantSlug/portal" && "params" in target) {
+    return `/t/${target.params.tenantSlug}/portal`;
+  }
+  if (target.to === "/workspace/enter" && "search" in target) {
+    return `/workspace/enter?slug=${target.search.slug}`;
+  }
+  return target.to;
+}
+
+export function getWorkspaceEntryRedirect(tenantSlug: string) {
+  return { to: "/workspace/enter" as const, search: { slug: tenantSlug } };
+}
+
+export function getTenantAppPath(tenantSlug: string, subpath = "painel"): string {
+  return `/t/${tenantSlug}/app/${subpath}`;
+}
+
+const WORKSPACE_ENTERED_PREFIX = "glowup_workspace_entered_";
+
+export function markWorkspaceEntered(tenantSlug: string): void {
+  if (typeof window === "undefined") return;
+  sessionStorage.setItem(`${WORKSPACE_ENTERED_PREFIX}${tenantSlug}`, "1");
+}
+
+export function hasEnteredWorkspace(tenantSlug: string): boolean {
+  if (typeof window === "undefined") return false;
+  return sessionStorage.getItem(`${WORKSPACE_ENTERED_PREFIX}${tenantSlug}`) === "1";
+}
+
+export function clearWorkspaceEntered(tenantSlug: string): void {
+  if (typeof window === "undefined") return;
+  sessionStorage.removeItem(`${WORKSPACE_ENTERED_PREFIX}${tenantSlug}`);
 }
 
 export function createSession(user: SessionUser): Session {
+  const normalizedUser: SessionUser = {
+    ...user,
+    tenantMemberships: normalizeMemberships(user.tenantMemberships),
+  };
   return {
-    user,
+    user: normalizedUser,
     expiresAt: new Date(Date.now() + SESSION_TTL_MS).toISOString(),
   };
 }

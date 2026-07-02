@@ -174,7 +174,7 @@ export const PLATFORM_ACTIVITIES: PlatformActivity[] = [
   {
     id: "act-001",
     em: "2026-06-14T10:00:00.000Z",
-    texto: "Maria Operacional (demo) fechou lead EduTech Cursos — R$ 12.000",
+    texto: "Maria Silva (demo) fechou lead EduTech Cursos — R$ 12.000",
     tenantSlug: "demo",
   },
   {

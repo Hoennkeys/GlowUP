@@ -84,6 +84,79 @@ export async function seedDatabaseIfEmpty() {
   return true;
 }
 
+/** Upserts mock users/memberships so dev DB stays aligned with MOCK_USERS. */
+export async function ensureMockUsersSynced() {
+  ensureSchema();
+  const db = getDb();
+
+  for (const mock of MOCK_USERS) {
+    const email = mock.email.toLowerCase();
+    const passwordHash = await hashPassword(mock.password);
+    let existing = getUserByEmail(email);
+
+    if (!existing) {
+      db.insert(users)
+        .values({
+          id: mock.id,
+          email,
+          passwordHash,
+          nome: mock.nome,
+          platformRole: mock.platformRole ?? null,
+          clientRole: mock.clientRole ?? null,
+          clientId: mock.clientId ?? null,
+          tenantId: mock.tenantId ?? null,
+          tenantSlug: mock.tenantSlug ?? null,
+        })
+        .run();
+      existing = getUserByEmail(email);
+    } else {
+      db.update(users)
+        .set({
+          nome: mock.nome,
+          passwordHash,
+          platformRole: mock.platformRole ?? null,
+          clientRole: mock.clientRole ?? null,
+          clientId: mock.clientId ?? null,
+          tenantId: mock.tenantId ?? null,
+          tenantSlug: mock.tenantSlug ?? null,
+        })
+        .where(eq(users.id, existing.id))
+        .run();
+    }
+
+    if (!existing) continue;
+    const userId = existing.id;
+
+    if (mock.tenantMemberships) {
+      for (const membership of mock.tenantMemberships) {
+        const row = db
+          .select()
+          .from(tenantMemberships)
+          .where(eq(tenantMemberships.userId, userId))
+          .all()
+          .find((m) => m.tenantId === membership.tenantId);
+
+        if (!row) {
+          db.insert(tenantMemberships)
+            .values({
+              id: `${userId}-${membership.tenantId}`,
+              userId,
+              tenantId: membership.tenantId,
+              tenantSlug: membership.tenantSlug,
+              role: membership.role,
+            })
+            .run();
+        } else {
+          db.update(tenantMemberships)
+            .set({ role: membership.role, tenantSlug: membership.tenantSlug })
+            .where(eq(tenantMemberships.id, row.id))
+            .run();
+        }
+      }
+    }
+  }
+}
+
 export function getUserByEmail(email: string) {
   const db = getDb();
   return db.select().from(users).where(eq(users.email, email.trim().toLowerCase())).get();

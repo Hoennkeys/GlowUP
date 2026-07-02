@@ -89,7 +89,7 @@ test("seed inicial contém demo e acme como sistema", () => {
   assert.ok(getPlatformTenantBySlug("acme"));
   assert.equal(getPlatformTenantBySlug("techstart")?.status, "trial");
   assert.equal(getPlatformTenantBySlug("nordic")?.status, "suspended");
-  assert.equal(getPlatformTenantById("tenant-demo")?.nome, "Demo Corp");
+  assert.equal(getPlatformTenantById("tenant-demo")?.nome, "Lucas Felipe");
 
   removeBrowserGlobals();
 });

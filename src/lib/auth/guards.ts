@@ -1,11 +1,11 @@
 import { redirect } from "@tanstack/react-router";
-import { getDefaultPortalPath } from "./session";
+import { getDefaultPortalRedirect } from "./session";
 import type { Session, TenantRole } from "./types";
 import { isValidTenantSlug } from "@/lib/tenant/mock-tenants";
 
 type AuthContext = { session: Session | null };
 
-const TENANT_APP_ROLES: TenantRole[] = ["ADMIN", "OPERATIONAL"];
+const TENANT_APP_ROLES: TenantRole[] = ["OWNER", "MEMBER"];
 
 export function requireAuth({ session }: AuthContext, returnTo?: string) {
   if (!session) {
@@ -20,7 +20,7 @@ export function requireAuth({ session }: AuthContext, returnTo?: string) {
 export function requireSuperAdmin(context: AuthContext) {
   const session = requireAuth(context);
   if (session.user.platformRole !== "SUPER_ADMIN") {
-    throw redirect({ to: getDefaultPortalPath(session) });
+    throw redirect(getDefaultPortalRedirect(session));
   }
   return session;
 }
@@ -38,7 +38,7 @@ export function requireTenantAppAccess(
 
   const membership = session.user.tenantMemberships?.find((m) => m.tenantSlug === tenantSlug);
   if (!membership || !TENANT_APP_ROLES.includes(membership.role)) {
-    throw redirect({ to: getDefaultPortalPath(session) });
+    throw redirect(getDefaultPortalRedirect(session));
   }
 
   return session;
@@ -56,7 +56,7 @@ export function requireClientPortalAccess(
   }
 
   if (session.user.clientRole !== "CLIENT" || session.user.tenantSlug !== tenantSlug) {
-    throw redirect({ to: getDefaultPortalPath(session) });
+    throw redirect(getDefaultPortalRedirect(session));
   }
 
   return session;
