@@ -2,15 +2,15 @@ import type { Session } from "@/lib/auth/types";
 import type { Lead, Usuario } from "@/lib/types";
 import type { Conversation, InternalNote, Message, Ticket } from "./entities";
 
-export type CommunicationsAuthRole = "ADMIN" | "OPERATIONAL" | "CLIENT";
+export type CommunicationsAuthRole = "OWNER" | "MEMBER" | "CLIENT";
 
 export function resolveAuthRole(session: Session | null): CommunicationsAuthRole | null {
   if (!session) return null;
-  if (session.user.platformRole === "SUPER_ADMIN") return "ADMIN";
+  if (session.user.platformRole === "SUPER_ADMIN") return "OWNER";
   if (session.user.clientRole === "CLIENT") return "CLIENT";
   const membership = session.user.tenantMemberships?.[0];
-  if (membership?.role === "ADMIN") return "ADMIN";
-  if (membership?.role === "OPERATIONAL") return "OPERATIONAL";
+  if (membership?.role === "OWNER") return "OWNER";
+  if (membership?.role === "MEMBER") return "MEMBER";
   return null;
 }
 
@@ -19,7 +19,7 @@ export function canViewConversation(
   conversation: Conversation,
   ctx: { userId: string; clientId?: string; leads: Lead[] },
 ): boolean {
-  if (role === "ADMIN") return true;
+  if (role === "OWNER") return true;
   if (role === "CLIENT") {
     return conversation.clientId === ctx.clientId;
   }
@@ -39,7 +39,7 @@ export function canViewTicket(
   ticket: Ticket,
   ctx: { userId: string; clientId?: string },
 ): boolean {
-  if (role === "ADMIN") return true;
+  if (role === "OWNER") return true;
   if (role === "CLIENT") return ticket.clientId === ctx.clientId;
   return ticket.assignedEmployeeId === ctx.userId || !ticket.assignedEmployeeId;
 }
@@ -49,16 +49,16 @@ export function canViewInternalNote(
   note: InternalNote,
 ): boolean {
   if (role === "CLIENT") return false;
-  if (role === "ADMIN") return true;
+  if (role === "OWNER") return true;
   return note.visibleToRoles.includes("employee");
 }
 
 export function canConfigureIntegrations(role: CommunicationsAuthRole): boolean {
-  return role === "ADMIN";
+  return role === "OWNER";
 }
 
 export function canViewReports(role: CommunicationsAuthRole): boolean {
-  return role === "ADMIN" || role === "OPERATIONAL";
+  return role === "OWNER" || role === "MEMBER";
 }
 
 export function filterConversationsForRole(

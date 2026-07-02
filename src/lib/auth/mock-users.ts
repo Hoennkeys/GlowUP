@@ -11,18 +11,25 @@ export const MOCK_USERS: MockUserRecord[] = [
     platformRole: "SUPER_ADMIN",
   },
   {
-    id: "user-operacional",
+    id: "user-member-demo",
     email: "operacional@demo.com",
     password: "demo123",
-    nome: "Maria Operacional",
-    tenantMemberships: [{ tenantId: "tenant-demo", tenantSlug: "demo", role: "OPERATIONAL" }],
+    nome: "Maria Silva",
+    tenantMemberships: [{ tenantId: "tenant-demo", tenantSlug: "demo", role: "MEMBER" }],
   },
   {
-    id: "user-operacional-acme",
-    email: "operacional@acme.com",
+    id: "user-owner-demo",
+    email: "owner@demo.com",
+    password: "demo123",
+    nome: "Lucas Felipe",
+    tenantMemberships: [{ tenantId: "tenant-demo", tenantSlug: "demo", role: "OWNER" }],
+  },
+  {
+    id: "user-owner-acme",
+    email: "owner@acme.com",
     password: "demo123",
     nome: "Carlos Acme",
-    tenantMemberships: [{ tenantId: "tenant-acme", tenantSlug: "acme", role: "ADMIN" }],
+    tenantMemberships: [{ tenantId: "tenant-acme", tenantSlug: "acme", role: "OWNER" }],
   },
   {
     id: "user-cliente",
@@ -46,10 +53,17 @@ export const MOCK_USERS: MockUserRecord[] = [
   },
 ];
 
+/** Optional aliases for dev login hints. */
+export const LEGACY_MOCK_EMAIL_ALIASES: Record<string, string> = {
+  "membro@demo.com": "operacional@demo.com",
+  "operacional@acme.com": "owner@acme.com",
+};
+
 export function findMockUser(email: string, password: string): SessionUser | null {
   const normalized = email.trim().toLowerCase();
+  const resolvedEmail = LEGACY_MOCK_EMAIL_ALIASES[normalized] ?? normalized;
   const user = MOCK_USERS.find(
-    (u) => u.email.toLowerCase() === normalized && u.password === password,
+    (u) => u.email.toLowerCase() === resolvedEmail && u.password === password,
   );
   if (!user) return null;
 
@@ -58,10 +72,12 @@ export function findMockUser(email: string, password: string): SessionUser | nul
 }
 
 function portalLabel(user: MockUserRecord): string {
-  if (user.platformRole === "SUPER_ADMIN") return "Admin plataforma";
-  if (user.clientRole === "CLIENT") return `Cliente (${user.tenantSlug})`;
-  const slug = user.tenantMemberships?.[0]?.tenantSlug ?? "app";
-  return `Operacional (${slug})`;
+  if (user.platformRole === "SUPER_ADMIN") return "Plataforma";
+  if (user.clientRole === "CLIENT") return `Marca (${user.tenantSlug})`;
+  const membership = user.tenantMemberships?.[0];
+  if (!membership) return "App";
+  const roleLabel = membership.role === "OWNER" ? "Owner" : "Membro";
+  return `${roleLabel} (${membership.tenantSlug})`;
 }
 
 export const MOCK_LOGIN_HINTS = MOCK_USERS.map(({ email, password, nome, ...rest }) => ({

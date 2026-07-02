@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/auth/auth-store";
-import { getDefaultPortalPath } from "@/lib/auth/session";
+import { getDefaultPortalRedirect } from "@/lib/auth/session";
 import { pageTitle, PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/product-branding";
 
 type LoginSearch = {
@@ -27,8 +27,10 @@ export const Route = createFileRoute("/login")({
   }),
   beforeLoad: ({ context, search }) => {
     if (context.session) {
-      const target = safeRedirectPath(search.redirect) ?? getDefaultPortalPath(context.session);
-      throw redirect({ to: target });
+      const target = safeRedirectPath(search.redirect)
+        ? { to: safeRedirectPath(search.redirect)! }
+        : getDefaultPortalRedirect(context.session);
+      throw redirect(target);
     }
   },
   head: () => ({ meta: [{ title: pageTitle("Login") }] }),
@@ -48,8 +50,10 @@ function LoginPage() {
     setLoading(true);
     try {
       const session = await login(email, password);
-      const target = safeRedirectPath(redirectTo) ?? getDefaultPortalPath(session);
-      await router.navigate({ to: target, replace: true });
+      const target = safeRedirectPath(redirectTo)
+        ? { to: safeRedirectPath(redirectTo)! }
+        : getDefaultPortalRedirect(session);
+      await router.navigate({ ...target, replace: true });
       toast.success(`Bem-vindo, ${session.user.nome}!`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Falha no login.");
@@ -64,8 +68,10 @@ function LoginPage() {
     setLoading(true);
     try {
       const session = await login(mockEmail, mockPassword);
-      const target = safeRedirectPath(redirectTo) ?? getDefaultPortalPath(session);
-      await router.navigate({ to: target, replace: true });
+      const target = safeRedirectPath(redirectTo)
+        ? { to: safeRedirectPath(redirectTo)! }
+        : getDefaultPortalRedirect(session);
+      await router.navigate({ ...target, replace: true });
       toast.success(`Bem-vindo, ${session.user.nome}!`);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Falha no login.");

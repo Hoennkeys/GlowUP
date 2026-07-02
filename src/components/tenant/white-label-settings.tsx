@@ -38,7 +38,7 @@ export function WhiteLabelSettings() {
       <CardContent className="space-y-6">
         <div className="grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <Label htmlFor="wl-nome">Nome da empresa</Label>
+            <Label htmlFor="wl-nome">Nome do workspace</Label>
             <Input
               id="wl-nome"
               value={draft.nome}

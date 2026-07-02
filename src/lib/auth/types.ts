@@ -1,5 +1,6 @@
 export type PlatformRole = "SUPER_ADMIN";
-export type TenantRole = "ADMIN" | "OPERATIONAL";
+export type TenantRole = "OWNER" | "MEMBER";
+export type TenantRoleFuture = TenantRole | "MANAGER" | "FINANCIAL" | "CONTENT" | "SALES";
 export type ClientRole = "CLIENT";
 
 export type PortalRole = PlatformRole | TenantRole | ClientRole;

@@ -27,12 +27,35 @@ async function loginWithCredentials(
   await page.waitForURL(expectedUrl, { timeout: 15_000 });
 }
 
+export async function enterWorkspace(page: Page) {
+  await expectWorkspaceEntry(page);
+  await page.getByRole("button", { name: "Entrar" }).click();
+  await page.waitForURL(/\/t\/[^/]+\/app\/painel/, { timeout: 15_000 });
+}
+
+export async function expectWorkspaceEntry(page: Page) {
+  await page.waitForURL(/\/workspace\/enter/, { timeout: 15_000 });
+  await page.getByText("Workspace:", { exact: true }).waitFor({ state: "visible" });
+  await page.getByText("Você faz parte desta equipe.").waitFor({ state: "visible" });
+}
+
 export async function loginAsSuperAdmin(page: Page) {
   await loginWithCredentials(page, "admin@vendapro.app", "admin123", /\/admin/);
 }
 
+export async function loginAsMember(page: Page) {
+  await loginWithCredentials(page, "operacional@demo.com", "demo123", /\/workspace\/enter/);
+  await enterWorkspace(page);
+}
+
+/** @deprecated Use loginAsMember */
 export async function loginAsOperational(page: Page) {
-  await loginWithCredentials(page, "operacional@demo.com", "demo123", /\/t\/demo\/app\/painel/);
+  await loginAsMember(page);
+}
+
+export async function loginAsOwner(page: Page) {
+  await loginWithCredentials(page, "owner@demo.com", "demo123", /\/workspace\/enter/);
+  await enterWorkspace(page);
 }
 
 export async function loginAsClient(page: Page) {

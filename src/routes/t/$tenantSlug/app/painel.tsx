@@ -128,7 +128,7 @@ function Painel() {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">{CREATOR_TERMS.employee}:</span>
+          <span className="text-sm text-muted-foreground">Membro da equipe:</span>
           <Select value={filtroVendedor} onValueChange={setFiltroVendedor}>
             <SelectTrigger className="w-[200px]">
               <SelectValue />
@@ -167,7 +167,7 @@ function Painel() {
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-              <Target className="h-4 w-4" /> Meta da Equipe
+              <Target className="h-4 w-4" /> Meta do workspace
             </CardTitle>
           </CardHeader>
           <CardContent>

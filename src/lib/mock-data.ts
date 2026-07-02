@@ -942,7 +942,7 @@ export const pipelineItemsMock: PipelineItem[] = [
 
 const configuracoesDemo: CrmConfiguracoes = {
   metaMensal: 80000,
-  empresaNome: "Demo Corp",
+  empresaNome: "Lucas Felipe",
   timezone: "America/Sao_Paulo",
   moeda: "BRL",
   smtpHost: "smtp.demo.com",

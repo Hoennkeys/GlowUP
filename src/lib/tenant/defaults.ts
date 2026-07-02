@@ -17,13 +17,14 @@ export const DEFAULT_WHITE_LABELS: Record<string, TenantWhiteLabel> = {
   demo: {
     tenantId: "tenant-demo",
     slug: "demo",
-    nome: "Demo Corp",
+    nome: "Lucas Felipe",
+    logoUrl: "https://api.dicebear.com/7.x/initials/svg?seed=LucasFelipe&backgroundColor=6366f1",
     cores: { ...DEFAULT_THEME_COLORS.vendapro },
   },
   acme: {
     tenantId: "tenant-acme",
     slug: "acme",
-    nome: "Acme Indústria",
+    nome: "Carlos Acme",
     logoUrl: "https://api.dicebear.com/7.x/initials/svg?seed=Acme&backgroundColor=059669",
     cores: { ...DEFAULT_THEME_COLORS.acme },
   },

@@ -44,6 +44,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } else {
       clearSession();
     }
+    if (typeof window !== "undefined") {
+      sessionStorage.clear();
+    }
     await router.invalidate();
     await router.navigate({ to: "/login" });
   }, [router]);

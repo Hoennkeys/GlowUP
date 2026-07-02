@@ -6,13 +6,19 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { AppBreadcrumbs } from "@/components/app-breadcrumbs";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth/auth-store";
+import { resolveActiveMembership } from "@/lib/auth/workspace-permissions";
 import { userInitials } from "@/lib/auth/session";
+import { labelTenantRole } from "@/modules/creator/domain/terminology";
+import { useParams } from "@tanstack/react-router";
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const { session, logout } = useAuth();
-  const initials = session ? userInitials(session.user.nome) : "AD";
+  const { tenantSlug } = useParams({ from: "/t/$tenantSlug/app" });
+  const initials = session ? userInitials(session.user.nome) : "GU";
+  const membership = session ? resolveActiveMembership(session, tenantSlug) : null;
 
   return (
     <SidebarProvider>
@@ -23,9 +29,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <AppBreadcrumbs className="hidden min-w-0 flex-1 sm:flex" />
           <div className="flex-1 sm:hidden" />
           <ThemeToggle />
-          <span className="hidden text-sm text-muted-foreground md:inline">
-            {session?.user.nome}
-          </span>
+          <div className="hidden items-center gap-2 md:flex">
+            {membership ? (
+              <Badge variant={membership.role === "OWNER" ? "default" : "secondary"}>
+                {labelTenantRole(membership.role)}
+              </Badge>
+            ) : null}
+            <span className="text-sm text-muted-foreground">{session?.user.nome}</span>
+          </div>
           <Button variant="ghost" size="icon" onClick={() => void logout()} title="Sair">
             <LogOut className="h-4 w-4" />
           </Button>
