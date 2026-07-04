@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://glowup.app/schemas/campanha.schema.json",
+  "title": "Campanha",
+  "description": "Campanha de parceria entre marca e influenciador",
+  "type": "object",
+  "required": ["id", "tenantId", "title", "brandId", "status", "budget", "startDate", "createdAt", "updatedAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "brandId": { "type": "string", "minLength": 1 },
+    "sponsorId": { "type": "string" },
+    "agencyId": { "type": "string" },
+    "influencerId": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "active", "paused", "completed"]
+    },
+    "budget": { "type": "number", "minimum": 0 },
+    "startDate": { "type": "string", "format": "date" },
+    "endDate": { "type": ["string", "null"], "format": "date" },
+    "channels": { "type": "array", "items": { "type": "string" } },
+    "description": { "type": "string" },
+    "conversationId": { "type": ["string", "null"] },
+    "legacyLeadId": { "type": "string" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}

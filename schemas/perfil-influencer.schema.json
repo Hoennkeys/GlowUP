@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://glowup.app/schemas/perfil-influencer.json",
+  "title": "PerfilInfluencer",
+  "description": "Perfil de influenciador na plataforma GlowUP",
+  "type": "object",
+  "required": ["id", "tenantId", "nome", "email", "status", "createdAt", "updatedAt"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "tenantId": { "type": "string", "minLength": 1 },
+    "nome": { "type": "string", "minLength": 1 },
+    "handle": { "type": ["string", "null"] },
+    "avatarUrl": { "type": ["string", "null"], "format": "uri" },
+    "coverUrl": { "type": ["string", "null"], "format": "uri" },
+    "nicho": { "type": ["string", "null"] },
+    "bio": { "type": ["string", "null"] },
+    "plataformas": { "type": "array", "items": { "type": "string" } },
+    "metricasSociais": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "seguidores": { "type": "number", "minimum": 0 },
+          "inscritos": { "type": "number", "minimum": 0 },
+          "visualizacoes": { "type": "number", "minimum": 0 },
+          "engajamento": { "type": "number", "minimum": 0 },
+          "curtidas": { "type": "number", "minimum": 0 }
+        }
+      }
+    },
+    "mediaKitUrl": { "type": ["string", "null"], "format": "uri" },
+    "email": { "type": "string", "format": "email" },
+    "telefone": { "type": "string" },
+    "status": { "type": "string", "enum": ["ativo", "inativo", "pendente"] },
+    "legacyLeadId": { "type": "string" },
+    "legacyClientId": { "type": "string" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "updatedAt": { "type": "string", "format": "date-time" }
+  },
+  "additionalProperties": false
+}
