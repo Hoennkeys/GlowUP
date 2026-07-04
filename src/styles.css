@@ -59,6 +59,12 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-creator-primary: var(--creator-primary);
+  --color-creator-accent: var(--creator-accent);
+  --color-creator-neutral-text: var(--creator-neutral-text);
+  --color-creator-neutral-bg: var(--creator-neutral-bg);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
 }
 
 /*
@@ -71,6 +77,16 @@
   --radius: 0.625rem;
   --glowup-gradient: linear-gradient(135deg, oklch(0.62 0.24 310) 0%, oklch(0.68 0.22 350) 100%);
   --glowup-accent: oklch(0.72 0.2 350);
+  /* Creator platform tokens (design/tokens.json) */
+  --creator-primary: oklch(0.68 0.22 350);
+  --creator-accent: oklch(0.55 0.25 290);
+  --creator-neutral-text: oklch(0.21 0.03 260);
+  --creator-neutral-bg: oklch(0.985 0.005 260);
+  --creator-gradient: linear-gradient(
+    135deg,
+    var(--creator-primary) 0%,
+    var(--creator-accent) 100%
+  );
   --background: oklch(1 0 0);
   --foreground: oklch(0.12 0.015 310);
   --card: oklch(1 0 0);
@@ -110,6 +126,10 @@
 }
 
 .dark {
+  --creator-primary: oklch(0.72 0.22 350);
+  --creator-accent: oklch(0.62 0.25 290);
+  --creator-neutral-text: oklch(0.97 0.01 260);
+  --creator-neutral-bg: oklch(0.18 0.025 260);
   --background: oklch(0.16 0.025 310);
   --foreground: oklch(0.97 0.01 310);
   --card: oklch(0.21 0.03 310);
@@ -165,5 +185,38 @@
   }
   to {
     transform: scaleY(1);
+  }
+}
+
+@layer utilities {
+  .glowup-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 2rem;
+  }
+
+  .glowup-subheading {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    line-height: 1.25rem;
+  }
+
+  .glowup-gradient-text {
+    background: var(--creator-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .glowup-card-hover {
+    transition:
+      transform 250ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glowup-card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px oklch(0.68 0.22 350 / 0.12);
   }
 }
