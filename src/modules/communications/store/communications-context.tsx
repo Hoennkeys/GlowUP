@@ -67,10 +67,7 @@ export function CommunicationsProvider({ children }: { children: React.ReactNode
     [queryClient, tenantId],
   );
 
-  const hub = React.useMemo(
-    () => new CommunicationHubService(tenantId, repos),
-    [tenantId, repos],
-  );
+  const hub = React.useMemo(() => new CommunicationHubService(tenantId, repos), [tenantId, repos]);
 
   React.useEffect(() => {
     void hub.init();
@@ -123,9 +120,7 @@ export function CommunicationsProvider({ children }: { children: React.ReactNode
     [tenantId, hub, snapshot, role, visibleConversations, visibleTickets, refresh],
   );
 
-  return (
-    <CommunicationsContext.Provider value={value}>{children}</CommunicationsContext.Provider>
-  );
+  return <CommunicationsContext.Provider value={value}>{children}</CommunicationsContext.Provider>;
 }
 
 export function useCommunications() {

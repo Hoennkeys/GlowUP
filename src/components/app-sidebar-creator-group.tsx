@@ -1,17 +1,9 @@
 import * as React from "react";
 import { ChevronDown } from "lucide-react";
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-} from "@/components/ui/sidebar";
+import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { AppSidebarNavMenu } from "@/components/app-sidebar-nav-menu";
-import {
-  CREATOR_SECTION_LABEL,
-  creatorNav,
-  isCreatorNavActive,
-} from "@/lib/navigation/app-nav";
+import { CREATOR_SECTION_LABEL, creatorNav, isCreatorNavActive } from "@/lib/navigation/app-nav";
 import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "sidebar-creator-open";

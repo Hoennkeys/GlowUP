@@ -6,10 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { getPlatformTenantBySlug } from "@/lib/admin/tenant-registry";
 import { resolveActiveMembership } from "@/lib/auth/workspace-permissions";
-import {
-  markWorkspaceEntered,
-  userInitials,
-} from "@/lib/auth/session";
+import { markWorkspaceEntered, userInitials } from "@/lib/auth/session";
 import { pageTitle, PRODUCT_NAME } from "@/lib/product-branding";
 import { getDefaultWhiteLabel } from "@/lib/tenant/defaults";
 import { loadTenantWhiteLabel } from "@/lib/tenant/storage";

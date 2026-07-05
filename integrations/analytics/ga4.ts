@@ -28,7 +28,9 @@ const eventLog: Array<TrackEventInput & { trackedAt: string; mock: boolean }> = 
  * Envia evento para GA4 Measurement Protocol.
  * Mock quando GA4_MEASUREMENT_ID ausente.
  */
-export async function trackCampaignEvent(input: TrackEventInput): Promise<{ ok: boolean; mock: boolean }> {
+export async function trackCampaignEvent(
+  input: TrackEventInput,
+): Promise<{ ok: boolean; mock: boolean }> {
   const measurementId = process.env.GA4_MEASUREMENT_ID;
   const apiSecret = process.env.GA4_API_SECRET;
   const mock = !measurementId || !apiSecret;

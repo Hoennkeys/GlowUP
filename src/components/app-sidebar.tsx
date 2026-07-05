@@ -44,11 +44,7 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>{COMMERCIAL_SECTION_LABEL}</SidebarGroupLabel>
           <SidebarGroupContent>
-            <AppSidebarNavMenu
-              items={commercialNav}
-              tenantSlug={tenantSlug}
-              pathname={pathname}
-            />
+            <AppSidebarNavMenu items={commercialNav} tenantSlug={tenantSlug} pathname={pathname} />
           </SidebarGroupContent>
         </SidebarGroup>
         <AppSidebarComunicacoesGroup tenantSlug={tenantSlug} pathname={pathname} />

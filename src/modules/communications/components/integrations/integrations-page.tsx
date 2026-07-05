@@ -10,9 +10,7 @@ export function IntegrationsPage() {
 
   if (!role || !canConfigureIntegrations(role)) {
     return (
-      <p className="text-sm text-muted-foreground">
-        Apenas o Owner pode configurar integrações.
-      </p>
+      <p className="text-sm text-muted-foreground">Apenas o Owner pode configurar integrações.</p>
     );
   }
 

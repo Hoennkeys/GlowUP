@@ -1,4 +1,8 @@
-import type { CommunicationProvider, CreateConversationInput, SendMessageInput } from "./communication-provider.interface";
+import type {
+  CommunicationProvider,
+  CreateConversationInput,
+  SendMessageInput,
+} from "./communication-provider.interface";
 import type { Conversation, Message, ProviderConfig } from "../domain/entities";
 import { BaseProvider, uid } from "./base-provider";
 import type { LocalCommunicationsRepositories } from "../repositories/local/local-storage.repository";
@@ -115,11 +119,7 @@ export class WhatsAppProvider extends BaseProvider implements CommunicationProvi
     return msg;
   }
 
-  async sendTemplate(
-    to: string,
-    templateName: string,
-    language = "pt_BR",
-  ): Promise<void> {
+  async sendTemplate(to: string, templateName: string, language = "pt_BR"): Promise<void> {
     const { accessToken, phoneNumberId } = this.config?.credentials ?? {};
     if (!accessToken || !phoneNumberId) return;
     await fetch(`${GRAPH_API}/${phoneNumberId}/messages`, {

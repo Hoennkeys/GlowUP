@@ -18,10 +18,7 @@ import {
 } from "@/components/ui/select";
 import { TeamSection } from "@/components/settings/team-section";
 import { useAuth } from "@/lib/auth/auth-store";
-import {
-  canManageWhiteLabel,
-  canManageWorkspaceSettings,
-} from "@/lib/auth/workspace-permissions";
+import { canManageWhiteLabel, canManageWorkspaceSettings } from "@/lib/auth/workspace-permissions";
 import { useCrm } from "@/lib/crm-store";
 import { creatorPageTitle, CREATOR_TERMS, NAV_LABELS } from "@/modules/creator/domain/terminology";
 import { WhiteLabelSettings } from "@/components/tenant/white-label-settings";

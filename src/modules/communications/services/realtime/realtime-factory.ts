@@ -36,7 +36,10 @@ export function resetRealtimeServiceForTests() {
   cachedProvider = null;
 }
 
-export function warnIfRealtimeUnavailable(provider: CommunicationsRealtimeProvider, reason: string) {
+export function warnIfRealtimeUnavailable(
+  provider: CommunicationsRealtimeProvider,
+  reason: string,
+) {
   if (provider === "websocket") {
     commsDevWarn(`websocket unavailable — ${reason}`);
   }

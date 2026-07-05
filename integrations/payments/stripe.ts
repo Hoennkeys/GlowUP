@@ -37,7 +37,9 @@ export async function processMilestonePayment(
   };
 }
 
-export async function createPayoutAccount(influencerEmail: string): Promise<{ accountId: string; mock: boolean }> {
+export async function createPayoutAccount(
+  influencerEmail: string,
+): Promise<{ accountId: string; mock: boolean }> {
   if (!process.env.STRIPE_SECRET_KEY) {
     return { accountId: `acct_mock_${influencerEmail.replace(/@/, "_")}`, mock: true };
   }

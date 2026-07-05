@@ -54,9 +54,7 @@ function rowsToTeamMembers(
     email: row.email,
     role: row.role as TenantRole,
     avatarUrl:
-      row.role === "OWNER"
-        ? avatarForMember(row.nome, ownerLogoUrl)
-        : avatarForMember(row.nome),
+      row.role === "OWNER" ? avatarForMember(row.nome, ownerLogoUrl) : avatarForMember(row.nome),
   }));
 }
 

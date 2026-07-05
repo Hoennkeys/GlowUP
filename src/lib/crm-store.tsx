@@ -77,9 +77,7 @@ type Ctx = State & {
   marcarEmailLido: (id: string) => void;
   enviarMensagem: (conversaId: string, texto: string) => void;
   marcarConversaLida: (conversaId: string) => void;
-  adicionarConversa: (
-    c: Omit<Conversa, "id" | "mensagens" | "naoLidas">,
-  ) => Conversa;
+  adicionarConversa: (c: Omit<Conversa, "id" | "mensagens" | "naoLidas">) => Conversa;
   adicionarProposta: (
     p: Omit<Proposta, "id" | "numero" | "criadaEm" | "status"> & { status?: Proposta["status"] },
   ) => Proposta;
@@ -277,9 +275,7 @@ export function CrmProvider({ children, tenantId }: CrmProviderProps) {
         setState((s) => ({
           ...s,
           pipelineItems: s.pipelineItems.map((item) =>
-            item.id === itemId && item.pipelineId === pipelineId
-              ? { ...item, stageId }
-              : item,
+            item.id === itemId && item.pipelineId === pipelineId ? { ...item, stageId } : item,
           ),
         }));
       },
@@ -562,9 +558,7 @@ export function CrmProvider({ children, tenantId }: CrmProviderProps) {
             creator: {
               ...creator,
               campaigns: creator.campaigns.map((c) =>
-                c.id === id
-                  ? { ...c, status, updatedAt: new Date().toISOString() }
-                  : c,
+                c.id === id ? { ...c, status, updatedAt: new Date().toISOString() } : c,
               ),
             },
           };

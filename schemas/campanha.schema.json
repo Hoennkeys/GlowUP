@@ -4,7 +4,17 @@
   "title": "Campanha",
   "description": "Campanha de parceria entre marca e influenciador",
   "type": "object",
-  "required": ["id", "tenantId", "title", "brandId", "status", "budget", "startDate", "createdAt", "updatedAt"],
+  "required": [
+    "id",
+    "tenantId",
+    "title",
+    "brandId",
+    "status",
+    "budget",
+    "startDate",
+    "createdAt",
+    "updatedAt"
+  ],
   "properties": {
     "id": { "type": "string", "minLength": 1 },
     "tenantId": { "type": "string", "minLength": 1 },

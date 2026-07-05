@@ -117,12 +117,12 @@ export function OnboardingPage() {
 
       {step === 3 && profile ? (
         <div className="space-y-4" data-testid="onboarding-step-portfolio">
-          <CardInfluencer
-            profile={{ ...profile, ...form }}
-            onViewProfile={() => {}}
-          />
+          <CardInfluencer profile={{ ...profile, ...form }} onViewProfile={() => {}} />
           <GlowButton asChild className="w-full">
-            <Link to="/t/$tenantSlug/app/creator/profile/$profileId" params={{ tenantSlug, profileId: profile.id }}>
+            <Link
+              to="/t/$tenantSlug/app/creator/profile/$profileId"
+              params={{ tenantSlug, profileId: profile.id }}
+            >
               Ver perfil completo
             </Link>
           </GlowButton>

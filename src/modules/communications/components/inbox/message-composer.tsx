@@ -44,7 +44,9 @@ export function MessageComposer({
   return (
     <div className="p-3 border-t bg-background space-y-2">
       {noteMode && (
-        <p className="text-xs text-amber-600 font-medium">Modo nota interna — visível só para equipe</p>
+        <p className="text-xs text-amber-600 font-medium">
+          Modo nota interna — visível só para equipe
+        </p>
       )}
       <div className="flex items-end gap-2">
         <Popover>

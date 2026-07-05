@@ -36,7 +36,10 @@ export function createCommunicationsRepositories(input: {
     });
   };
 
-  const repos = createLocalCommunicationsRepositories(input.getSnapshot, setSnapshotWithPersistence);
+  const repos = createLocalCommunicationsRepositories(
+    input.getSnapshot,
+    setSnapshotWithPersistence,
+  );
 
   return {
     ...repos,

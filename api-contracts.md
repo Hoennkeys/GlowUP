@@ -9,23 +9,23 @@ Este documento define os contratos de API alvo para a plataforma de influenciado
 
 ## Convenções
 
-| Aspecto | Padrão |
-| --- | --- |
-| Formato | JSON |
-| Autenticação | Session cookie (TanStack Start) |
-| Escopo | Por tenant (`tenantId` implícito na sessão) |
-| Versionamento | Header `X-API-Version: 2026-07` |
-| Erros | `{ "error": string, "code": string, "details"?: object }` |
+| Aspecto       | Padrão                                                    |
+| ------------- | --------------------------------------------------------- |
+| Formato       | JSON                                                      |
+| Autenticação  | Session cookie (TanStack Start)                           |
+| Escopo        | Por tenant (`tenantId` implícito na sessão)               |
+| Versionamento | Header `X-API-Version: 2026-07`                           |
+| Erros         | `{ "error": string, "code": string, "details"?: object }` |
 
 ### Códigos de erro
 
-| Code | HTTP | Descrição |
-| --- | --- | --- |
-| `UNAUTHORIZED` | 401 | Sessão inválida |
-| `FORBIDDEN` | 403 | Sem permissão para o recurso |
-| `NOT_FOUND` | 404 | Recurso não encontrado |
-| `VALIDATION_ERROR` | 422 | Payload inválido |
-| `CONFLICT` | 409 | Conflito de versão/estado |
+| Code               | HTTP | Descrição                    |
+| ------------------ | ---- | ---------------------------- |
+| `UNAUTHORIZED`     | 401  | Sessão inválida              |
+| `FORBIDDEN`        | 403  | Sem permissão para o recurso |
+| `NOT_FOUND`        | 404  | Recurso não encontrado       |
+| `VALIDATION_ERROR` | 422  | Payload inválido             |
+| `CONFLICT`         | 409  | Conflito de versão/estado    |
 
 ---
 
@@ -214,28 +214,26 @@ Inicia fluxo de e-sign (integração futura DocuSign/HelloSign).
 
 ### Server functions existentes
 
-| Função | Método | Descrição |
-| --- | --- | --- |
-| `getCommunicationsStateServerFn` | GET | Lê snapshot de comunicações |
-| `saveCommunicationsStateServerFn` | POST | Salva snapshot |
+| Função                            | Método | Descrição                   |
+| --------------------------------- | ------ | --------------------------- |
+| `getCommunicationsStateServerFn`  | GET    | Lê snapshot de comunicações |
+| `saveCommunicationsStateServerFn` | POST   | Salva snapshot              |
 
 ### Endpoints alvo (evolução)
 
-| Endpoint | Descrição |
-| --- | --- |
-| `GET /api/v1/inbox/conversations` | Lista threads (filtro por campanha, canal, tag) |
-| `GET /api/v1/inbox/conversations/:id/messages` | Mensagens da thread |
-| `POST /api/v1/inbox/conversations/:id/messages` | Enviar mensagem + anexos |
-| `PATCH /api/v1/inbox/conversations/:id/tags` | Atualizar tags |
+| Endpoint                                        | Descrição                                       |
+| ----------------------------------------------- | ----------------------------------------------- |
+| `GET /api/v1/inbox/conversations`               | Lista threads (filtro por campanha, canal, tag) |
+| `GET /api/v1/inbox/conversations/:id/messages`  | Mensagens da thread                             |
+| `POST /api/v1/inbox/conversations/:id/messages` | Enviar mensagem + anexos                        |
+| `PATCH /api/v1/inbox/conversations/:id/tags`    | Atualizar tags                                  |
 
 **Request — enviar mensagem:**
 
 ```json
 {
   "body": "Conteúdo aprovado! Pode publicar amanhã às 18h.",
-  "attachments": [
-    { "name": "brief.pdf", "mimeType": "application/pdf", "url": "https://..." }
-  ]
+  "attachments": [{ "name": "brief.pdf", "mimeType": "application/pdf", "url": "https://..." }]
 }
 ```
 
@@ -275,11 +273,11 @@ Gera PDF/media kit exportável.
 
 ## 7. Server functions legadas (mantidas durante migração)
 
-| Função | Arquivo | Substituída por |
-| --- | --- | --- |
-| `getCrmStateServerFn` | `crm.functions.ts` | `GET /api/v1/snapshot` (transitório) |
-| `saveCrmStateServerFn` | `crm.functions.ts` | Endpoints granulares acima |
-| `addChamadoServerFn` | `crm.functions.ts` | `POST /api/v1/inbox/tickets` |
+| Função                 | Arquivo            | Substituída por                      |
+| ---------------------- | ------------------ | ------------------------------------ |
+| `getCrmStateServerFn`  | `crm.functions.ts` | `GET /api/v1/snapshot` (transitório) |
+| `saveCrmStateServerFn` | `crm.functions.ts` | Endpoints granulares acima           |
+| `addChamadoServerFn`   | `crm.functions.ts` | `POST /api/v1/inbox/tickets`         |
 
 ---
 
@@ -295,12 +293,12 @@ export const flags = {
 };
 ```
 
-| Fase | Read | Write | Endpoints ativos |
-| --- | --- | --- | --- |
-| 0 (atual) | legado | legado | Server functions CRM |
-| 1 | adapter | legado | Adapter layer |
-| 2 | alvo | dual-write | Novos + legado |
-| 3 | alvo | alvo | Apenas novos |
+| Fase      | Read    | Write      | Endpoints ativos     |
+| --------- | ------- | ---------- | -------------------- |
+| 0 (atual) | legado  | legado     | Server functions CRM |
+| 1         | adapter | legado     | Adapter layer        |
+| 2         | alvo    | dual-write | Novos + legado       |
+| 3         | alvo    | alvo       | Apenas novos         |
 
 ---
 
@@ -308,10 +306,10 @@ export const flags = {
 
 Payloads validados contra JSON Schema em `schemas/`:
 
-| Schema | Entidade |
-| --- | --- |
+| Schema                          | Entidade         |
+| ------------------------------- | ---------------- |
 | `perfil-influencer.schema.json` | PerfilInfluencer |
-| `campanha.schema.json` | Campanha |
+| `campanha.schema.json`          | Campanha         |
 
 ---
 

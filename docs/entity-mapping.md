@@ -7,16 +7,16 @@ Este documento define como cada entidade legada do CRM se transforma na platafor
 
 ## Visão geral
 
-| CRM (legado) | Nova entidade | Status no código |
-| --- | --- | --- |
-| Leads / Contatos | **PerfilInfluencer** | Tipo alvo — a criar |
-| Oportunidades | **Campanha** | Parcial — `Campaign` existe no módulo Creator |
-| Atividades | **Entrega** | Tipo alvo — a criar |
-| Conta / Empresa | **Marca / Agência** | Parcial — `Brand`, `Agency` existem |
-| Tarefas | **ChecklistEntrega** | Tipo alvo — a criar |
-| Relatórios | **PainelCampanha** | Parcial — painel CRM + comms reports |
-| Documentos | **Contrato** | Tipo alvo — `Proposta` é o análogo mais próximo |
-| Mensagens | **InboxUnificada** | Parcial — Communications Hub implementado |
+| CRM (legado)     | Nova entidade        | Status no código                                |
+| ---------------- | -------------------- | ----------------------------------------------- |
+| Leads / Contatos | **PerfilInfluencer** | Tipo alvo — a criar                             |
+| Oportunidades    | **Campanha**         | Parcial — `Campaign` existe no módulo Creator   |
+| Atividades       | **Entrega**          | Tipo alvo — a criar                             |
+| Conta / Empresa  | **Marca / Agência**  | Parcial — `Brand`, `Agency` existem             |
+| Tarefas          | **ChecklistEntrega** | Tipo alvo — a criar                             |
+| Relatórios       | **PainelCampanha**   | Parcial — painel CRM + comms reports            |
+| Documentos       | **Contrato**         | Tipo alvo — `Proposta` é o análogo mais próximo |
+| Mensagens        | **InboxUnificada**   | Parcial — Communications Hub implementado       |
 
 ### Nota sobre terminologia
 
@@ -81,14 +81,14 @@ No código atual, `Lead` é rotulado na UI como **Oportunidade de Parceria** (`t
 
 ### Mapeamento de campos
 
-| Legado | Alvo | Regra |
-| --- | --- | --- |
-| `contato` | `nome` | Direto |
-| `email` | `email` | Direto |
-| `telefone` | `telefone` | Direto |
-| `cliente` | — | Não migra para perfil (vai para Marca) |
-| `id` | `legacyLeadId` | Preservar para rastreabilidade |
-| `clientId` | `legacyClientId` | Link com portal/marca |
+| Legado     | Alvo             | Regra                                  |
+| ---------- | ---------------- | -------------------------------------- |
+| `contato`  | `nome`           | Direto                                 |
+| `email`    | `email`          | Direto                                 |
+| `telefone` | `telefone`       | Direto                                 |
+| `cliente`  | —                | Não migra para perfil (vai para Marca) |
+| `id`       | `legacyLeadId`   | Preservar para rastreabilidade         |
+| `clientId` | `legacyClientId` | Link com portal/marca                  |
 
 ---
 
@@ -135,13 +135,13 @@ No código atual, `Lead` é rotulado na UI como **Oportunidade de Parceria** (`t
 
 ### Mapeamento de status
 
-| `Lead.etapa` | `Campaign.status` |
-| --- | --- |
-| Sem Contato | `draft` |
-| Em Atendimento | `draft` |
-| Proposta Enviada | `active` |
-| Ganho | `completed` |
-| Perdido | `paused` |
+| `Lead.etapa`     | `Campaign.status` |
+| ---------------- | ----------------- |
+| Sem Contato      | `draft`           |
+| Em Atendimento   | `draft`           |
+| Proposta Enviada | `active`          |
+| Ganho            | `completed`       |
+| Perdido          | `paused`          |
 
 ---
 
@@ -346,9 +346,7 @@ No código atual, `Lead` é rotulado na UI como **Oportunidade de Parceria** (`t
   "validade": "2026-07-01",
   "status": "Aceita",
   "responsavelId": "user-operacional",
-  "itens": [
-    { "descricao": "Implementação CRM", "qtd": 1, "valorUnit": 8500 }
-  ],
+  "itens": [{ "descricao": "Implementação CRM", "qtd": 1, "valorUnit": 8500 }],
   "condicoes": "Pagamento em 2x",
   "observacoes": "",
   "leadId": "lead-demo-jc-ativo"
@@ -367,8 +365,20 @@ No código atual, `Lead` é rotulado na UI como **Oportunidade de Parceria** (`t
   "valor": 8500,
   "moeda": "BRL",
   "milestones": [
-    { "id": "ms_001", "descricao": "Assinatura", "valor": 4250, "status": "pago", "vencimento": "2026-05-20" },
-    { "id": "ms_002", "descricao": "Entrega aprovada", "valor": 4250, "status": "pendente", "vencimento": "2026-07-01" }
+    {
+      "id": "ms_001",
+      "descricao": "Assinatura",
+      "valor": 4250,
+      "status": "pago",
+      "vencimento": "2026-05-20"
+    },
+    {
+      "id": "ms_002",
+      "descricao": "Entrega aprovada",
+      "valor": 4250,
+      "status": "pendente",
+      "vencimento": "2026-07-01"
+    }
   ],
   "assinaturaStatus": "aceita",
   "assinadoEm": "2026-05-18T10:00:00.000Z",
@@ -447,11 +457,11 @@ O Communications Hub já implementa o padrão de **dual-write** via `legacy-adap
 
 ## Referências de código
 
-| Entidade legada | Arquivo |
-| --- | --- |
-| Lead, Tarefa, Proposta, etc. | `src/lib/types.ts` |
-| TenantCrmSnapshot | `src/lib/db/types.ts` |
-| Brand, Campaign, Agency | `src/modules/creator/domain/entities.ts` |
+| Entidade legada               | Arquivo                                         |
+| ----------------------------- | ----------------------------------------------- |
+| Lead, Tarefa, Proposta, etc.  | `src/lib/types.ts`                              |
+| TenantCrmSnapshot             | `src/lib/db/types.ts`                           |
+| Brand, Campaign, Agency       | `src/modules/creator/domain/entities.ts`        |
 | Conversation, Message, Ticket | `src/modules/communications/domain/entities.ts` |
-| PipelineItem | `src/lib/pipelines/types.ts` |
-| ClientRecord | `src/lib/clients-registry.ts` |
+| PipelineItem                  | `src/lib/pipelines/types.ts`                    |
+| ClientRecord                  | `src/lib/clients-registry.ts`                   |

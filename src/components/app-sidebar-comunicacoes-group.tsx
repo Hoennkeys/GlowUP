@@ -1,10 +1,6 @@
 import * as React from "react";
 import { ChevronDown } from "lucide-react";
-import {
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-} from "@/components/ui/sidebar";
+import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { AppSidebarNavMenu } from "@/components/app-sidebar-nav-menu";
 import {
@@ -73,7 +69,11 @@ export function AppSidebarComunicacoesGroup({ tenantSlug, pathname }: Props) {
         </SidebarGroupLabel>
         <CollapsibleContent>
           <SidebarGroupContent>
-            <AppSidebarNavMenu items={communicationsNav} tenantSlug={tenantSlug} pathname={pathname} />
+            <AppSidebarNavMenu
+              items={communicationsNav}
+              tenantSlug={tenantSlug}
+              pathname={pathname}
+            />
           </SidebarGroupContent>
         </CollapsibleContent>
       </SidebarGroup>

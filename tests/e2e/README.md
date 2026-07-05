@@ -6,14 +6,14 @@ Scripts Playwright para fluxos críticos. Configuração em [`playwright.config.
 
 ## Specs
 
-| Arquivo | Escopo |
-| --- | --- |
+| Arquivo                       | Escopo                                                         |
+| ----------------------------- | -------------------------------------------------------------- |
 | `influencer-platform.spec.ts` | Etapas 7–9 — onboarding, campanhas, perfil, inbox, performance |
-| `communications-hub.spec.ts` | Redirects Communications Hub |
-| `multi-portal.spec.ts` | Portais multi-tenant |
-| `workspace-entry.spec.ts` | Entrada no workspace |
-| `sales-focus.spec.ts` | Fluxos comerciais |
-| `chamados-chat.spec.ts` | Chamados + chat |
+| `communications-hub.spec.ts`  | Redirects Communications Hub                                   |
+| `multi-portal.spec.ts`        | Portais multi-tenant                                           |
+| `workspace-entry.spec.ts`     | Entrada no workspace                                           |
+| `sales-focus.spec.ts`         | Fluxos comerciais                                              |
+| `chamados-chat.spec.ts`       | Chamados + chat                                                |
 
 ## Comandos
 

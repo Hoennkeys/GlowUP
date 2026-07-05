@@ -51,18 +51,12 @@ function InboxPage() {
       }
     }
 
-    const unified = snapshot.conversations.find(
-      (c) => c.legacyConversaId === legacyConversaId,
-    );
-    const chamado = search.chamadoId
-      ? chamados.find((c) => c.id === search.chamadoId)
-      : undefined;
+    const unified = snapshot.conversations.find((c) => c.legacyConversaId === legacyConversaId);
+    const chamado = search.chamadoId ? chamados.find((c) => c.id === search.chamadoId) : undefined;
     const clientId = search.clientId ?? chamado?.clientId;
-    const clientName = clientId ? findClientById(clientId)?.nome ?? "cliente" : "cliente";
+    const clientName = clientId ? (findClientById(clientId)?.nome ?? "cliente") : "cliente";
     const draftMessage =
-      chamado && clientId
-        ? buildChamadoGreetingMessage(clientName, chamado.titulo)
-        : undefined;
+      chamado && clientId ? buildChamadoGreetingMessage(clientName, chamado.titulo) : undefined;
 
     setBootstrap({
       conversationId: unified?.id ?? legacyConversaId,

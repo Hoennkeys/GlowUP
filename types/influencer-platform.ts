@@ -13,18 +13,8 @@ export type EntregaStatusAprovacao =
   | "em_revisao"
   | "aprovado"
   | "rejeitado";
-export type EntregaTipoMidia =
-  | "imagem"
-  | "video"
-  | "stories"
-  | "reels"
-  | "documento"
-  | "link";
-export type ContratoAssinaturaStatus =
-  | "pendente"
-  | "aceita"
-  | "expirada"
-  | "cancelada";
+export type EntregaTipoMidia = "imagem" | "video" | "stories" | "reels" | "documento" | "link";
+export type ContratoAssinaturaStatus = "pendente" | "aceita" | "expirada" | "cancelada";
 export type PagamentoStatus = "pendente" | "pago" | "vencido" | "cancelado";
 export type ChecklistPrioridade = "alta" | "media" | "baixa";
 

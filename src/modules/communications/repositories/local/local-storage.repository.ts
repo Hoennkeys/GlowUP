@@ -1,4 +1,12 @@
-import type { CommunicationsSnapshot, Conversation, Message, ProviderConfig, Ticket, InternalNote, Attachment } from "../../domain/entities";
+import type {
+  CommunicationsSnapshot,
+  Conversation,
+  Message,
+  ProviderConfig,
+  Ticket,
+  InternalNote,
+  Attachment,
+} from "../../domain/entities";
 import type { ConversationFilters } from "../../types/provider.types";
 import type { ConversationRepository } from "../interfaces/conversation.repository";
 import type { MessageRepository } from "../interfaces/message.repository";
@@ -16,7 +24,8 @@ function matchesFilters(c: Conversation, filters?: ConversationFilters): boolean
   if (!filters) return true;
   if (filters.channelType && c.channelType !== filters.channelType) return false;
   if (filters.status && c.status !== filters.status) return false;
-  if (filters.assignedEmployeeId && c.assignedEmployeeId !== filters.assignedEmployeeId) return false;
+  if (filters.assignedEmployeeId && c.assignedEmployeeId !== filters.assignedEmployeeId)
+    return false;
   if (filters.clientId && c.clientId !== filters.clientId) return false;
   if (filters.search) {
     const q = filters.search.toLowerCase();
@@ -192,4 +201,6 @@ export function createLocalCommunicationsRepositories(
   };
 }
 
-export type LocalCommunicationsRepositories = ReturnType<typeof createLocalCommunicationsRepositories>;
+export type LocalCommunicationsRepositories = ReturnType<
+  typeof createLocalCommunicationsRepositories
+>;

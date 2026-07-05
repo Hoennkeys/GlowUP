@@ -164,9 +164,7 @@ function BillingPage() {
                   <TableCell className="font-mono text-sm">{inv.numero}</TableCell>
                   <TableCell>{inv.tenantNome}</TableCell>
                   <TableCell className="text-muted-foreground">{inv.descricao}</TableCell>
-                  <TableCell>
-                    {new Date(inv.vencimento).toLocaleDateString("pt-BR")}
-                  </TableCell>
+                  <TableCell>{new Date(inv.vencimento).toLocaleDateString("pt-BR")}</TableCell>
                   <TableCell>
                     <Badge
                       variant={

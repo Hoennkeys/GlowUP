@@ -1,4 +1,8 @@
-import type { CommunicationProvider, CreateConversationInput, SendMessageInput } from "./communication-provider.interface";
+import type {
+  CommunicationProvider,
+  CreateConversationInput,
+  SendMessageInput,
+} from "./communication-provider.interface";
 import type { Conversation, Message, ProviderConfig } from "../domain/entities";
 import { BaseProvider, uid } from "./base-provider";
 import type { LocalCommunicationsRepositories } from "../repositories/local/local-storage.repository";

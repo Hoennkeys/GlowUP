@@ -111,7 +111,10 @@ function PipelinePage() {
             {labelPipelineDisplay(pipeline.id, pipeline.nome)}
           </h1>
           <p className="text-sm text-muted-foreground">
-            {labelPipelineDescription(pipeline.id, pipeline.descricao ?? "Arraste os cards entre as etapas.")}
+            {labelPipelineDescription(
+              pipeline.id,
+              pipeline.descricao ?? "Arraste os cards entre as etapas.",
+            )}
           </p>
         </div>
         {isSales && (
@@ -204,7 +207,9 @@ function NovoLeadDialog({
         </DialogHeader>
         <div className="grid grid-cols-2 gap-3">
           <div className="col-span-2">
-            <Label>{CREATOR_TERMS.client} / {CREATOR_TERMS.company}</Label>
+            <Label>
+              {CREATOR_TERMS.client} / {CREATOR_TERMS.company}
+            </Label>
             <Input
               value={form.cliente}
               onChange={(e) => setForm({ ...form, cliente: e.target.value })}
@@ -351,10 +356,7 @@ function DialogLead({
   return (
     <Dialog open onOpenChange={(v) => !v && onClose()}>
       <DialogContent
-        className={cn(
-          "max-w-2xl",
-          tab === "proposta" && "max-w-4xl max-h-[90vh] overflow-y-auto",
-        )}
+        className={cn("max-w-2xl", tab === "proposta" && "max-w-4xl max-h-[90vh] overflow-y-auto")}
       >
         <DialogHeader>
           <DialogTitle>{lead.cliente}</DialogTitle>
@@ -385,7 +387,9 @@ function DialogLead({
                   {lead.prioridade}
                 </Badge>
               </Info>
-              <Info label={CREATOR_TERMS.employee}>{nomeVendedor(usuarios, lead.responsavelId)}</Info>
+              <Info label={CREATOR_TERMS.employee}>
+                {nomeVendedor(usuarios, lead.responsavelId)}
+              </Info>
               <Info label="Criado em">{brDate(lead.criadoEm)}</Info>
             </div>
             <div>
@@ -412,11 +416,7 @@ function DialogLead({
           </TabsContent>
 
           <TabsContent value="proposta" className="mt-4">
-            <PropostaGenerator
-              embedded
-              leadId={lead.id}
-              onCreated={handlePropostaCreated}
-            />
+            <PropostaGenerator embedded leadId={lead.id} onCreated={handlePropostaCreated} />
           </TabsContent>
         </Tabs>
       </DialogContent>

@@ -10,16 +10,16 @@ Pasta reservada para capturas de tela das telas críticas do GlowUP, usadas como
 
 ## Telas prioritárias
 
-| Arquivo sugerido | Rota | Descrição |
-| --- | --- | --- |
-| `01-login.png` | `/login` | Tela de login split-screen |
-| `02-creator-dashboard.png` | `/t/demo/app/creator/` | Creator Workspace |
-| `03-pipeline-vendas.png` | `/t/demo/app/funil/pipeline-vendas` | Pipeline de parcerias |
-| `04-inbox.png` | `/t/demo/app/communications/inbox` | Inbox unificada |
-| `05-painel.png` | `/t/demo/app/painel` | Dashboard de receita |
-| `06-campaigns.png` | `/t/demo/app/creator/campaigns` | Lista de campanhas |
-| `07-brand-portal.png` | `/t/demo/portal/` | Portal da marca |
-| `08-configuracoes.png` | `/t/demo/app/configuracoes` | Configurações |
+| Arquivo sugerido           | Rota                                | Descrição                  |
+| -------------------------- | ----------------------------------- | -------------------------- |
+| `01-login.png`             | `/login`                            | Tela de login split-screen |
+| `02-creator-dashboard.png` | `/t/demo/app/creator/`              | Creator Workspace          |
+| `03-pipeline-vendas.png`   | `/t/demo/app/funil/pipeline-vendas` | Pipeline de parcerias      |
+| `04-inbox.png`             | `/t/demo/app/communications/inbox`  | Inbox unificada            |
+| `05-painel.png`            | `/t/demo/app/painel`                | Dashboard de receita       |
+| `06-campaigns.png`         | `/t/demo/app/creator/campaigns`     | Lista de campanhas         |
+| `07-brand-portal.png`      | `/t/demo/portal/`                   | Portal da marca            |
+| `08-configuracoes.png`     | `/t/demo/app/configuracoes`         | Configurações              |
 
 ## Status
 

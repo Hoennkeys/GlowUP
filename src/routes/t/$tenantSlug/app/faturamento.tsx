@@ -74,11 +74,17 @@ function AppFaturamento() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Propostas ativas</CardTitle>
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Propostas ativas
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold">
-              {propostas.filter((p) => p.tenantId === whiteLabel.tenantId && p.status === "Pendente").length}
+              {
+                propostas.filter(
+                  (p) => p.tenantId === whiteLabel.tenantId && p.status === "Pendente",
+                ).length
+              }
             </p>
           </CardContent>
         </Card>
@@ -113,7 +119,9 @@ function AppFaturamento() {
                     <TableCell>
                       <Badge variant="outline">{clientDisplayName(f.clientId)}</Badge>
                     </TableCell>
-                    <TableCell className="max-w-xs truncate text-muted-foreground">{f.descricao}</TableCell>
+                    <TableCell className="max-w-xs truncate text-muted-foreground">
+                      {f.descricao}
+                    </TableCell>
                     <TableCell>{brDate(f.vencimento)}</TableCell>
                     <TableCell>
                       <PortalStatusBadge status={f.status} />

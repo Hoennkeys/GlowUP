@@ -43,7 +43,9 @@ function writeTenantSnapshot(tenantId: string, snapshot: TenantCrmSnapshot) {
 }
 
 /** Loads the communications slice from the normalized tenant CRM row (server-only). */
-export async function loadCommunicationsFromDb(tenantId: string): Promise<CommunicationsSnapshot | null> {
+export async function loadCommunicationsFromDb(
+  tenantId: string,
+): Promise<CommunicationsSnapshot | null> {
   const snapshot = readTenantSnapshot(tenantId);
   return snapshot.communications ?? null;
 }

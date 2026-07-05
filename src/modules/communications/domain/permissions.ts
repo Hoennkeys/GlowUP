@@ -44,10 +44,7 @@ export function canViewTicket(
   return ticket.assignedEmployeeId === ctx.userId || !ticket.assignedEmployeeId;
 }
 
-export function canViewInternalNote(
-  role: CommunicationsAuthRole,
-  note: InternalNote,
-): boolean {
+export function canViewInternalNote(role: CommunicationsAuthRole, note: InternalNote): boolean {
   if (role === "CLIENT") return false;
   if (role === "OWNER") return true;
   return note.visibleToRoles.includes("employee");

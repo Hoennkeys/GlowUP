@@ -27,9 +27,5 @@ function CreatorLayout() {
     return content;
   }
 
-  return (
-    <InfluencerProvider tenantId={whiteLabel.tenantId}>
-      {content}
-    </InfluencerProvider>
-  );
+  return <InfluencerProvider tenantId={whiteLabel.tenantId}>{content}</InfluencerProvider>;
 }

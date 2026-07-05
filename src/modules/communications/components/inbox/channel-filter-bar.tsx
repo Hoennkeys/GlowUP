@@ -12,7 +12,11 @@ import type { CommunicationChannelType } from "../../domain/entities";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const CHANNELS: { type: CommunicationChannelType | "all"; label: string; icon: typeof MessageSquare }[] = [
+const CHANNELS: {
+  type: CommunicationChannelType | "all";
+  label: string;
+  icon: typeof MessageSquare;
+}[] = [
   { type: "all", label: "Todos", icon: MessageSquare },
   { type: "internal", label: "Chat", icon: MessageSquare },
   { type: "email", label: "E-mail", icon: Mail },

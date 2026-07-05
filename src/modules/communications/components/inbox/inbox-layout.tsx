@@ -41,7 +41,12 @@ import { MessageComposer } from "./message-composer";
 import { CREATOR_TERMS } from "@/modules/creator/domain/terminology";
 
 function iniciais(nome: string) {
-  return nome.split(" ").slice(0, 2).map((p) => p[0]).join("").toUpperCase();
+  return nome
+    .split(" ")
+    .slice(0, 2)
+    .map((p) => p[0])
+    .join("")
+    .toUpperCase();
 }
 
 export type InboxLayoutProps = {
@@ -157,7 +162,9 @@ export function InboxLayout({
       return;
     }
     if (legacyConversa.leadId) {
-      toast.info(`Esta conversa já está vinculada a uma ${CREATOR_TERMS.lead.toLowerCase()} no pipeline.`);
+      toast.info(
+        `Esta conversa já está vinculada a uma ${CREATOR_TERMS.lead.toLowerCase()} no pipeline.`,
+      );
       return;
     }
     const novo = crm.adicionarLead(
@@ -368,7 +375,11 @@ function ComposeEmailDialog({
               onValueChange={(id) => {
                 const t = emailTemplates.find((x) => x.id === id);
                 if (!t) return;
-                const { assunto: a, corpo: c } = aplicarTemplate(t, para.split("@")[0] || "cliente", "Administrador");
+                const { assunto: a, corpo: c } = aplicarTemplate(
+                  t,
+                  para.split("@")[0] || "cliente",
+                  "Administrador",
+                );
                 setAssunto(a);
                 setCorpo(c);
               }}

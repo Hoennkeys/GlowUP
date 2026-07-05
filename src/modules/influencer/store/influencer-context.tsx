@@ -34,7 +34,9 @@ type InfluencerContextValue = {
   getProfile: (id: string) => PerfilInfluencer | undefined;
   getEntregasByCampaign: (campaignId: string) => Entrega[];
   atualizarEntregaStatus: (id: string, status: EntregaStatusAprovacao) => void;
-  adicionarEntrega: (input: Omit<Entrega, "id" | "criadoEm" | "atualizadoEm" | "comentarios">) => Entrega;
+  adicionarEntrega: (
+    input: Omit<Entrega, "id" | "criadoEm" | "atualizadoEm" | "comentarios">,
+  ) => Entrega;
   atualizarProfile: (id: string, patch: Partial<PerfilInfluencer>) => void;
   uploadMedia: (
     file: File,
@@ -60,10 +62,7 @@ export function InfluencerProvider({
 
   const role = resolveInfluencerRole(session?.user);
 
-  const snapshot = React.useMemo(
-    () => crm.getInfluencer(),
-    [crm, crm.getInfluencer],
-  );
+  const snapshot = React.useMemo(() => crm.getInfluencer(), [crm, crm.getInfluencer]);
 
   const value: InfluencerContextValue = {
     tenantId,

@@ -6,12 +6,12 @@
 
 ## Stack recomendada
 
-| Camada | Ferramenta | Variável | Status |
-| --- | --- | --- | --- |
-| Erros | Sentry | `SENTRY_DSN` | Scaffold em `src/lib/observability.ts` |
-| Logs | JSON estruturado | — | `logger.*` em observability |
-| Métricas | Prometheus / Datadog | — | `incrementMetric()` placeholder |
-| Uptime | GitHub Actions CI | — | `.github/workflows/ci.yml` |
+| Camada   | Ferramenta           | Variável     | Status                                 |
+| -------- | -------------------- | ------------ | -------------------------------------- |
+| Erros    | Sentry               | `SENTRY_DSN` | Scaffold em `src/lib/observability.ts` |
+| Logs     | JSON estruturado     | —            | `logger.*` em observability            |
+| Métricas | Prometheus / Datadog | —            | `incrementMetric()` placeholder        |
+| Uptime   | GitHub Actions CI    | —            | `.github/workflows/ci.yml`             |
 
 ---
 
@@ -65,13 +65,13 @@ Em produção, encaminhar stdout para Datadog Agent, CloudWatch ou Loki.
 
 ## Alertas sugeridos
 
-| Alerta | Condição | Severidade | Ação |
-| --- | --- | --- | --- |
-| Error rate spike | > 10 erros/min no Sentry | Crítico | Rollback flag + investigar |
-| CI failing | Workflow `CI` falhou | Alto | Bloquear merge |
-| Upload failures | `upload_failed` > 5% | Médio | Verificar S3 credenciais |
-| Stripe webhook | `payment_failed` | Médio | Revisar sandbox/prod keys |
-| Sync métricas | Job cron falhou 2x | Baixo | Verificar tokens sociais |
+| Alerta           | Condição                 | Severidade | Ação                       |
+| ---------------- | ------------------------ | ---------- | -------------------------- |
+| Error rate spike | > 10 erros/min no Sentry | Crítico    | Rollback flag + investigar |
+| CI failing       | Workflow `CI` falhou     | Alto       | Bloquear merge             |
+| Upload failures  | `upload_failed` > 5%     | Médio      | Verificar S3 credenciais   |
+| Stripe webhook   | `payment_failed`         | Médio      | Revisar sandbox/prod keys  |
+| Sync métricas    | Job cron falhou 2x       | Baixo      | Verificar tokens sociais   |
 
 ---
 
@@ -97,11 +97,11 @@ Instrumentar via GA4 (`integrations/analytics/ga4.ts`):
 
 Flags via env vars (`src/lib/feature-flags.ts`):
 
-| Flag | Rollout sugerido |
-| --- | --- |
+| Flag                       | Rollout sugerido |
+| -------------------------- | ---------------- |
 | `VITE_INFLUENCER_PLATFORM` | 10% → 50% → 100% |
-| `VITE_SOCIAL_METRICS_SYNC` | Staging first |
-| `VITE_STRIPE_SANDBOX` | false em prod |
+| `VITE_SOCIAL_METRICS_SYNC` | Staging first    |
+| `VITE_STRIPE_SANDBOX`      | false em prod    |
 
 Para rollout avançado, migrar para LaunchDarkly/Unleash mantendo a mesma interface `isFeatureEnabled()`.
 

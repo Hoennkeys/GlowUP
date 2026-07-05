@@ -69,10 +69,7 @@ test("creatorPageTitle e portalPageTitle usam sufixo GlowUP", () => {
 });
 
 test("resolveAppBreadcrumbs gera trilha para pipeline de parcerias", () => {
-  const crumbs = resolveAppBreadcrumbs(
-    `/t/demo/app/funil/${SALES_PIPELINE_ID}`,
-    "demo",
-  );
+  const crumbs = resolveAppBreadcrumbs(`/t/demo/app/funil/${SALES_PIPELINE_ID}`, "demo");
   assert.ok(crumbs.some((c) => c.label === NAV_LABELS.campaignPipeline));
 });
 
