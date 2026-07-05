@@ -50,6 +50,7 @@ export function OnboardingPage() {
           <button
             key={s.id}
             type="button"
+            data-testid={`onboarding-nav-step-${s.id}`}
             onClick={() => setStep(s.id)}
             className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
               step === s.id
@@ -96,10 +97,10 @@ export function OnboardingPage() {
       ) : null}
 
       {step === 2 && profile ? (
-        <GlowCard>
+        <GlowCard data-testid="onboarding-step-social">
           <GlowCardContent className="p-6 space-y-4">
             <p className="text-sm text-muted-foreground">
-              Conecte suas redes para importar métricas públicas (mock — integração real na etapa 8).
+              Conecte suas redes para importar métricas públicas (mock em dev — APIs na etapa 8).
             </p>
             {profile.plataformas.map((p) => (
               <div key={p} className="flex items-center justify-between rounded-lg border p-3">
@@ -115,7 +116,7 @@ export function OnboardingPage() {
       ) : null}
 
       {step === 3 && profile ? (
-        <div className="space-y-4">
+        <div className="space-y-4" data-testid="onboarding-step-portfolio">
           <CardInfluencer
             profile={{ ...profile, ...form }}
             onViewProfile={() => {}}
