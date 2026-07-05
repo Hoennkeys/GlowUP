@@ -27,5 +27,11 @@ export default defineConfig({
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
+    env: {
+      VITE_INFLUENCER_PLATFORM: "true",
+      VITE_USE_SERVER_DB: "true",
+      USE_SERVER_DB: "true",
+      SESSION_SECRET: "ci-secret-minimum-32-characters-long!!",
+    },
   },
 });

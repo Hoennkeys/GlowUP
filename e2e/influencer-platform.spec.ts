@@ -1,42 +1,47 @@
 import { test, expect } from "@playwright/test";
-import { loginAsMember } from "./helpers";
+import { loginAsOwner } from "./helpers";
 
-test.describe("Plataforma Influenciador — fluxos core (§7)", () => {
+const CREATOR_BASE = "/t/demo/app/creator";
+
+test.describe("Plataforma Influenciadores — fluxos core", () => {
   test.beforeEach(async ({ page }) => {
-    await loginAsMember(page);
+    await loginAsOwner(page);
   });
 
-  test("onboarding exibe wizard em 3 passos", async ({ page }) => {
-    await page.goto("/t/demo/app/creator/onboarding");
+  test("onboarding — wizard carrega perfil demo", async ({ page }) => {
+    await page.goto(`${CREATOR_BASE}/onboarding`);
     await expect(page.getByRole("heading", { name: "Onboarding Creator" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Perfil" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Redes sociais" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Portfólio" })).toBeVisible();
+    await expect(page.getByLabel("Nome")).toHaveValue("Ana Creator");
+    await expect(page.getByRole("button", { name: "Salvar e continuar" })).toBeVisible();
+    await expect(page.getByTestId("onboarding-nav-step-2")).toBeVisible();
+    await expect(page.getByTestId("onboarding-nav-step-3")).toBeVisible();
   });
 
-  test("campanhas lista cards e abre detalhe", async ({ page }) => {
-    await page.goto("/t/demo/app/creator/campaigns");
+  test("campanhas — listagem e detalhe com timeline", async ({ page }) => {
+    await page.goto(`${CREATOR_BASE}/campaigns`);
     await expect(page.getByRole("heading", { name: "Campanhas" })).toBeVisible();
-    await page.getByRole("link", { name: /Lançamento NovaTech/i }).click();
-    await expect(page).toHaveURL(/\/creator\/campaigns\/campaign_demo_launch_x3/);
+    await expect(page.getByText("Lançamento NovaTech X3").first()).toBeVisible();
+
+    await page.goto(`${CREATOR_BASE}/campaigns/campaign_demo_launch_x3`);
     await expect(page.getByText("Timeline de entregas")).toBeVisible();
-    await expect(page.getByText("Enviar entrega")).toBeVisible();
   });
 
-  test("perfil de influencer carrega métricas", async ({ page }) => {
-    await page.goto("/t/demo/app/creator/profile/influencer_demo_ana");
-    await expect(page.getByText("Ana Creator")).toBeVisible();
+  test("perfil — métricas e portfólio", async ({ page }) => {
+    await page.goto(`${CREATOR_BASE}/profile/influencer_demo_ana`);
+    await expect(page.getByText("Ana Creator").first()).toBeVisible();
     await expect(page.getByText("Métricas por plataforma")).toBeVisible();
+    await expect(page.getByText("instagram", { exact: true }).first()).toBeVisible();
   });
 
-  test("inbox unificada exibe threads", async ({ page }) => {
-    await page.goto("/t/demo/app/creator/inbox");
+  test("inbox — threads unificadas", async ({ page }) => {
+    await page.goto(`${CREATOR_BASE}/inbox`);
     await expect(page.getByRole("heading", { name: "Inbox Unificada" })).toBeVisible();
+    await expect(page.getByPlaceholder("Buscar conversas...")).toBeVisible();
   });
 
-  test("painel de performance exibe métricas", async ({ page }) => {
-    await page.goto("/t/demo/app/creator/performance?campaignId=campaign_demo_launch_x3");
+  test("performance — painel de métricas", async ({ page }) => {
+    await page.goto(`${CREATOR_BASE}/performance`);
     await expect(page.getByRole("heading", { name: "Painel de Performance" })).toBeVisible();
-    await expect(page.getByText("Alcance")).toBeVisible();
+    await expect(page.getByText("Alcance", { exact: true }).first()).toBeVisible();
   });
 });

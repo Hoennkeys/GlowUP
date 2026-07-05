@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-test:
+    name: Lint & unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Integration tests (etapa 8)
+        run: npm run test:integrations
+
+  e2e-influencer:
+    name: E2E — plataforma influencer
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E influencer platform
+        run: npm run test:e2e -- e2e/influencer-platform.spec.ts
+        env:
+          CI: true
+          VITE_INFLUENCER_PLATFORM: "true"
+          VITE_USE_SERVER_DB: "true"
+          USE_SERVER_DB: "true"
+          SESSION_SECRET: ci-secret-minimum-32-characters-long!!
+
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    needs: lint-and-test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_INFLUENCER_PLATFORM: "true"
+          VITE_USE_SERVER_DB: "true"
+          SESSION_SECRET: ci-secret-minimum-32-characters-long!!

@@ -2,7 +2,7 @@
 
 > Registro consolidado de todas as mudanças executadas com base em [`.cursor/plans/change.plan.md`](../.cursor/plans/change.plan.md).  
 > **Última atualização:** julho/2026  
-> **Status geral:** etapas 2–7 concluídas (documentação, arquitetura, design system, componentes UI, fluxos core, integrações e QA). Etapas 8–15 pendentes.
+> **Status geral:** etapas 2–10 concluídas. Etapas 11–15 pendentes.
 
 ---
 
@@ -10,10 +10,10 @@
 
 | Métrica | Valor |
 | --- | --- |
-| Etapas concluídas | 8 de 14 (§2 mapeamento + §3–§7) |
+| Etapas concluídas | 10 de 14 (§2 mapeamento + §3–§10) |
 | PRs mergeados | [#18](https://github.com/Hoennkeys/GlowUP/pull/18), [#19](https://github.com/Hoennkeys/GlowUP/pull/19) |
 | Arquivos novos | ~70 |
-| Testes adicionados | 59 (14 migração + 16 componentes + 15 plataforma + 14 integrações implícitas) |
+| Testes adicionados | 69 (14 migração + 16 componentes + 15 plataforma + 12 integrações + 12 E2E) |
 | Commits principais | `92f8e15`, `c116092` |
 
 **Objetivo do plano:** transformar o CRM GlowUP em plataforma centrada em influenciadores, mantendo compatibilidade com dados legados.
@@ -226,7 +226,8 @@ npm run build-storybook
 | Migração 001 | `migrations/001-migrate-contacts-to-profiles.test.ts` | 14 | ✅ Passando |
 | Componentes UI | `src/components/influencer/influencer-components.test.ts` | 16 | ✅ Passando |
 | Plataforma §7 | `src/modules/influencer/influencer.test.ts` | 15 | ✅ Passando |
-| **Total plano** | | **45** | ✅ |
+| Integrações §8 | `integrations/integrations.test.ts` | 12 | ✅ Passando |
+| **Total plano** | | **57** | ✅ |
 
 ---
 
@@ -258,59 +259,74 @@ npm run build-storybook
 
 ---
 
-## §8 — Integrações externas ✅ (mock + adapters)
+## §8 — Integrações externas ✅
 
 **Entregáveis:**
 
 | Adapter | Arquivo |
 | --- | --- |
 | S3 presigned URLs | `integrations/storage/s3.ts` |
-| Métricas sociais | `integrations/social/instagram.ts` |
+| Redes sociais (IG/TT/YT) | `integrations/social/` |
+| Analytics GA4 + UTM | `integrations/analytics/ga4.ts` |
 | Realtime (Pusher) | `integrations/realtime/pusher.ts` |
 | Pagamentos Stripe | `integrations/payments/stripe.ts` |
+| E-sign DocuSign | `integrations/esign/docusign.ts` |
+| Webhooks Stripe/OAuth | `integrations/webhooks/` |
+| Job sync métricas | `scripts/sync-social-metrics.ts` |
+| Testes integração | `integrations/integrations.test.ts` (12) |
 | Documentação | `integrations/README.md` |
 | Env vars | `.env.example` atualizado |
 
-Todos funcionam em **modo mock** sem credenciais — suficiente para dev e E2E.
+```bash
+npm run test:integrations
+npm run sync:social-metrics -- --dry-run
+```
 
 ---
 
-## §9 — Testes, QA e usabilidade ✅ (parcial)
+## §9 — Testes, QA e usabilidade ✅
 
 | Suíte | Arquivo | Testes |
 | --- | --- | --- |
 | Plataforma influencer | `src/modules/influencer/influencer.test.ts` | 15 |
+| Integrações | `integrations/integrations.test.ts` | 12 |
 | E2E fluxos core | `e2e/influencer-platform.spec.ts` | 5 specs |
 | Relatório QA | `qa/report.md` | — |
+| Checklist WCAG | `qa/accessibility-checklist.md` | — |
+| Índice E2E | `tests/e2e/README.md` | — |
 
-```bash
-npm run test:influencer-platform
-npm run test:e2e -- e2e/influencer-platform.spec.ts
-```
-
-**Pendente:** auditoria WCAG, sessões de usabilidade com creators reais.
+**Pendente:** auditoria WCAG manual, sessões de usabilidade com creators reais.
 
 ---
 
-## Etapas pendentes (§10–§15)
+## §10 — Deploy, feature flags e monitoramento ✅
+
+| Entregável | Arquivo |
+| --- | --- |
+| CI/CD pipeline | `.github/workflows/ci.yml` |
+| Feature flags | `src/lib/feature-flags.ts` |
+| Observabilidade | `observability.md`, `src/lib/observability.ts` |
+| Deploy runbook | `deploy/README.md`, `deploy/staging.sh` |
+
+---
+
+## Etapas pendentes (§11–§15)
 
 | § | Etapa | Status |
 | --- | --- | --- |
-| 10 | Deploy, feature flags prod, monitoramento (CI/CD, Sentry) | ⬜ Não iniciado |
 | 11 | Documentação handoff (CONTRIBUTING.md, docs/api.md) | ⬜ Parcial |
 | 12 | Automação via Agent (workflows Cursor) | ⬜ Não iniciado |
 | 13 | Segurança e conformidade (LGPD, RBAC) | ⬜ Parcial (roles básicos) |
-| 14 | Métricas de sucesso e KPIs | ⬜ Não iniciado |
+| 14 | Métricas de sucesso e KPIs | ⬜ Parcial (GA4 scaffold) |
 | 15 | Checklist final de PR / Release | ⬜ Não iniciado |
 
 ---
 
-## Próximo passo recomendado (§10)
+## Próximo passo recomendado (§11)
 
-1. CI/CD com testes E2E influencer no pipeline
-2. Configurar Sentry e alertas
-3. MSW/json-server pendente da §4
-4. Migração batch em staging com persistência real
+1. `CONTRIBUTING.md` e `docs/api.md`
+2. Workflows Cursor em `agents/cursor/workflows/`
+3. Migração batch em staging com persistência real
 
 ---
 
