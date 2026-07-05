@@ -11,7 +11,7 @@ test.describe("Reforma comercial — sidebar e Comunicação", () => {
     const sidebar = appSidebar(page);
 
     await expect(sidebar.getByText("Parcerias", { exact: true })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Receita de Parcerias" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Painel de Campanhas" })).toBeVisible();
     await expect(sidebar.getByRole("link", { name: "Pipeline de Parcerias" })).toBeVisible();
     await expect(sidebar.getByRole("link", { name: "Comunicação" })).toBeVisible();
     await expect(sidebar.getByRole("link", { name: "Calendário" })).toBeVisible();

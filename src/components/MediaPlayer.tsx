@@ -1,4 +1,4 @@
-export { GlowPlayer as MediaPlayer } from "@/ui/glow-player";
+export { GlowPlayer as MediaPlayer, GlowPlayer as PlayerMultimidia } from "@/ui/glow-player";
 
 export type MediaPlayerProps = {
   src?: string | null;

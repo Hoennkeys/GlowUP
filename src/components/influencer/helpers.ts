@@ -1,5 +1,10 @@
 import type { CampaignStatus } from "@/modules/creator/domain/entities";
-import type { EntregaStatusAprovacao } from "../../../types/influencer-platform";
+import type {
+  Entrega,
+  EntregaStatusAprovacao,
+  InfluencerPlatformSnapshot,
+  PainelCampanhaMetricas,
+} from "../../../types/influencer-platform";
 
 /** Formata contagem de seguidores/visualizações (ex: 45000 → "45K") */
 export function formatMetricCount(value: number): string {
@@ -46,6 +51,66 @@ export function initialsFromName(name: string): string {
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase() ?? "")
     .join("");
+}
+
+/** Agrega métricas de todos os painéis de campanha do tenant */
+export function aggregatePainelMetricas(
+  paineis: InfluencerPlatformSnapshot["paineis"],
+): PainelCampanhaMetricas & { entregasAprovadas: number } {
+  if (paineis.length === 0) {
+    return {
+      alcance: 0,
+      impressoes: 0,
+      cliques: 0,
+      engajamento: 0,
+      conversoes: 0,
+      roi: null,
+      receitaParceria: 0,
+      cpm: 0,
+      entregasAprovadas: 0,
+    };
+  }
+
+  const totals = paineis.reduce(
+    (acc, p) => ({
+      alcance: acc.alcance + p.metricas.alcance,
+      impressoes: acc.impressoes + p.metricas.impressoes,
+      cliques: acc.cliques + p.metricas.cliques,
+      engajamento: acc.engajamento + p.metricas.engajamento,
+      conversoes: acc.conversoes + p.metricas.conversoes,
+      receitaParceria: acc.receitaParceria + p.metricas.receitaParceria,
+      cpm: acc.cpm + p.metricas.cpm,
+      roiSum: acc.roiSum + (p.metricas.roi ?? 0),
+      roiCount: acc.roiCount + (p.metricas.roi != null ? 1 : 0),
+    }),
+    {
+      alcance: 0,
+      impressoes: 0,
+      cliques: 0,
+      engajamento: 0,
+      conversoes: 0,
+      receitaParceria: 0,
+      cpm: 0,
+      roiSum: 0,
+      roiCount: 0,
+    },
+  );
+
+  return {
+    alcance: totals.alcance,
+    impressoes: totals.impressoes,
+    cliques: totals.cliques,
+    engajamento: Math.round((totals.engajamento / paineis.length) * 10) / 10,
+    conversoes: totals.conversoes,
+    roi: totals.roiCount > 0 ? Math.round((totals.roiSum / totals.roiCount) * 10) / 10 : null,
+    receitaParceria: totals.receitaParceria,
+    cpm: Math.round((totals.cpm / paineis.length) * 100) / 100,
+    entregasAprovadas: 0,
+  };
+}
+
+export function countEntregasAprovadas(entregas: Entrega[]): number {
+  return entregas.filter((e) => e.statusAprovacao === "aprovado").length;
 }
 
 export function acceptMimeForMediaTypes(types: string[]): string {

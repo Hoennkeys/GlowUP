@@ -27,7 +27,7 @@ test("botão Entrar leva ao dashboard principal", async ({ page }) => {
   await expectWorkspaceEntry(page);
   await page.getByRole("button", { name: "Entrar" }).click();
   await expect(page).toHaveURL(/\/t\/demo\/app\/painel/);
-  await expect(page.getByRole("heading", { name: /Receita de Parcerias/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Painel de Campanhas/i })).toBeVisible();
 });
 
 test("fluxo completo membro via helper", async ({ page }) => {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { MessageSquare } from "lucide-react";
-import { Inbox, type InboxThread } from "@/components/Inbox";
+import { InboxUnificada, type InboxThread } from "@/components/Inbox";
 import { GlowCard, GlowCardContent, GlowCardHeader } from "@/ui";
 import { brDateTime } from "@/lib/format";
 import { useCommunicationsUnread } from "@/hooks/use-communications-unread";
@@ -64,7 +64,7 @@ export function InfluencerInboxPage() {
 
       <div className="grid gap-4 lg:grid-cols-[360px_1fr] min-h-[480px]">
         <GlowCard className="overflow-hidden">
-          <Inbox
+          <InboxUnificada
             threads={threads}
             selectedId={selected?.id}
             onSelect={setSelectedId}

@@ -87,7 +87,7 @@ export const SIDEBAR_SECTIONS = {
 /** Navigation item labels (GlowUP presentation over legacy routes) */
 export const NAV_LABELS = {
   dashboard: "Workspace",
-  revenueDashboard: "Receita de Parcerias",
+  revenueDashboard: "Painel de Campanhas",
   campaignPipeline: "Pipeline de Parcerias",
   agenda: "Calendário",
   chamados: "Suporte",
