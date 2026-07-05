@@ -49,6 +49,9 @@ import { Route as TTenantSlugAppCreatorIndexRouteImport } from './routes/t/$tena
 import { Route as TTenantSlugAppCommunicationsIndexRouteImport } from './routes/t/$tenantSlug/app/communications/index'
 import { Route as TTenantSlugAppFunilPipelineIdRouteImport } from './routes/t/$tenantSlug/app/funil/$pipelineId'
 import { Route as TTenantSlugAppCreatorSponsorsRouteImport } from './routes/t/$tenantSlug/app/creator/sponsors'
+import { Route as TTenantSlugAppCreatorPerformanceRouteImport } from './routes/t/$tenantSlug/app/creator/performance'
+import { Route as TTenantSlugAppCreatorOnboardingRouteImport } from './routes/t/$tenantSlug/app/creator/onboarding'
+import { Route as TTenantSlugAppCreatorInboxRouteImport } from './routes/t/$tenantSlug/app/creator/inbox'
 import { Route as TTenantSlugAppCreatorCampaignsRouteImport } from './routes/t/$tenantSlug/app/creator/campaigns'
 import { Route as TTenantSlugAppCreatorBrandsRouteImport } from './routes/t/$tenantSlug/app/creator/brands'
 import { Route as TTenantSlugAppCreatorAgenciesRouteImport } from './routes/t/$tenantSlug/app/creator/agencies'
@@ -58,6 +61,8 @@ import { Route as TTenantSlugAppCommunicationsReportsRouteImport } from './route
 import { Route as TTenantSlugAppCommunicationsIntegrationsRouteImport } from './routes/t/$tenantSlug/app/communications/integrations'
 import { Route as TTenantSlugAppCommunicationsInboxRouteImport } from './routes/t/$tenantSlug/app/communications/inbox'
 import { Route as TTenantSlugAppCommunicationsChannelsRouteImport } from './routes/t/$tenantSlug/app/communications/channels'
+import { Route as TTenantSlugAppCreatorProfileProfileIdRouteImport } from './routes/t/$tenantSlug/app/creator/profile/$profileId'
+import { Route as TTenantSlugAppCreatorCampaignsCampaignIdRouteImport } from './routes/t/$tenantSlug/app/creator/campaigns/$campaignId'
 
 const PropostasRoute = PropostasRouteImport.update({
   id: '/propostas',
@@ -273,6 +278,24 @@ const TTenantSlugAppCreatorSponsorsRoute =
     path: '/sponsors',
     getParentRoute: () => TTenantSlugAppCreatorRouteRoute,
   } as any)
+const TTenantSlugAppCreatorPerformanceRoute =
+  TTenantSlugAppCreatorPerformanceRouteImport.update({
+    id: '/performance',
+    path: '/performance',
+    getParentRoute: () => TTenantSlugAppCreatorRouteRoute,
+  } as any)
+const TTenantSlugAppCreatorOnboardingRoute =
+  TTenantSlugAppCreatorOnboardingRouteImport.update({
+    id: '/onboarding',
+    path: '/onboarding',
+    getParentRoute: () => TTenantSlugAppCreatorRouteRoute,
+  } as any)
+const TTenantSlugAppCreatorInboxRoute =
+  TTenantSlugAppCreatorInboxRouteImport.update({
+    id: '/inbox',
+    path: '/inbox',
+    getParentRoute: () => TTenantSlugAppCreatorRouteRoute,
+  } as any)
 const TTenantSlugAppCreatorCampaignsRoute =
   TTenantSlugAppCreatorCampaignsRouteImport.update({
     id: '/campaigns',
@@ -327,6 +350,18 @@ const TTenantSlugAppCommunicationsChannelsRoute =
     path: '/channels',
     getParentRoute: () => TTenantSlugAppCommunicationsRouteRoute,
   } as any)
+const TTenantSlugAppCreatorProfileProfileIdRoute =
+  TTenantSlugAppCreatorProfileProfileIdRouteImport.update({
+    id: '/profile/$profileId',
+    path: '/profile/$profileId',
+    getParentRoute: () => TTenantSlugAppCreatorRouteRoute,
+  } as any)
+const TTenantSlugAppCreatorCampaignsCampaignIdRoute =
+  TTenantSlugAppCreatorCampaignsCampaignIdRouteImport.update({
+    id: '/$campaignId',
+    path: '/$campaignId',
+    getParentRoute: () => TTenantSlugAppCreatorCampaignsRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -372,12 +407,17 @@ export interface FileRoutesByFullPath {
   '/t/$tenantSlug/app/communications/tickets': typeof TTenantSlugAppCommunicationsTicketsRoute
   '/t/$tenantSlug/app/creator/agencies': typeof TTenantSlugAppCreatorAgenciesRoute
   '/t/$tenantSlug/app/creator/brands': typeof TTenantSlugAppCreatorBrandsRoute
-  '/t/$tenantSlug/app/creator/campaigns': typeof TTenantSlugAppCreatorCampaignsRoute
+  '/t/$tenantSlug/app/creator/campaigns': typeof TTenantSlugAppCreatorCampaignsRouteWithChildren
+  '/t/$tenantSlug/app/creator/inbox': typeof TTenantSlugAppCreatorInboxRoute
+  '/t/$tenantSlug/app/creator/onboarding': typeof TTenantSlugAppCreatorOnboardingRoute
+  '/t/$tenantSlug/app/creator/performance': typeof TTenantSlugAppCreatorPerformanceRoute
   '/t/$tenantSlug/app/creator/sponsors': typeof TTenantSlugAppCreatorSponsorsRoute
   '/t/$tenantSlug/app/funil/$pipelineId': typeof TTenantSlugAppFunilPipelineIdRoute
   '/t/$tenantSlug/app/communications/': typeof TTenantSlugAppCommunicationsIndexRoute
   '/t/$tenantSlug/app/creator/': typeof TTenantSlugAppCreatorIndexRoute
   '/t/$tenantSlug/app/funil/': typeof TTenantSlugAppFunilIndexRoute
+  '/t/$tenantSlug/app/creator/campaigns/$campaignId': typeof TTenantSlugAppCreatorCampaignsCampaignIdRoute
+  '/t/$tenantSlug/app/creator/profile/$profileId': typeof TTenantSlugAppCreatorProfileProfileIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -418,12 +458,17 @@ export interface FileRoutesByTo {
   '/t/$tenantSlug/app/communications/tickets': typeof TTenantSlugAppCommunicationsTicketsRoute
   '/t/$tenantSlug/app/creator/agencies': typeof TTenantSlugAppCreatorAgenciesRoute
   '/t/$tenantSlug/app/creator/brands': typeof TTenantSlugAppCreatorBrandsRoute
-  '/t/$tenantSlug/app/creator/campaigns': typeof TTenantSlugAppCreatorCampaignsRoute
+  '/t/$tenantSlug/app/creator/campaigns': typeof TTenantSlugAppCreatorCampaignsRouteWithChildren
+  '/t/$tenantSlug/app/creator/inbox': typeof TTenantSlugAppCreatorInboxRoute
+  '/t/$tenantSlug/app/creator/onboarding': typeof TTenantSlugAppCreatorOnboardingRoute
+  '/t/$tenantSlug/app/creator/performance': typeof TTenantSlugAppCreatorPerformanceRoute
   '/t/$tenantSlug/app/creator/sponsors': typeof TTenantSlugAppCreatorSponsorsRoute
   '/t/$tenantSlug/app/funil/$pipelineId': typeof TTenantSlugAppFunilPipelineIdRoute
   '/t/$tenantSlug/app/communications': typeof TTenantSlugAppCommunicationsIndexRoute
   '/t/$tenantSlug/app/creator': typeof TTenantSlugAppCreatorIndexRoute
   '/t/$tenantSlug/app/funil': typeof TTenantSlugAppFunilIndexRoute
+  '/t/$tenantSlug/app/creator/campaigns/$campaignId': typeof TTenantSlugAppCreatorCampaignsCampaignIdRoute
+  '/t/$tenantSlug/app/creator/profile/$profileId': typeof TTenantSlugAppCreatorProfileProfileIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -470,12 +515,17 @@ export interface FileRoutesById {
   '/t/$tenantSlug/app/communications/tickets': typeof TTenantSlugAppCommunicationsTicketsRoute
   '/t/$tenantSlug/app/creator/agencies': typeof TTenantSlugAppCreatorAgenciesRoute
   '/t/$tenantSlug/app/creator/brands': typeof TTenantSlugAppCreatorBrandsRoute
-  '/t/$tenantSlug/app/creator/campaigns': typeof TTenantSlugAppCreatorCampaignsRoute
+  '/t/$tenantSlug/app/creator/campaigns': typeof TTenantSlugAppCreatorCampaignsRouteWithChildren
+  '/t/$tenantSlug/app/creator/inbox': typeof TTenantSlugAppCreatorInboxRoute
+  '/t/$tenantSlug/app/creator/onboarding': typeof TTenantSlugAppCreatorOnboardingRoute
+  '/t/$tenantSlug/app/creator/performance': typeof TTenantSlugAppCreatorPerformanceRoute
   '/t/$tenantSlug/app/creator/sponsors': typeof TTenantSlugAppCreatorSponsorsRoute
   '/t/$tenantSlug/app/funil/$pipelineId': typeof TTenantSlugAppFunilPipelineIdRoute
   '/t/$tenantSlug/app/communications/': typeof TTenantSlugAppCommunicationsIndexRoute
   '/t/$tenantSlug/app/creator/': typeof TTenantSlugAppCreatorIndexRoute
   '/t/$tenantSlug/app/funil/': typeof TTenantSlugAppFunilIndexRoute
+  '/t/$tenantSlug/app/creator/campaigns/$campaignId': typeof TTenantSlugAppCreatorCampaignsCampaignIdRoute
+  '/t/$tenantSlug/app/creator/profile/$profileId': typeof TTenantSlugAppCreatorProfileProfileIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -524,11 +574,16 @@ export interface FileRouteTypes {
     | '/t/$tenantSlug/app/creator/agencies'
     | '/t/$tenantSlug/app/creator/brands'
     | '/t/$tenantSlug/app/creator/campaigns'
+    | '/t/$tenantSlug/app/creator/inbox'
+    | '/t/$tenantSlug/app/creator/onboarding'
+    | '/t/$tenantSlug/app/creator/performance'
     | '/t/$tenantSlug/app/creator/sponsors'
     | '/t/$tenantSlug/app/funil/$pipelineId'
     | '/t/$tenantSlug/app/communications/'
     | '/t/$tenantSlug/app/creator/'
     | '/t/$tenantSlug/app/funil/'
+    | '/t/$tenantSlug/app/creator/campaigns/$campaignId'
+    | '/t/$tenantSlug/app/creator/profile/$profileId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -570,11 +625,16 @@ export interface FileRouteTypes {
     | '/t/$tenantSlug/app/creator/agencies'
     | '/t/$tenantSlug/app/creator/brands'
     | '/t/$tenantSlug/app/creator/campaigns'
+    | '/t/$tenantSlug/app/creator/inbox'
+    | '/t/$tenantSlug/app/creator/onboarding'
+    | '/t/$tenantSlug/app/creator/performance'
     | '/t/$tenantSlug/app/creator/sponsors'
     | '/t/$tenantSlug/app/funil/$pipelineId'
     | '/t/$tenantSlug/app/communications'
     | '/t/$tenantSlug/app/creator'
     | '/t/$tenantSlug/app/funil'
+    | '/t/$tenantSlug/app/creator/campaigns/$campaignId'
+    | '/t/$tenantSlug/app/creator/profile/$profileId'
   id:
     | '__root__'
     | '/'
@@ -621,11 +681,16 @@ export interface FileRouteTypes {
     | '/t/$tenantSlug/app/creator/agencies'
     | '/t/$tenantSlug/app/creator/brands'
     | '/t/$tenantSlug/app/creator/campaigns'
+    | '/t/$tenantSlug/app/creator/inbox'
+    | '/t/$tenantSlug/app/creator/onboarding'
+    | '/t/$tenantSlug/app/creator/performance'
     | '/t/$tenantSlug/app/creator/sponsors'
     | '/t/$tenantSlug/app/funil/$pipelineId'
     | '/t/$tenantSlug/app/communications/'
     | '/t/$tenantSlug/app/creator/'
     | '/t/$tenantSlug/app/funil/'
+    | '/t/$tenantSlug/app/creator/campaigns/$campaignId'
+    | '/t/$tenantSlug/app/creator/profile/$profileId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -925,6 +990,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TTenantSlugAppCreatorSponsorsRouteImport
       parentRoute: typeof TTenantSlugAppCreatorRouteRoute
     }
+    '/t/$tenantSlug/app/creator/performance': {
+      id: '/t/$tenantSlug/app/creator/performance'
+      path: '/performance'
+      fullPath: '/t/$tenantSlug/app/creator/performance'
+      preLoaderRoute: typeof TTenantSlugAppCreatorPerformanceRouteImport
+      parentRoute: typeof TTenantSlugAppCreatorRouteRoute
+    }
+    '/t/$tenantSlug/app/creator/onboarding': {
+      id: '/t/$tenantSlug/app/creator/onboarding'
+      path: '/onboarding'
+      fullPath: '/t/$tenantSlug/app/creator/onboarding'
+      preLoaderRoute: typeof TTenantSlugAppCreatorOnboardingRouteImport
+      parentRoute: typeof TTenantSlugAppCreatorRouteRoute
+    }
+    '/t/$tenantSlug/app/creator/inbox': {
+      id: '/t/$tenantSlug/app/creator/inbox'
+      path: '/inbox'
+      fullPath: '/t/$tenantSlug/app/creator/inbox'
+      preLoaderRoute: typeof TTenantSlugAppCreatorInboxRouteImport
+      parentRoute: typeof TTenantSlugAppCreatorRouteRoute
+    }
     '/t/$tenantSlug/app/creator/campaigns': {
       id: '/t/$tenantSlug/app/creator/campaigns'
       path: '/campaigns'
@@ -988,6 +1074,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TTenantSlugAppCommunicationsChannelsRouteImport
       parentRoute: typeof TTenantSlugAppCommunicationsRouteRoute
     }
+    '/t/$tenantSlug/app/creator/profile/$profileId': {
+      id: '/t/$tenantSlug/app/creator/profile/$profileId'
+      path: '/profile/$profileId'
+      fullPath: '/t/$tenantSlug/app/creator/profile/$profileId'
+      preLoaderRoute: typeof TTenantSlugAppCreatorProfileProfileIdRouteImport
+      parentRoute: typeof TTenantSlugAppCreatorRouteRoute
+    }
+    '/t/$tenantSlug/app/creator/campaigns/$campaignId': {
+      id: '/t/$tenantSlug/app/creator/campaigns/$campaignId'
+      path: '/$campaignId'
+      fullPath: '/t/$tenantSlug/app/creator/campaigns/$campaignId'
+      preLoaderRoute: typeof TTenantSlugAppCreatorCampaignsCampaignIdRouteImport
+      parentRoute: typeof TTenantSlugAppCreatorCampaignsRoute
+    }
   }
 }
 
@@ -1042,21 +1142,47 @@ const TTenantSlugAppCommunicationsRouteRouteWithChildren =
     TTenantSlugAppCommunicationsRouteRouteChildren,
   )
 
+interface TTenantSlugAppCreatorCampaignsRouteChildren {
+  TTenantSlugAppCreatorCampaignsCampaignIdRoute: typeof TTenantSlugAppCreatorCampaignsCampaignIdRoute
+}
+
+const TTenantSlugAppCreatorCampaignsRouteChildren: TTenantSlugAppCreatorCampaignsRouteChildren =
+  {
+    TTenantSlugAppCreatorCampaignsCampaignIdRoute:
+      TTenantSlugAppCreatorCampaignsCampaignIdRoute,
+  }
+
+const TTenantSlugAppCreatorCampaignsRouteWithChildren =
+  TTenantSlugAppCreatorCampaignsRoute._addFileChildren(
+    TTenantSlugAppCreatorCampaignsRouteChildren,
+  )
+
 interface TTenantSlugAppCreatorRouteRouteChildren {
   TTenantSlugAppCreatorAgenciesRoute: typeof TTenantSlugAppCreatorAgenciesRoute
   TTenantSlugAppCreatorBrandsRoute: typeof TTenantSlugAppCreatorBrandsRoute
-  TTenantSlugAppCreatorCampaignsRoute: typeof TTenantSlugAppCreatorCampaignsRoute
+  TTenantSlugAppCreatorCampaignsRoute: typeof TTenantSlugAppCreatorCampaignsRouteWithChildren
+  TTenantSlugAppCreatorInboxRoute: typeof TTenantSlugAppCreatorInboxRoute
+  TTenantSlugAppCreatorOnboardingRoute: typeof TTenantSlugAppCreatorOnboardingRoute
+  TTenantSlugAppCreatorPerformanceRoute: typeof TTenantSlugAppCreatorPerformanceRoute
   TTenantSlugAppCreatorSponsorsRoute: typeof TTenantSlugAppCreatorSponsorsRoute
   TTenantSlugAppCreatorIndexRoute: typeof TTenantSlugAppCreatorIndexRoute
+  TTenantSlugAppCreatorProfileProfileIdRoute: typeof TTenantSlugAppCreatorProfileProfileIdRoute
 }
 
 const TTenantSlugAppCreatorRouteRouteChildren: TTenantSlugAppCreatorRouteRouteChildren =
   {
     TTenantSlugAppCreatorAgenciesRoute: TTenantSlugAppCreatorAgenciesRoute,
     TTenantSlugAppCreatorBrandsRoute: TTenantSlugAppCreatorBrandsRoute,
-    TTenantSlugAppCreatorCampaignsRoute: TTenantSlugAppCreatorCampaignsRoute,
+    TTenantSlugAppCreatorCampaignsRoute:
+      TTenantSlugAppCreatorCampaignsRouteWithChildren,
+    TTenantSlugAppCreatorInboxRoute: TTenantSlugAppCreatorInboxRoute,
+    TTenantSlugAppCreatorOnboardingRoute: TTenantSlugAppCreatorOnboardingRoute,
+    TTenantSlugAppCreatorPerformanceRoute:
+      TTenantSlugAppCreatorPerformanceRoute,
     TTenantSlugAppCreatorSponsorsRoute: TTenantSlugAppCreatorSponsorsRoute,
     TTenantSlugAppCreatorIndexRoute: TTenantSlugAppCreatorIndexRoute,
+    TTenantSlugAppCreatorProfileProfileIdRoute:
+      TTenantSlugAppCreatorProfileProfileIdRoute,
   }
 
 const TTenantSlugAppCreatorRouteRouteWithChildren =

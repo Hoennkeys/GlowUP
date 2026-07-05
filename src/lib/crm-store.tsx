@@ -23,6 +23,8 @@ import {
   type CreatorSnapshot,
 } from "@/modules/creator/domain/entities";
 import { buildMockCreatorForTenant } from "@/modules/creator/data/mock-creator-data";
+import { hydrateInfluencerPlatform } from "@/modules/influencer/domain/legacy-adapter";
+import type { InfluencerPlatformSnapshot } from "../../types/influencer-platform";
 
 import { buildMockSnapshotForTenant } from "./mock-data";
 import type { CrmConfiguracoes } from "./db/types";
@@ -56,6 +58,7 @@ type State = {
   configuracoes?: CrmConfiguracoes;
   communications?: CommunicationsSnapshot;
   creator?: CreatorSnapshot;
+  influencer?: InfluencerPlatformSnapshot;
   filtroVendedor: string; // "todos" | userId
 };
 
@@ -105,6 +108,10 @@ type Ctx = State & {
   adicionarSponsor: (s: Omit<Sponsor, "id" | "tenantId" | "createdAt" | "updatedAt">) => Sponsor;
   adicionarCampaign: (c: Omit<Campaign, "id" | "tenantId" | "createdAt" | "updatedAt">) => Campaign;
   atualizarCampaignStatus: (id: string, status: CampaignStatus) => void;
+  getInfluencer: () => InfluencerPlatformSnapshot;
+  setInfluencer: (
+    updater: (snapshot: InfluencerPlatformSnapshot) => InfluencerPlatformSnapshot,
+  ) => void;
 };
 
 const CrmContext = React.createContext<Ctx | null>(null);
@@ -128,11 +135,16 @@ function hydrateCreator(tenantId: string, state: Partial<State>): CreatorSnapsho
   return state.creator ?? buildMockCreatorForTenant(tenantId);
 }
 
+function hydrateInfluencer(tenantId: string, state: Partial<State>): InfluencerPlatformSnapshot {
+  return hydrateInfluencerPlatform(tenantId, state);
+}
+
 function getInitialStateForTenant(tenantId: string): State {
   const base = buildMockSnapshotForTenant(tenantId);
   const communications = hydrateCommunications(tenantId, base);
   const creator = hydrateCreator(tenantId, base);
-  return { ...base, communications, creator, filtroVendedor: "todos" };
+  const influencer = hydrateInfluencer(tenantId, base);
+  return { ...base, communications, creator, influencer, filtroVendedor: "todos" };
 }
 
 function uid(prefix = "id") {
@@ -171,6 +183,7 @@ export function CrmProvider({ children, tenantId }: CrmProviderProps) {
               ...merged,
               communications: hydrateCommunications(tenantId, merged),
               creator: hydrateCreator(tenantId, merged),
+              influencer: hydrateInfluencer(tenantId, merged),
               filtroVendedor: prev.filtroVendedor,
             }));
           }
@@ -555,6 +568,12 @@ export function CrmProvider({ children, tenantId }: CrmProviderProps) {
               ),
             },
           };
+        }),
+      getInfluencer: () => state.influencer ?? hydrateInfluencer(tenantId, state),
+      setInfluencer: (updater) =>
+        setState((s) => {
+          const current = s.influencer ?? hydrateInfluencer(tenantId, s);
+          return { ...s, influencer: updater(current) };
         }),
     }),
     [state, tenantId, useServerApi, isClientUser],
