@@ -1,7 +1,8 @@
-import { MessageSquare, Search } from "lucide-react";
-import { GlowBadge, GlowInput } from "@/ui";
+import { MessageSquare, Search, Send } from "lucide-react";
+import { GlowAvatar, GlowBadge, GlowButton, GlowInput } from "@/ui";
 import { cn } from "@/lib/utils";
 import { brDateTime } from "@/lib/format";
+import { initialsFromName } from "@/modules/creator/lib/visual-utils";
 
 export type InboxThread = {
   id: string;
@@ -23,6 +24,13 @@ export type InboxProps = {
   searchQuery?: string;
   onSearchChange?: (query: string) => void;
   className?: string;
+};
+
+const TAG_LABELS: Record<string, string> = {
+  campanha: "Campanha",
+  entrega: "Conteúdo",
+  contrato: "Acordo",
+  urgente: "Urgente",
 };
 
 const ALL_TAGS = ["campanha", "entrega", "contrato", "urgente"] as const;
@@ -49,15 +57,15 @@ export function Inbox({
   });
 
   return (
-    <div className={cn("flex flex-col h-full min-h-[320px] border rounded-xl bg-card", className)}>
+    <div className={cn("flex flex-col h-full min-h-[320px] bg-card", className)}>
       <div className="p-3 border-b space-y-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <GlowInput
-            placeholder="Buscar conversas..."
+            placeholder="Buscar mensagens..."
             value={searchQuery}
             onChange={(e) => onSearchChange?.(e.target.value)}
-            className="pl-9"
+            className="pl-9 rounded-full bg-muted/40 border-0"
           />
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -66,7 +74,10 @@ export function Inbox({
             onClick={() => onTagFilterChange?.(undefined)}
             className="focus:outline-none"
           >
-            <GlowBadge variant={!tagFilter ? "default" : "outline"} className="cursor-pointer">
+            <GlowBadge
+              variant={!tagFilter ? "default" : "outline"}
+              className="cursor-pointer rounded-full"
+            >
               Todas
             </GlowBadge>
           </button>
@@ -79,20 +90,20 @@ export function Inbox({
             >
               <GlowBadge
                 variant={tagFilter === tag ? "default" : "outline"}
-                className="cursor-pointer capitalize"
+                className="cursor-pointer rounded-full"
               >
-                {tag}
+                {TAG_LABELS[tag] ?? tag}
               </GlowBadge>
             </button>
           ))}
         </div>
       </div>
 
-      <ul className="flex-1 overflow-y-auto divide-y">
+      <ul className="flex-1 overflow-y-auto">
         {filtered.length === 0 ? (
           <li className="flex flex-col items-center justify-center gap-2 p-8 text-center text-muted-foreground">
             <MessageSquare className="h-8 w-8 opacity-40" />
-            <p className="text-sm">Nenhuma conversa encontrada</p>
+            <p className="text-sm">Nenhuma mensagem encontrada</p>
           </li>
         ) : (
           filtered.map((thread) => (
@@ -101,48 +112,72 @@ export function Inbox({
                 type="button"
                 onClick={() => onSelect?.(thread.id)}
                 className={cn(
-                  "w-full text-left px-4 py-3 transition-colors hover:bg-muted/50",
-                  selectedId === thread.id &&
-                    "bg-creator-primary/5 border-l-2 border-l-creator-primary",
+                  "w-full text-left px-4 py-3 transition-all hover:bg-muted/40",
+                  selectedId === thread.id && "bg-creator-primary/5",
                 )}
               >
-                <div className="flex items-start justify-between gap-2">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <p className="font-medium truncate text-sm">{thread.participantName}</p>
-                      {thread.unreadCount > 0 ? (
-                        <GlowBadge className="h-5 min-w-5 px-1.5 text-[10px]">
-                          {thread.unreadCount}
-                        </GlowBadge>
-                      ) : null}
-                    </div>
-                    <p className="text-xs text-muted-foreground truncate">{thread.subject}</p>
-                    <p className="text-xs text-muted-foreground truncate mt-0.5 line-clamp-1">
-                      {thread.lastMessage}
-                    </p>
-                    {thread.tags.length > 0 ? (
-                      <div className="flex flex-wrap gap-1 mt-1.5">
-                        {thread.tags.slice(0, 3).map((tag) => (
-                          <GlowBadge
-                            key={tag}
-                            variant="outline"
-                            className="text-[10px] py-0 font-normal"
-                          >
-                            {tag}
-                          </GlowBadge>
-                        ))}
-                      </div>
+                <div className="flex items-center gap-3">
+                  <div className="relative shrink-0">
+                    <GlowAvatar
+                      alt={thread.participantName}
+                      fallback={initialsFromName(thread.participantName)}
+                      size="md"
+                      ring={thread.unreadCount > 0}
+                    />
+                    {thread.unreadCount > 0 ? (
+                      <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-creator-primary px-1 text-[9px] font-bold text-white">
+                        {thread.unreadCount}
+                      </span>
                     ) : null}
                   </div>
-                  <span className="text-[10px] text-muted-foreground shrink-0">
-                    {brDateTime(thread.lastMessageAt)}
-                  </span>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <p
+                        className={cn(
+                          "truncate text-sm",
+                          thread.unreadCount > 0 ? "font-semibold" : "font-medium",
+                        )}
+                      >
+                        {thread.participantName}
+                      </p>
+                      <span className="text-[10px] text-muted-foreground shrink-0">
+                        {brDateTime(thread.lastMessageAt)}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground truncate">{thread.subject}</p>
+                    <p className="text-xs text-muted-foreground truncate mt-0.5">
+                      {thread.lastMessage}
+                    </p>
+                  </div>
                 </div>
               </button>
             </li>
           ))
         )}
       </ul>
+    </div>
+  );
+}
+
+export type ChatComposerProps = {
+  placeholder?: string;
+  className?: string;
+};
+
+export function ChatComposer({
+  placeholder = "Escreva uma mensagem...",
+  className,
+}: ChatComposerProps) {
+  return (
+    <div className={cn("flex items-center gap-2 border-t p-3", className)}>
+      <GlowInput
+        placeholder={placeholder}
+        className="rounded-full bg-muted/40 border-0 flex-1"
+        readOnly
+      />
+      <GlowButton size="icon" className="rounded-full shrink-0 h-9 w-9">
+        <Send className="h-4 w-4" />
+      </GlowButton>
     </div>
   );
 }

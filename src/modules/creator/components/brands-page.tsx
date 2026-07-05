@@ -1,22 +1,16 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Instagram, Youtube, Music2 } from "lucide-react";
+import { GlowAvatar, GlowBadge } from "@/ui";
+import { CREATOR_NAV } from "../domain/terminology";
+import { coverGradient, formatAudience, initialsFromName } from "../lib/visual-utils";
 import { useCreator } from "../store/creator-context";
 
 const STATUS_LABEL = { active: "Ativa", paused: "Pausada", archived: "Arquivada" } as const;
 
-function formatAudience(n: number) {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${Math.round(n / 1_000)}k`;
-  return String(n);
-}
+const PLATFORM_ICONS: Record<string, typeof Instagram> = {
+  instagram: Instagram,
+  youtube: Youtube,
+  tiktok: Music2,
+};
 
 export function BrandsPage() {
   const { brands, agencies } = useCreator();
@@ -24,60 +18,90 @@ export function BrandsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Marcas</h1>
-        <p className="text-sm text-muted-foreground">
-          Perfis de creator e propriedades de conteúdo gerenciados no tenant.
+        <h1 className="glowup-heading">{CREATOR_NAV.portfolio}</h1>
+        <p className="glowup-subheading">
+          Seus perfis, nichos e audiências — tudo em cards visuais.
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Todas as marcas</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {brands.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Nenhuma marca cadastrada.</p>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nome</TableHead>
-                  <TableHead>Nicho</TableHead>
-                  <TableHead>Audiência</TableHead>
-                  <TableHead>Plataformas</TableHead>
-                  <TableHead>Agency</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {brands.map((b) => {
-                  const agency = agencies.find((a) => a.id === b.primaryAgencyId);
-                  return (
-                    <TableRow key={b.id}>
-                      <TableCell className="font-medium">{b.name}</TableCell>
-                      <TableCell>{b.niche}</TableCell>
-                      <TableCell>{formatAudience(b.audienceSize)}</TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {b.platforms.map((p) => (
-                            <Badge key={p} variant="secondary" className="text-[10px]">
-                              {p}
-                            </Badge>
-                          ))}
-                        </div>
-                      </TableCell>
-                      <TableCell>{agency?.name ?? "—"}</TableCell>
-                      <TableCell>
-                        <Badge variant="outline">{STATUS_LABEL[b.status]}</Badge>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          )}
-        </CardContent>
-      </Card>
+      {brands.length === 0 ? (
+        <div className="creator-empty-feed rounded-2xl border border-dashed p-10 text-center">
+          <p className="text-sm text-muted-foreground">Nenhum perfil no portfólio ainda.</p>
+        </div>
+      ) : (
+        <div className="creator-feed-grid">
+          {brands.map((brand) => {
+            const agency = agencies.find((a) => a.id === brand.primaryAgencyId);
+            return (
+              <article
+                key={brand.id}
+                className="creator-visual-card glowup-card-hover overflow-hidden rounded-2xl border bg-card"
+              >
+                <div
+                  className="h-32 w-full"
+                  style={{ background: coverGradient(brand.slug) }}
+                />
+                <div className="relative px-4 pb-5">
+                  <GlowAvatar
+                    src={brand.logoUrl}
+                    alt={brand.name}
+                    fallback={initialsFromName(brand.name)}
+                    size="xl"
+                    ring
+                    className="-mt-10 border-4 border-card mx-auto"
+                  />
+                  <div className="mt-3 text-center">
+                    <p className="font-semibold text-lg truncate">{brand.name}</p>
+                    <p className="text-sm text-muted-foreground truncate">{brand.niche}</p>
+                  </div>
+
+                  <div className="mt-4 flex justify-center gap-6 text-center">
+                    <div>
+                      <p className="text-lg font-bold text-creator-primary">
+                        {formatAudience(brand.audienceSize)}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wide">
+                        audiência
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-lg font-bold">{brand.platforms.length}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-wide">
+                        plataformas
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex flex-wrap justify-center gap-1.5">
+                    {brand.platforms.map((p) => {
+                      const Icon = PLATFORM_ICONS[p];
+                      return (
+                        <GlowBadge
+                          key={p}
+                          variant="outline"
+                          className="rounded-full text-[10px] capitalize gap-1"
+                        >
+                          {Icon ? <Icon className="h-3 w-3" /> : null}
+                          {p}
+                        </GlowBadge>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-4 flex items-center justify-between gap-2 border-t pt-3">
+                    <p className="text-xs text-muted-foreground truncate">
+                      {agency ? `via ${agency.name}` : "Independente"}
+                    </p>
+                    <GlowBadge variant="outline" className="rounded-full shrink-0">
+                      {STATUS_LABEL[brand.status]}
+                    </GlowBadge>
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

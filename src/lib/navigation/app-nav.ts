@@ -14,13 +14,18 @@ import {
   Settings2,
   MessagesSquare,
   Sparkles,
-  Building2,
-  Handshake,
-  Target,
+  LayoutGrid,
+  Users,
   Megaphone,
+  MessageCircle,
+  TrendingUp,
 } from "lucide-react";
 import { SALES_PIPELINE_ID, PROJECTS_PIPELINE_ID } from "@/lib/pipelines/defaults";
-import { NAV_LABELS, SIDEBAR_SECTIONS } from "@/modules/creator/domain/terminology";
+import {
+  CREATOR_NAV,
+  NAV_LABELS,
+  SIDEBAR_SECTIONS,
+} from "@/modules/creator/domain/terminology";
 
 type AppNavRoute =
   | "/t/$tenantSlug/app/creator/"
@@ -28,6 +33,8 @@ type AppNavRoute =
   | "/t/$tenantSlug/app/creator/agencies"
   | "/t/$tenantSlug/app/creator/sponsors"
   | "/t/$tenantSlug/app/creator/campaigns"
+  | "/t/$tenantSlug/app/creator/inbox"
+  | "/t/$tenantSlug/app/creator/performance"
   | "/t/$tenantSlug/app/painel"
   | "/t/$tenantSlug/app/funil/$pipelineId"
   | "/t/$tenantSlug/app/comunicacao"
@@ -45,6 +52,7 @@ export type AppNavLink = {
   title: string;
   to: AppNavRoute;
   icon: LucideIcon;
+  iconClassName?: string;
 };
 
 export type AppNavPipelineLink = AppNavLink & {
@@ -60,11 +68,42 @@ export const COMMUNICATIONS_SECTION_LABEL = SIDEBAR_SECTIONS.communications;
 export const POS_VENDA_SECTION_LABEL = SIDEBAR_SECTIONS.operations;
 
 export const creatorNav: AppNavItem[] = [
-  { title: NAV_LABELS.dashboard, to: "/t/$tenantSlug/app/creator/", icon: Sparkles },
-  { title: "Marcas", to: "/t/$tenantSlug/app/creator/brands", icon: Building2 },
-  { title: "Agências", to: "/t/$tenantSlug/app/creator/agencies", icon: Handshake },
-  { title: "Patrocinadores", to: "/t/$tenantSlug/app/creator/sponsors", icon: Target },
-  { title: "Campanhas", to: "/t/$tenantSlug/app/creator/campaigns", icon: Megaphone },
+  {
+    title: CREATOR_NAV.home,
+    to: "/t/$tenantSlug/app/creator/",
+    icon: Sparkles,
+    iconClassName: "text-creator-primary",
+  },
+  {
+    title: CREATOR_NAV.portfolio,
+    to: "/t/$tenantSlug/app/creator/brands",
+    icon: LayoutGrid,
+    iconClassName: "text-pink-500",
+  },
+  {
+    title: CREATOR_NAV.campaigns,
+    to: "/t/$tenantSlug/app/creator/campaigns",
+    icon: Megaphone,
+    iconClassName: "text-violet-500",
+  },
+  {
+    title: CREATOR_NAV.collaborations,
+    to: "/t/$tenantSlug/app/creator/agencies",
+    icon: Users,
+    iconClassName: "text-sky-500",
+  },
+  {
+    title: CREATOR_NAV.messages,
+    to: "/t/$tenantSlug/app/creator/inbox",
+    icon: MessageCircle,
+    iconClassName: "text-emerald-500",
+  },
+  {
+    title: CREATOR_NAV.earnings,
+    to: "/t/$tenantSlug/app/creator/performance",
+    icon: TrendingUp,
+    iconClassName: "text-amber-500",
+  },
 ];
 
 export const commercialNav: AppNavItem[] = [
@@ -79,7 +118,12 @@ export const commercialNav: AppNavItem[] = [
 ];
 
 export const communicationsNav: AppNavItem[] = [
-  { title: "Inbox", to: "/t/$tenantSlug/app/communications/inbox", icon: Inbox },
+  {
+    title: CREATOR_NAV.messages,
+    to: "/t/$tenantSlug/app/communications/inbox",
+    icon: Inbox,
+    iconClassName: "text-emerald-500",
+  },
   { title: "Tickets", to: "/t/$tenantSlug/app/communications/tickets", icon: Ticket },
   { title: "Canais", to: "/t/$tenantSlug/app/communications/channels", icon: Radio },
   {
@@ -97,7 +141,7 @@ export const communicationsNav: AppNavItem[] = [
 
 /** @deprecated Use communicationsNav — redirect compatível em /comunicacao */
 export const legacyComunicacaoNavItem: AppNavLink = {
-  title: "Comunicação",
+  title: "Mensagens",
   to: "/t/$tenantSlug/app/comunicacao",
   icon: MessagesSquare,
 };

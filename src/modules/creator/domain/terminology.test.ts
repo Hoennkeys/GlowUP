@@ -32,9 +32,9 @@ test("CREATOR_TERMS mapeia conceitos legados", () => {
   assert.equal(CREATOR_TERMS.admin, "Owner");
   assert.equal(CREATOR_TERMS.employee, "Membro");
   assert.equal(CREATOR_TERMS.client, "Marca");
-  assert.equal(CREATOR_TERMS.company, "Workspace");
-  assert.equal(CREATOR_TERMS.workspace, "Workspace");
-  assert.equal(SIDEBAR_SECTIONS.operations, "Gestão de Conteúdo e Campanhas");
+  assert.equal(CREATOR_TERMS.company, "Portfólio");
+  assert.equal(CREATOR_TERMS.workspace, "Início");
+  assert.equal(SIDEBAR_SECTIONS.operations, "Conteúdo");
 });
 
 test("LEGACY_TERMS preserva vocabulário CRM", () => {
@@ -75,7 +75,7 @@ test("resolveAppBreadcrumbs gera trilha para pipeline de parcerias", () => {
 
 test("SIDEBAR_SECTIONS expõe rótulos GlowUP", () => {
   assert.equal(SIDEBAR_SECTIONS.creator, "GlowUP");
-  assert.equal(SIDEBAR_SECTIONS.commercial, "Parcerias");
+  assert.equal(SIDEBAR_SECTIONS.commercial, "Campanhas");
 });
 
 console.log("\nTodos os testes de terminology passaram.\n");

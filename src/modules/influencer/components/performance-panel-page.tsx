@@ -1,12 +1,12 @@
 import { BarChart3, TrendingUp } from "lucide-react";
-import { useParams, useSearch } from "@tanstack/react-router";
+import { useSearch } from "@tanstack/react-router";
 import { GlowBadge, GlowCard, GlowCardContent, GlowCardHeader } from "@/ui";
 import { formatMetricCount } from "@/components/influencer/helpers";
+import { CREATOR_NAV } from "@/modules/creator/domain/terminology";
 import { useCreator } from "@/modules/creator/store/creator-context";
 import { useInfluencer } from "../store/influencer-context";
 
 export function PerformancePanelPage() {
-  const { tenantSlug } = useParams({ from: "/t/$tenantSlug/app/creator/performance" });
   const { campaignId } = useSearch({ from: "/t/$tenantSlug/app/creator/performance" });
   const { campaigns } = useCreator();
   const { snapshot } = useInfluencer();
@@ -20,14 +20,14 @@ export function PerformancePanelPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
-          <BarChart3 className="h-6 w-6 text-creator-primary" />
-          Painel de Performance
+        <h1 className="glowup-heading flex items-center gap-2">
+          <BarChart3 className="h-6 w-6 text-amber-500" />
+          {CREATOR_NAV.earnings}
         </h1>
-        <p className="text-sm text-muted-foreground">
+        <p className="glowup-subheading">
           {selectedCampaign
-            ? `Métricas — ${selectedCampaign.title}`
-            : "Métricas consolidadas por campanha"}
+            ? `Insights — ${selectedCampaign.title}`
+            : "Suas métricas sociais e resultados de campanha"}
         </p>
       </div>
 
@@ -45,7 +45,7 @@ export function PerformancePanelPage() {
               ) : null}
 
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                <MetricCard label="Alcance" value={formatMetricCount(m.alcance)} />
+                <MetricCard label="Alcance" value={formatMetricCount(m.alcance)} highlight />
                 <MetricCard label="Impressões" value={formatMetricCount(m.impressoes)} />
                 <MetricCard label="Cliques" value={formatMetricCount(m.cliques)} />
                 <MetricCard label="Engajamento" value={`${m.engajamento}%`} highlight />
@@ -101,10 +101,12 @@ function MetricCard({
   highlight?: boolean;
 }) {
   return (
-    <GlowCard>
+    <GlowCard className="creator-visual-card glowup-card-hover overflow-hidden rounded-2xl">
       <GlowCardContent className="p-4">
-        <p className="text-xs text-muted-foreground">{label}</p>
-        <p className={`text-2xl font-bold ${highlight ? "text-creator-primary" : ""}`}>{value}</p>
+        <p className="text-xs text-muted-foreground uppercase tracking-wide">{label}</p>
+        <p className={`text-2xl font-bold mt-1 ${highlight ? "glowup-gradient-text" : ""}`}>
+          {value}
+        </p>
       </GlowCardContent>
     </GlowCard>
   );
