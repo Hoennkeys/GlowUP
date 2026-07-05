@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { CardInfluencer } from "@/components/CardInfluencer";
 import { CampaignCard } from "@/components/CampaignCard";
-import { Inbox, type InboxThread } from "@/components/Inbox";
+import { InboxUnificada, type InboxThread } from "@/components/Inbox";
+import { PainelCampanha } from "@/components/PainelCampanha";
 import { TimelineEntrega } from "@/components/TimelineEntrega";
 
 const meta: Meta = {
@@ -75,10 +76,45 @@ const sampleThreads: InboxThread[] = [
   },
 ];
 
-export const InboxPanel: StoryObj = {
+export const InboxUnificadaStory: StoryObj = {
+  name: "Inbox Unificada",
   render: () => (
     <div className="w-96 h-[420px]">
-      <Inbox threads={sampleThreads} selectedId="1" />
+      <InboxUnificada threads={sampleThreads} selectedId="1" />
+    </div>
+  ),
+};
+
+export const PainelCampanhaStory: StoryObj = {
+  name: "Painel de Campanha",
+  render: () => (
+    <div className="w-[640px]">
+      <PainelCampanha
+        painel={{
+          id: "painel-story",
+          tenantId: "tenant-demo",
+          campanhaId: "campaign_demo_launch",
+          periodo: { inicio: "2026-07-01", fim: "2026-08-31" },
+          metricas: {
+            alcance: 420000,
+            impressoes: 890000,
+            cliques: 12400,
+            engajamento: 5.2,
+            conversoes: 340,
+            roi: 2.4,
+            receitaParceria: 50000,
+            cpm: 56.18,
+          },
+          porPlataforma: {
+            instagram: { alcance: 280000, impressoes: 620000 },
+            tiktok: { alcance: 140000, impressoes: 270000 },
+          },
+          exportMediaKit: true,
+          atualizadoEm: "2026-07-04T12:00:00.000Z",
+        }}
+        campaignTitle="Launch Verão 2026"
+        entregasAprovadas={3}
+      />
     </div>
   ),
 };

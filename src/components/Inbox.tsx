@@ -146,3 +146,6 @@ export function Inbox({
     </div>
   );
 }
+
+/** Alias canônico do design system (Inbox antiga → InboxUnificada) */
+export const InboxUnificada = Inbox;

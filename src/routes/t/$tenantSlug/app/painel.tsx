@@ -10,200 +10,145 @@ import {
   CartesianGrid,
   BarChart,
   Bar,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
 } from "recharts";
-import { TrendingUp, Wallet, Target, Percent, ArrowUpRight } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Eye, Heart, TrendingUp, CheckCircle2, BarChart3 } from "lucide-react";
+import { PainelCampanha } from "@/components/PainelCampanha";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import { useCrm, nomeVendedor } from "@/lib/crm-store";
-import { brl } from "@/lib/format";
-import { etapas } from "@/lib/mock-data";
+  aggregatePainelMetricas,
+  countEntregasAprovadas,
+  formatMetricCount,
+} from "@/components/influencer/helpers";
+import { GlowBadge, GlowCard, GlowCardContent, GlowCardHeader } from "@/ui";
+import { useCrm } from "@/lib/crm-store";
 import { pageTitle } from "@/lib/product-branding";
-import { CREATOR_TERMS, NAV_LABELS } from "@/modules/creator/domain/terminology";
+import { NAV_LABELS } from "@/modules/creator/domain/terminology";
 
 export const Route = createFileRoute("/t/$tenantSlug/app/painel")({
   head: () => ({ meta: [{ title: pageTitle(NAV_LABELS.revenueDashboard) }] }),
   component: Painel,
 });
 
-const MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-
-function ultimos6Meses() {
-  const hoje = new Date();
-  return Array.from({ length: 6 }, (_, i) => {
-    const d = new Date(hoje.getFullYear(), hoje.getMonth() - (5 - i), 1);
-    return { ano: d.getFullYear(), mes: d.getMonth(), label: MESES[d.getMonth()] };
-  });
-}
-
 function Painel() {
-  const { leads, usuarios, filtroVendedor, setFiltroVendedor, configuracoes } = useCrm();
+  const { getInfluencer } = useCrm();
+  const snapshot = getInfluencer();
+  const { paineis, entregas } = snapshot;
 
-  const leadsFiltrados = React.useMemo(
-    () =>
-      filtroVendedor === "todos" ? leads : leads.filter((l) => l.responsavelId === filtroVendedor),
-    [leads, filtroVendedor],
-  );
+  const metrics = React.useMemo(() => {
+    const agg = aggregatePainelMetricas(paineis);
+    return { ...agg, entregasAprovadas: countEntregasAprovadas(entregas) };
+  }, [paineis, entregas]);
 
-  const pipeline = leadsFiltrados
-    .filter((l) => l.etapa !== "Ganho" && l.etapa !== "Perdido")
-    .reduce((acc, l) => acc + l.valor, 0);
-  const faturamento = leadsFiltrados
-    .filter((l) => l.etapa === "Ganho")
-    .reduce((a, l) => a + l.valor, 0);
-  const ganhos = leadsFiltrados.filter((l) => l.etapa === "Ganho").length;
-  const fechados = leadsFiltrados.filter(
-    (l) => l.etapa === "Ganho" || l.etapa === "Perdido",
-  ).length;
-  const conversao = fechados ? Math.round((ganhos / fechados) * 100) : 0;
-  const meta = configuracoes?.metaMensal ?? 0;
-  const progressoMeta = meta > 0 ? Math.min(100, Math.round((faturamento / meta) * 100)) : 0;
-
-  const porEtapa = etapas.map((e) => ({
-    etapa: e,
-    quantidade: leadsFiltrados.filter((l) => l.etapa === e).length,
+  const chartData = paineis.map((p) => ({
+    campanha: p.campanhaId.replace(/^campaign_demo_/, "").replace(/_/g, " "),
+    alcance: p.metricas.alcance,
+    impressoes: p.metricas.impressoes,
+    engajamento: p.metricas.engajamento,
   }));
 
-  const porVendedor = usuarios
-    .filter((u) => filtroVendedor === "todos" || u.id === filtroVendedor)
-    .map((u) => ({
-      nome: u.nome.split(" ")[0],
-      vendas: leadsFiltrados
-        .filter((l) => l.responsavelId === u.id && l.etapa === "Ganho")
-        .reduce((a, l) => a + l.valor, 0),
-      destaque: filtroVendedor === u.id,
-    }));
-
-  const faturamentoMensal = React.useMemo(
-    () =>
-      ultimos6Meses().map(({ ano, mes, label }) => ({
-        mes: label,
-        faturamento: leadsFiltrados
-          .filter((l) => {
-            if (l.etapa !== "Ganho") return false;
-            const d = new Date(l.criadoEm);
-            return d.getFullYear() === ano && d.getMonth() === mes;
-          })
-          .reduce((a, l) => a + l.valor, 0),
-      })),
-    [leadsFiltrados],
-  );
-
-  const atividades = React.useMemo(() => {
-    const base =
-      filtroVendedor === "todos" ? leads : leads.filter((l) => l.responsavelId === filtroVendedor);
-    return base
-      .flatMap((l) =>
-        l.timeline.map((t, i) => ({
-          id: `${l.id}-${i}`,
-          em: t.em,
-          texto: `${l.cliente}: ${t.texto}`,
-          vendedorId: l.responsavelId,
-        })),
-      )
-      .sort((a, b) => new Date(b.em).getTime() - new Date(a.em).getTime())
-      .slice(0, 10);
-  }, [leads, filtroVendedor]);
-
-  const coresEtapa = ["#94a3b8", "#6366f1", "#f59e0b", "#16a34a", "#dc2626"];
+  const entregasRecentes = [...entregas]
+    .sort((a, b) => new Date(b.atualizadoEm).getTime() - new Date(a.atualizadoEm).getTime())
+    .slice(0, 8);
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{NAV_LABELS.revenueDashboard}</h1>
-          <p className="text-sm text-muted-foreground">Acompanhe suas campanhas e parcerias.</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Membro da equipe:</span>
-          <Select value={filtroVendedor} onValueChange={setFiltroVendedor}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos</SelectItem>
-              {usuarios.map((u) => (
-                <SelectItem key={u.id} value={u.id}>
-                  {u.nome}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div>
+        <h1 className="glowup-heading">{NAV_LABELS.revenueDashboard}</h1>
+        <p className="glowup-subheading">
+          Alcance, engajamento e entregas das suas campanhas ativas.
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-5">
         <Kpi
-          icon={<Wallet className="h-4 w-4" />}
-          label="Receita de Parcerias — mês"
-          value={brl(faturamento)}
-          hint={ganhos ? `${ganhos} campanha(s) fechada(s)` : "Nenhuma receita registrada ainda"}
+          icon={<Eye className="h-4 w-4" />}
+          label="Alcance"
+          value={formatMetricCount(metrics.alcance)}
+          hint={`${paineis.length} campanha(s) monitorada(s)`}
+        />
+        <Kpi
+          icon={<BarChart3 className="h-4 w-4" />}
+          label="Impressões"
+          value={formatMetricCount(metrics.impressoes)}
+          hint="Total consolidado"
+        />
+        <Kpi
+          icon={<Heart className="h-4 w-4" />}
+          label="Engajamento"
+          value={`${metrics.engajamento}%`}
+          hint="Média entre campanhas"
+          highlight
         />
         <Kpi
           icon={<TrendingUp className="h-4 w-4" />}
-          label={`Valor do ${NAV_LABELS.campaignPipeline}`}
-          value={brl(pipeline)}
-          hint={`${leadsFiltrados.length} ${CREATOR_TERMS.lead.toLowerCase()}${leadsFiltrados.length === 1 ? "" : "s"}`}
+          label="ROI de campanha"
+          value={metrics.roi != null ? `${metrics.roi}x` : "—"}
+          hint={metrics.roi != null ? "Retorno sobre investimento" : "Sem dados de ROI"}
+          highlight
         />
         <Kpi
-          icon={<Percent className="h-4 w-4" />}
-          label="Taxa de Conversão"
-          value={`${conversao}%`}
-          hint={`${ganhos} ganhos de ${fechados} fechados`}
+          icon={<CheckCircle2 className="h-4 w-4" />}
+          label="Entregas aprovadas"
+          value={String(metrics.entregasAprovadas)}
+          hint={`${entregas.length} entrega(s) no total`}
         />
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-              <Target className="h-4 w-4" /> Meta do workspace
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-semibold">{brl(faturamento)}</div>
-            <div className="text-xs text-muted-foreground mb-2">
-              {meta > 0 ? `de ${brl(meta)}` : "Meta não definida"}
-            </div>
-            <Progress value={progressoMeta} />
-            <div className="mt-1 text-xs text-muted-foreground">
-              {meta > 0 ? `${progressoMeta}% atingido` : "Configure a meta em Configurações"}
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Faturamento — últimos 6 meses</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[280px]">
-            {faturamentoMensal.every((m) => m.faturamento === 0) ? (
+        <GlowCard className="lg:col-span-2">
+          <GlowCardHeader>
+            <h2 className="font-semibold">Alcance por campanha</h2>
+          </GlowCardHeader>
+          <GlowCardContent className="h-[280px]">
+            {chartData.length === 0 ? (
               <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                Sem receita registrada. Feche parcerias no{" "}
-                {NAV_LABELS.campaignPipeline.toLowerCase()} para ver o gráfico.
+                Nenhuma campanha com métricas. Ative campanhas no workspace creator.
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={faturamentoMensal}>
+                <BarChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" opacity={0.3} />
-                  <XAxis dataKey="mes" stroke="currentColor" fontSize={12} />
+                  <XAxis dataKey="campanha" stroke="currentColor" fontSize={11} />
                   <YAxis
                     stroke="currentColor"
                     fontSize={12}
-                    tickFormatter={(v) => `R$ ${(v / 1000).toFixed(0)}k`}
+                    tickFormatter={(v) => formatMetricCount(Number(v))}
                   />
                   <Tooltip
-                    formatter={(v) => brl(Number(v))}
+                    formatter={(v, name) => [
+                      name === "engajamento" ? `${v}%` : formatMetricCount(Number(v)),
+                      String(name),
+                    ]}
+                    contentStyle={{
+                      background: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: 8,
+                    }}
+                  />
+                  <Bar dataKey="alcance" fill="var(--creator-primary)" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="impressoes" fill="var(--creator-accent)" radius={[6, 6, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            )}
+          </GlowCardContent>
+        </GlowCard>
+
+        <GlowCard>
+          <GlowCardHeader>
+            <h2 className="font-semibold">Engajamento</h2>
+          </GlowCardHeader>
+          <GlowCardContent className="h-[280px]">
+            {chartData.length === 0 ? (
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
+                Sem dados de engajamento.
+              </div>
+            ) : (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
+                  <XAxis dataKey="campanha" fontSize={11} stroke="currentColor" />
+                  <YAxis fontSize={12} stroke="currentColor" unit="%" />
+                  <Tooltip
+                    formatter={(v) => [`${v}%`, "Engajamento"]}
                     contentStyle={{
                       background: "var(--popover)",
                       border: "1px solid var(--border)",
@@ -212,125 +157,63 @@ function Painel() {
                   />
                   <Line
                     type="monotone"
-                    dataKey="faturamento"
-                    stroke="var(--primary)"
+                    dataKey="engajamento"
+                    stroke="var(--creator-primary)"
                     strokeWidth={3}
-                    dot={{ r: 4 }}
-                    name="Faturamento"
+                    dot={{ r: 4, fill: "var(--creator-accent)" }}
                   />
                 </LineChart>
               </ResponsiveContainer>
             )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Oportunidades por Etapa</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[280px]">
-            {leadsFiltrados.length === 0 ? (
-              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                Nenhuma {CREATOR_TERMS.lead.toLowerCase()} cadastrada.
-              </div>
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={porEtapa}
-                    dataKey="quantidade"
-                    nameKey="etapa"
-                    innerRadius={50}
-                    outerRadius={90}
-                    paddingAngle={2}
-                  >
-                    {porEtapa.map((_, i) => (
-                      <Cell key={i} fill={coresEtapa[i]} />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      background: "var(--popover)",
-                      border: "1px solid var(--border)",
-                      borderRadius: 8,
-                    }}
-                  />
-                  <Legend wrapperStyle={{ fontSize: 11 }} />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </CardContent>
-        </Card>
+          </GlowCardContent>
+        </GlowCard>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Parcerias por {CREATOR_TERMS.employee}</CardTitle>
-          </CardHeader>
-          <CardContent className="h-[260px]">
-            {porVendedor.every((v) => v.vendas === 0) ? (
-              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                Nenhuma receita fechada por {CREATOR_TERMS.employee.toLowerCase()}.
-              </div>
-            ) : (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={porVendedor}>
-                  <CartesianGrid strokeDasharray="3 3" opacity={0.3} />
-                  <XAxis dataKey="nome" fontSize={12} stroke="currentColor" />
-                  <YAxis
-                    fontSize={12}
-                    stroke="currentColor"
-                    tickFormatter={(v) => `R$ ${(v / 1000).toFixed(0)}k`}
-                  />
-                  <Tooltip
-                    formatter={(v) => brl(Number(v))}
-                    contentStyle={{
-                      background: "var(--popover)",
-                      border: "1px solid var(--border)",
-                      borderRadius: 8,
-                    }}
-                  />
-                  <Bar dataKey="vendas" radius={[6, 6, 0, 0]}>
-                    {porVendedor.map((d, i) => (
-                      <Cell key={i} fill={d.destaque ? "var(--primary)" : "var(--chart-2)"} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            )}
-          </CardContent>
-        </Card>
+      {paineis.length > 0 ? (
+        <div className="space-y-4">
+          <h2 className="font-semibold text-lg">Painéis por campanha</h2>
+          <div className="grid gap-4 lg:grid-cols-2">
+            {paineis.map((painel) => {
+              const aprovadas = entregas.filter(
+                (e) => e.campanhaId === painel.campanhaId && e.statusAprovacao === "aprovado",
+              ).length;
+              return (
+                <PainelCampanha
+                  key={painel.id}
+                  painel={painel}
+                  campaignTitle={painel.campanhaId.replace(/^campaign_demo_/, "Campanha ")}
+                  entregasAprovadas={aprovadas}
+                />
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Atividades Recentes</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {atividades.length === 0 && (
-              <p className="text-sm text-muted-foreground">
-                Sem atividades. Interações nas {CREATOR_TERMS.lead.toLowerCase()}s aparecem aqui.
-              </p>
-            )}
-            {atividades.map((a) => (
-              <div key={a.id} className="flex items-start gap-3 text-sm">
-                <div className="mt-0.5 rounded-full bg-primary/10 p-1.5">
-                  <ArrowUpRight className="h-3 w-3 text-primary" />
+      <GlowCard>
+        <GlowCardHeader>
+          <h2 className="font-semibold">Entregas recentes</h2>
+        </GlowCardHeader>
+        <GlowCardContent className="space-y-3">
+          {entregasRecentes.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              Nenhuma entrega registrada. Envie conteúdo nas campanhas ativas.
+            </p>
+          ) : (
+            entregasRecentes.map((e) => (
+              <div key={e.id} className="flex items-start justify-between gap-3 text-sm">
+                <div>
+                  <p className="font-medium">{e.titulo}</p>
+                  <p className="text-xs text-muted-foreground capitalize">{e.tipoMidia}</p>
                 </div>
-                <div className="flex-1">
-                  <p>{a.texto}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {nomeVendedor(usuarios, a.vendedorId)}
-                  </p>
-                </div>
-                <Badge variant="secondary" className="text-xs">
-                  {new Date(a.em).toLocaleDateString("pt-BR")}
-                </Badge>
+                <GlowBadge variant="outline" className="capitalize shrink-0">
+                  {e.statusAprovacao.replace("_", " ")}
+                </GlowBadge>
               </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
+            ))
+          )}
+        </GlowCardContent>
+      </GlowCard>
     </div>
   );
 }
@@ -340,23 +223,27 @@ function Kpi({
   label,
   value,
   hint,
+  highlight,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
   hint: string;
+  highlight?: boolean;
 }) {
   return (
-    <Card>
-      <CardHeader className="pb-2">
-        <CardTitle className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+    <GlowCard>
+      <GlowCardHeader className="pb-2">
+        <p className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
           {icon} {label}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="text-2xl font-semibold">{value}</div>
+        </p>
+      </GlowCardHeader>
+      <GlowCardContent>
+        <div className={`text-2xl font-semibold ${highlight ? "text-creator-primary" : ""}`}>
+          {value}
+        </div>
         <p className="text-xs text-muted-foreground">{hint}</p>
-      </CardContent>
-    </Card>
+      </GlowCardContent>
+    </GlowCard>
   );
 }

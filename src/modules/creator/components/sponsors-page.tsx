@@ -1,5 +1,4 @@
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GlowBadge, GlowCard, GlowCardContent, GlowCardHeader } from "@/ui";
 import {
   Table,
   TableBody,
@@ -22,17 +21,17 @@ export function SponsorsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Sponsors</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="glowup-heading">Sponsors</h1>
+        <p className="glowup-subheading">
           Marcas patrocinadoras e budgets disponíveis para campanhas.
         </p>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Pipeline de sponsors</CardTitle>
-        </CardHeader>
-        <CardContent>
+      <GlowCard>
+        <GlowCardHeader>
+          <h2 className="font-semibold text-base">Marcas patrocinadoras</h2>
+        </GlowCardHeader>
+        <GlowCardContent>
           {sponsors.length === 0 ? (
             <p className="text-sm text-muted-foreground">Nenhum sponsor cadastrado.</p>
           ) : (
@@ -54,15 +53,15 @@ export function SponsorsPage() {
                     <TableCell>{s.budgetRange}</TableCell>
                     <TableCell className="text-muted-foreground">{s.contactEmail}</TableCell>
                     <TableCell>
-                      <Badge variant="outline">{STATUS_LABEL[s.status]}</Badge>
+                      <GlowBadge variant="outline">{STATUS_LABEL[s.status]}</GlowBadge>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           )}
-        </CardContent>
-      </Card>
+        </GlowCardContent>
+      </GlowCard>
     </div>
   );
 }

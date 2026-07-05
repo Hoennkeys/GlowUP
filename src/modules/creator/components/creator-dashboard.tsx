@@ -1,9 +1,7 @@
 import * as React from "react";
 import { Link, useParams } from "@tanstack/react-router";
 import { Sparkles, Building2, Handshake, Megaphone, Target, Inbox, ArrowRight } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { GlowBadge, GlowButton, GlowCard, GlowCardContent, GlowCardHeader } from "@/ui";
 import { useCommunicationsUnread } from "@/hooks/use-communications-unread";
 import { brl } from "@/lib/format";
 import { PRODUCT_NAME } from "@/lib/product-branding";
@@ -32,7 +30,7 @@ export function CreatorDashboard() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
-          <Sparkles className="h-6 w-6 text-primary" />
+          <Sparkles className="h-6 w-6 text-creator-primary" />
           {PRODUCT_NAME}
         </h1>
         <p className="text-sm text-muted-foreground">
@@ -56,7 +54,7 @@ export function CreatorDashboard() {
         <DashboardStatCard
           title="Patrocinadores"
           value={metrics.activeSponsors}
-          subtitle={`${sponsors.length} no pipeline de campanhas`}
+          subtitle={`${sponsors.length} parceiros ativos`}
           icon={Target}
         />
         <DashboardStatCard
@@ -68,12 +66,14 @@ export function CreatorDashboard() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base">Campanhas recentes</CardTitle>
-            <CardDescription>Status e orçamento das últimas movimentações</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
+        <GlowCard>
+          <GlowCardHeader>
+            <h2 className="font-semibold text-base">Campanhas recentes</h2>
+            <p className="text-sm text-muted-foreground">
+              Status e orçamento das últimas movimentações
+            </p>
+          </GlowCardHeader>
+          <GlowCardContent className="space-y-3">
             {recentCampaigns.length === 0 ? (
               <p className="text-sm text-muted-foreground">Nenhuma campanha cadastrada.</p>
             ) : (
@@ -89,46 +89,48 @@ export function CreatorDashboard() {
                       <p className="text-xs text-muted-foreground">{brand?.name ?? "—"}</p>
                     </div>
                     <div className="text-right shrink-0">
-                      <Badge variant="outline">{STATUS_LABEL[c.status] ?? c.status}</Badge>
+                      <GlowBadge variant="outline">{STATUS_LABEL[c.status] ?? c.status}</GlowBadge>
                       <p className="text-xs text-muted-foreground mt-1">{brl(c.budget)}</p>
                     </div>
                   </div>
                 );
               })
             )}
-            <Button variant="outline" size="sm" asChild>
+            <GlowButton variant="outline" size="sm" asChild>
               <Link to="/t/$tenantSlug/app/creator/campaigns" params={{ tenantSlug }}>
                 Ver todas
                 <ArrowRight className="ml-1 h-3 w-3" />
               </Link>
-            </Button>
-          </CardContent>
-        </Card>
+            </GlowButton>
+          </GlowCardContent>
+        </GlowCard>
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
+        <GlowCard>
+          <GlowCardHeader>
+            <h2 className="font-semibold text-base flex items-center gap-2">
               <Inbox className="h-4 w-4" />
               Comunicações
-            </CardTitle>
-            <CardDescription>Inbox omnichannel conectado às campanhas</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Inbox omnichannel conectado às campanhas
+            </p>
+          </GlowCardHeader>
+          <GlowCardContent className="space-y-4">
             <div className="flex items-center justify-between rounded-lg border p-4">
               <div>
                 <p className="text-sm font-medium">Mensagens não lidas</p>
                 <p className="text-xs text-muted-foreground">Inbox unificado de todos os canais</p>
               </div>
-              <span className="text-2xl font-bold text-emerald-600">{commsUnread}</span>
+              <span className="text-2xl font-bold text-creator-primary">{commsUnread}</span>
             </div>
-            <Button asChild>
+            <GlowButton asChild>
               <Link to="/t/$tenantSlug/app/communications/inbox" params={{ tenantSlug }}>
                 Abrir Inbox
                 <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
-            </Button>
-          </CardContent>
-        </Card>
+            </GlowButton>
+          </GlowCardContent>
+        </GlowCard>
       </div>
     </div>
   );
