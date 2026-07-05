@@ -1,10 +1,5 @@
 import { expect, test } from "@playwright/test";
-import {
-  clearAppStorage,
-  loginAsClient,
-  loginAsOperational,
-  loginAsSuperAdmin,
-} from "./helpers";
+import { clearAppStorage, loginAsClient, loginAsOperational, loginAsSuperAdmin } from "./helpers";
 
 test.describe("Fase 5 — Portal Admin", () => {
   test.beforeEach(async ({ page }) => {
@@ -146,7 +141,10 @@ test.describe("Fase 4 — Pipelines modulares", () => {
     await expect(page.getByRole("heading", { name: "Pipelines" })).toBeVisible();
     await expect(page.getByText("Vendas", { exact: true })).toBeVisible();
 
-    await page.getByRole("link", { name: /Abrir kanban/i }).first().click();
+    await page
+      .getByRole("link", { name: /Abrir kanban/i })
+      .first()
+      .click();
     await expect(page).toHaveURL(/\/t\/demo\/app\/funil\/pipeline-vendas/);
     await expect(page.getByText("Sem Contato").first()).toBeVisible({ timeout: 15_000 });
   });

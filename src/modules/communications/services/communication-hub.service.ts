@@ -35,7 +35,9 @@ export class CommunicationHubService {
     return this.registry.get(type);
   }
 
-  listConversations(filters?: Parameters<LocalCommunicationsRepositories["conversationRepo"]["list"]>[0]) {
+  listConversations(
+    filters?: Parameters<LocalCommunicationsRepositories["conversationRepo"]["list"]>[0],
+  ) {
     return this.repos.conversationRepo.list(filters);
   }
 

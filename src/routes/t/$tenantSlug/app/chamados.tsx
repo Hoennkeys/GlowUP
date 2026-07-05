@@ -17,7 +17,12 @@ import { clientDisplayName } from "@/lib/clients-registry";
 import { useCrm } from "@/lib/crm-store";
 import { brDateTime } from "@/lib/format";
 import { useTenant } from "@/lib/tenant/tenant-store";
-import { NAV_LABELS, CREATOR_TERMS, creatorPageTitle, portalPageTitle } from "@/modules/creator/domain/terminology";
+import {
+  NAV_LABELS,
+  CREATOR_TERMS,
+  creatorPageTitle,
+  portalPageTitle,
+} from "@/modules/creator/domain/terminology";
 
 export const Route = createFileRoute("/t/$tenantSlug/app/chamados")({
   head: () => ({ meta: [{ title: creatorPageTitle(NAV_LABELS.chamados) }] }),
@@ -115,7 +120,9 @@ function AppChamados() {
                     <TableCell>
                       <PortalStatusBadge status={c.status} />
                     </TableCell>
-                    <TableCell className="text-muted-foreground">{brDateTime(c.criadoEm)}</TableCell>
+                    <TableCell className="text-muted-foreground">
+                      {brDateTime(c.criadoEm)}
+                    </TableCell>
                     <TableCell>
                       <Button variant="outline" size="sm" asChild>
                         <Link

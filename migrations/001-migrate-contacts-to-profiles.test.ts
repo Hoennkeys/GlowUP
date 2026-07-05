@@ -3,7 +3,11 @@
  * Run: npx tsx migrations/001-migrate-contacts-to-profiles.test.ts
  */
 
-import { migrateContactsToProfiles, migrateLeadToProfile, migrateLeadToCampaign } from "./001-migrate-contacts-to-profiles";
+import {
+  migrateContactsToProfiles,
+  migrateLeadToProfile,
+  migrateLeadToCampaign,
+} from "./001-migrate-contacts-to-profiles";
 import { DEMO_SNAPSHOT } from "./fixtures/demo-snapshot";
 
 let passed = 0;
@@ -28,11 +32,19 @@ assert(profile.legacyLeadId === "lead-demo-jc-ativo", "Profile preserves legacyL
 assert(profile.email === "cliente@demo.com", "Profile email preserved");
 
 // Lead → Campaign (skip Sem Contato)
-const campaignActive = migrateLeadToCampaign(DEMO_SNAPSHOT.leads[0], "tenant-demo", "brand_client-001");
+const campaignActive = migrateLeadToCampaign(
+  DEMO_SNAPSHOT.leads[0],
+  "tenant-demo",
+  "brand_client-001",
+);
 assert(campaignActive?.status === "active", "Proposta Enviada → active campaign");
 assert(campaignActive?.budget === 15000, "Campaign budget from lead.valor");
 
-const campaignSkipped = migrateLeadToCampaign(DEMO_SNAPSHOT.leads[1], "tenant-demo", "brand_unknown");
+const campaignSkipped = migrateLeadToCampaign(
+  DEMO_SNAPSHOT.leads[1],
+  "tenant-demo",
+  "brand_unknown",
+);
 assert(campaignSkipped === null, "Sem Contato lead skipped for campaign");
 
 // Full migration

@@ -1,10 +1,5 @@
 import { expect, test } from "@playwright/test";
-import {
-  appSidebar,
-  clearAppStorage,
-  loginAsMember,
-  POS_VENDA_STORAGE_KEY,
-} from "./helpers";
+import { appSidebar, clearAppStorage, loginAsMember, POS_VENDA_STORAGE_KEY } from "./helpers";
 
 test.describe("Reforma comercial — sidebar e Comunicação", () => {
   test.beforeEach(async ({ page }) => {
@@ -26,7 +21,9 @@ test.describe("Reforma comercial — sidebar e Comunicação", () => {
     await expect(sidebar.getByRole("link", { name: "Propostas" })).not.toBeVisible();
   });
 
-  test("seção Gestão de Conteúdo e Campanhas colapsa e expande com persistência", async ({ page }) => {
+  test("seção Gestão de Conteúdo e Campanhas colapsa e expande com persistência", async ({
+    page,
+  }) => {
     const sidebar = appSidebar(page);
     const trigger = sidebar.getByRole("button", { name: /Gestão de Conteúdo e Campanhas/i });
 

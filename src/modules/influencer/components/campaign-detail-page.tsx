@@ -160,7 +160,9 @@ export function CampaignDetailPage() {
                 <p className="text-sm">
                   Valor total: <strong>{brl(contrato.valor)}</strong>
                 </p>
-                <GlowBadge variant={contrato.assinaturaStatus === "aceita" ? "default" : "secondary"}>
+                <GlowBadge
+                  variant={contrato.assinaturaStatus === "aceita" ? "default" : "secondary"}
+                >
                   {contrato.assinaturaStatus}
                 </GlowBadge>
                 <ul className="space-y-2 text-sm">

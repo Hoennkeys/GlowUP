@@ -15,9 +15,7 @@ export function PerformancePanelPage() {
     ? snapshot.paineis.filter((p) => p.campanhaId === campaignId)
     : snapshot.paineis;
 
-  const selectedCampaign = campaignId
-    ? campaigns.find((c) => c.id === campaignId)
-    : undefined;
+  const selectedCampaign = campaignId ? campaigns.find((c) => c.id === campaignId) : undefined;
 
   return (
     <div className="space-y-6">
@@ -50,14 +48,8 @@ export function PerformancePanelPage() {
                 <MetricCard label="Alcance" value={formatMetricCount(m.alcance)} />
                 <MetricCard label="Impressões" value={formatMetricCount(m.impressoes)} />
                 <MetricCard label="Cliques" value={formatMetricCount(m.cliques)} />
-                <MetricCard
-                  label="Engajamento"
-                  value={`${m.engajamento}%`}
-                  highlight
-                />
-                {m.roi != null ? (
-                  <MetricCard label="ROI" value={`${m.roi}x`} highlight />
-                ) : null}
+                <MetricCard label="Engajamento" value={`${m.engajamento}%`} highlight />
+                {m.roi != null ? <MetricCard label="ROI" value={`${m.roi}x`} highlight /> : null}
                 <MetricCard label="Conversões" value={String(m.conversoes)} />
                 <MetricCard label="CPM" value={`R$ ${m.cpm.toFixed(2)}`} />
               </div>
@@ -78,9 +70,7 @@ export function PerformancePanelPage() {
                             {platform}
                           </GlowBadge>
                           {metrics.alcance != null ? (
-                            <p className="text-sm">
-                              Alcance: {formatMetricCount(metrics.alcance)}
-                            </p>
+                            <p className="text-sm">Alcance: {formatMetricCount(metrics.alcance)}</p>
                           ) : null}
                           {metrics.impressoes != null ? (
                             <p className="text-sm text-muted-foreground">

@@ -490,7 +490,8 @@ const emailsDemo: EmailMsg[] = [
     de: "lucas@technova.com.br",
     para: "operacional@demo.com",
     assunto: "Re: Proposta comercial TechNova",
-    corpo: "Olá Maria, recebemos a proposta. Podemos agendar uma call na quinta para alinhar condições?",
+    corpo:
+      "Olá Maria, recebemos a proposta. Podemos agendar uma call na quinta para alinhar condições?",
     em: "2026-06-14T09:30:00.000Z",
     pasta: "Caixa de Entrada",
     lida: false,
@@ -510,7 +511,8 @@ const emailsDemo: EmailMsg[] = [
     de: "cliente@demo.com",
     para: "operacional@demo.com",
     assunto: "Dúvida sobre fatura FAT-2026-001",
-    corpo: "Maria, boa tarde. Poderia detalhar os itens da mensalidade de maio? Abri um chamado no portal também.",
+    corpo:
+      "Maria, boa tarde. Poderia detalhar os itens da mensalidade de maio? Abri um chamado no portal também.",
     em: "2026-06-01T11:05:00.000Z",
     pasta: "Caixa de Entrada",
     lida: true,
@@ -530,7 +532,8 @@ const emailsDemo: EmailMsg[] = [
     de: "bruno@construtorasatlas.com.br",
     para: "ricardo@demo.com",
     assunto: "Escopo ampliado — 3 filiais",
-    corpo: "Ricardo, após a reunião precisamos incluir as filiais SP, RJ e BH no escopo. Aguardo nova proposta.",
+    corpo:
+      "Ricardo, após a reunião precisamos incluir as filiais SP, RJ e BH no escopo. Aguardo nova proposta.",
     em: "2026-06-09T08:45:00.000Z",
     pasta: "Caixa de Entrada",
     lida: false,
@@ -543,7 +546,8 @@ const emailsAcme: EmailMsg[] = [
     de: "cliente@acme.com",
     para: "operacional@acme.com",
     assunto: "Integração ERP parou de sincronizar",
-    corpo: "Carlos, desde ontem os pedidos não estão sincronizando. Já abri chamado no portal. Urgente.",
+    corpo:
+      "Carlos, desde ontem os pedidos não estão sincronizando. Já abri chamado no portal. Urgente.",
     em: "2026-06-03T08:10:00.000Z",
     pasta: "Caixa de Entrada",
     lida: true,
@@ -553,7 +557,8 @@ const emailsAcme: EmailMsg[] = [
     de: "operacional@acme.com",
     para: "cliente@acme.com",
     assunto: "Re: Proposta PROP-2026-101 — Automação industrial",
-    corpo: "Ana, proposta enviada. Entrada de 50% conforme FAT-2026-101. Projeto em revisão na linha de produção.",
+    corpo:
+      "Ana, proposta enviada. Entrada de 50% conforme FAT-2026-101. Projeto em revisão na linha de produção.",
     em: "2026-05-20T11:00:00.000Z",
     pasta: "Enviados",
     lida: true,
@@ -897,7 +902,11 @@ export const pipelineItemsMock: PipelineItem[] = [
     clientId: DEMO_CLIENT_ID,
     criadoEm: "2026-04-01T10:00:00.000Z",
     timeline: [
-      { tipo: "anotacao", em: "2026-04-01T10:00:00.000Z", texto: "Projeto iniciado (PROP-2026-002 aceita)." },
+      {
+        tipo: "anotacao",
+        em: "2026-04-01T10:00:00.000Z",
+        texto: "Projeto iniciado (PROP-2026-002 aceita).",
+      },
       { tipo: "anotacao", em: "2026-05-15T14:00:00.000Z", texto: "Wireframes aprovados por João." },
     ],
   },
@@ -911,7 +920,11 @@ export const pipelineItemsMock: PipelineItem[] = [
     clientId: DEMO_CLIENT_ID,
     criadoEm: "2026-06-01T09:00:00.000Z",
     timeline: [
-      { tipo: "anotacao", em: "2026-06-01T09:00:00.000Z", texto: "Briefing agendado pós-consultoria." },
+      {
+        tipo: "anotacao",
+        em: "2026-06-01T09:00:00.000Z",
+        texto: "Briefing agendado pós-consultoria.",
+      },
     ],
   },
   {

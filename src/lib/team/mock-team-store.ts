@@ -93,11 +93,7 @@ export function removeMockTeamMember(tenantSlug: string, userId: string): void {
   writeExtras(tenantSlug, extras);
 }
 
-export function updateMockMemberRole(
-  tenantSlug: string,
-  userId: string,
-  role: TenantRole,
-): void {
+export function updateMockMemberRole(tenantSlug: string, userId: string, role: TenantRole): void {
   const extras = readExtras(tenantSlug);
   const idx = extras.findIndex((m) => m.id === userId);
   if (idx >= 0) {

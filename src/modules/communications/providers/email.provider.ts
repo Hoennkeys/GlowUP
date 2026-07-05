@@ -1,4 +1,8 @@
-import type { CommunicationProvider, CreateConversationInput, SendMessageInput } from "./communication-provider.interface";
+import type {
+  CommunicationProvider,
+  CreateConversationInput,
+  SendMessageInput,
+} from "./communication-provider.interface";
 import type { Conversation, Message, ProviderConfig } from "../domain/entities";
 import { BaseProvider, uid } from "./base-provider";
 import type { LocalCommunicationsRepositories } from "../repositories/local/local-storage.repository";
@@ -63,7 +67,12 @@ export class EmailProvider extends BaseProvider implements CommunicationProvider
   }
 
   async receiveMessage(payload: unknown): Promise<Message> {
-    const data = payload as { conversationId: string; from: string; body: string; subject?: string };
+    const data = payload as {
+      conversationId: string;
+      from: string;
+      body: string;
+      subject?: string;
+    };
     const msg: Message = {
       id: uid("msg_email"),
       conversationId: data.conversationId,
@@ -80,9 +89,7 @@ export class EmailProvider extends BaseProvider implements CommunicationProvider
 
   async getContacts(query?: string) {
     const convs = await this.getConversations();
-    const emails = convs.flatMap((c) =>
-      c.participants.filter((p) => p.email).map((p) => p),
-    );
+    const emails = convs.flatMap((c) => c.participants.filter((p) => p.email).map((p) => p));
     if (!query) return emails;
     const q = query.toLowerCase();
     return emails.filter((p) => (p.email ?? p.name).toLowerCase().includes(q));

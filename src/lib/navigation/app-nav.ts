@@ -20,10 +20,7 @@ import {
   Megaphone,
 } from "lucide-react";
 import { SALES_PIPELINE_ID, PROJECTS_PIPELINE_ID } from "@/lib/pipelines/defaults";
-import {
-  NAV_LABELS,
-  SIDEBAR_SECTIONS,
-} from "@/modules/creator/domain/terminology";
+import { NAV_LABELS, SIDEBAR_SECTIONS } from "@/modules/creator/domain/terminology";
 
 type AppNavRoute =
   | "/t/$tenantSlug/app/creator/"
@@ -152,15 +149,16 @@ export function isNavItemActive(pathname: string, tenantSlug: string, item: AppN
   if (item.to.includes("/creator")) {
     if (item.to.endsWith("/creator/")) {
       return (
-        pathname === `/t/${tenantSlug}/app/creator` ||
-        pathname === `/t/${tenantSlug}/app/creator/`
+        pathname === `/t/${tenantSlug}/app/creator` || pathname === `/t/${tenantSlug}/app/creator/`
       );
     }
     return pathname.startsWith(`/t/${tenantSlug}/app/creator/${segment}`);
   }
 
-  return pathname === `/t/${tenantSlug}/app/${segment}` ||
-    pathname.startsWith(`/t/${tenantSlug}/app/${segment}/`);
+  return (
+    pathname === `/t/${tenantSlug}/app/${segment}` ||
+    pathname.startsWith(`/t/${tenantSlug}/app/${segment}/`)
+  );
 }
 
 export function isPosVendaRouteActive(pathname: string, tenantSlug: string): boolean {

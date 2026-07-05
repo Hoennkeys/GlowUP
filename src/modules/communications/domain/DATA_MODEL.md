@@ -10,11 +10,11 @@ All hub operations (inbox, tickets, providers, internal notes) read and write th
 
 These CRM arrays remain for backward compatibility and are **not** removed:
 
-| Legacy array | Unified entity | Link field |
-|--------------|----------------|------------|
-| `conversas` | `Conversation` + `Message` | `legacyConversaId` |
-| `emails` | `Conversation` + `Message` | `legacyEmailId` |
-| `chamados` | `Ticket` | `legacyChamadoId` |
+| Legacy array | Unified entity             | Link field         |
+| ------------ | -------------------------- | ------------------ |
+| `conversas`  | `Conversation` + `Message` | `legacyConversaId` |
+| `emails`     | `Conversation` + `Message` | `legacyEmailId`    |
+| `chamados`   | `Ticket`                   | `legacyChamadoId`  |
 
 ### Read path
 

@@ -122,9 +122,7 @@ export function migrateClientToBrand(
 ): Brand | null {
   if (existingBrands.some((b) => b.id === `brand_${clientId}`)) return null;
 
-  const client = CLIENT_REGISTRY.find(
-    (c) => c.clientId === clientId && c.tenantId === tenantId,
-  );
+  const client = CLIENT_REGISTRY.find((c) => c.clientId === clientId && c.tenantId === tenantId);
   if (!client) return null;
 
   const now = new Date().toISOString();
@@ -161,7 +159,8 @@ export function migrateTarefaToChecklist(
     ],
     responsavelId: tarefa.responsavelId,
     prazo: tarefa.prazo,
-    prioridade: tarefa.prioridade === "Alta" ? "alta" : tarefa.prioridade === "Média" ? "media" : "baixa",
+    prioridade:
+      tarefa.prioridade === "Alta" ? "alta" : tarefa.prioridade === "Média" ? "media" : "baixa",
     legacyTarefaId: tarefa.id,
     createdAt: new Date().toISOString(),
   };
@@ -198,10 +197,7 @@ export function migratePropostaToContrato(
   };
 }
 
-export function migrateFaturaToPagamento(
-  fatura: Fatura,
-  campanhaId: string,
-): PagamentoCampanha {
+export function migrateFaturaToPagamento(fatura: Fatura, campanhaId: string): PagamentoCampanha {
   return {
     id: `pagamento_${fatura.id}`,
     tenantId: fatura.tenantId,
@@ -244,7 +240,7 @@ export function migrateContactsToProfiles(
 
   // 1. ClientRecord → Brand
   const clientIds = new Set([
-    ...input.leads.map((l) => l.clientId).filter(Boolean) as string[],
+    ...(input.leads.map((l) => l.clientId).filter(Boolean) as string[]),
     ...input.propostas.map((p) => p.clientId),
     ...input.faturas.map((f) => f.clientId),
   ]);
@@ -258,7 +254,7 @@ export function migrateContactsToProfiles(
   for (const lead of input.leads) {
     influencer.profiles.push(migrateLeadToProfile(lead, resolvedTenantId));
 
-    const brandId = lead.clientId ? `brand_${lead.clientId}` : brands[0]?.id ?? "brand_unknown";
+    const brandId = lead.clientId ? `brand_${lead.clientId}` : (brands[0]?.id ?? "brand_unknown");
     const campaign = migrateLeadToCampaign(lead, resolvedTenantId, brandId);
     if (campaign) {
       campaigns.push(campaign);
@@ -269,7 +265,7 @@ export function migrateContactsToProfiles(
   // 3. Tarefa → ChecklistEntrega
   for (const tarefa of input.tarefas) {
     const campanhaId = tarefa.leadId
-      ? campaignByLeadId.get(tarefa.leadId) ?? `campaign_migrated_${tarefa.leadId}`
+      ? (campaignByLeadId.get(tarefa.leadId) ?? `campaign_migrated_${tarefa.leadId}`)
       : "campaign_unknown";
     influencer.checklists.push(migrateTarefaToChecklist(tarefa, resolvedTenantId, campanhaId));
   }
@@ -277,11 +273,9 @@ export function migrateContactsToProfiles(
   // 4. Proposta → Contrato
   for (const proposta of input.propostas) {
     const campanhaId = proposta.leadId
-      ? campaignByLeadId.get(proposta.leadId) ?? `campaign_migrated_${proposta.leadId}`
+      ? (campaignByLeadId.get(proposta.leadId) ?? `campaign_migrated_${proposta.leadId}`)
       : "campaign_unknown";
-    const influencerId = proposta.leadId
-      ? `influencer_${proposta.leadId}`
-      : "influencer_unknown";
+    const influencerId = proposta.leadId ? `influencer_${proposta.leadId}` : "influencer_unknown";
     influencer.contratos.push(migratePropostaToContrato(proposta, campanhaId, influencerId));
   }
 
@@ -289,7 +283,7 @@ export function migrateContactsToProfiles(
   for (const fatura of input.faturas) {
     const relatedLead = input.leads.find((l) => l.clientId === fatura.clientId);
     const campanhaId = relatedLead
-      ? campaignByLeadId.get(relatedLead.id) ?? `campaign_migrated_${relatedLead.id}`
+      ? (campaignByLeadId.get(relatedLead.id) ?? `campaign_migrated_${relatedLead.id}`)
       : "campaign_unknown";
     influencer.pagamentos.push(migrateFaturaToPagamento(fatura, campanhaId));
   }

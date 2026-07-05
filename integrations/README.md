@@ -6,18 +6,18 @@
 
 ## Visão geral
 
-| Integração | Pasta | Status | Modo mock |
-| --- | --- | --- | --- |
-| Storage S3 | `integrations/storage/s3.ts` | Presigned URLs | Sem `AWS_*` |
-| Instagram | `integrations/social/index.ts` | Métricas públicas | Sem access token |
-| TikTok | `integrations/social/tiktok.ts` | Métricas públicas | Sem `TIKTOK_*` |
-| YouTube | `integrations/social/youtube.ts` | Métricas públicas | Sem `YOUTUBE_*` |
-| Analytics GA4 | `integrations/analytics/ga4.ts` | Eventos + UTM | Sem `GA4_*` |
-| Realtime | `integrations/realtime/pusher.ts` | Eventos de entrega | Sem `PUSHER_*` |
-| Pagamentos | `integrations/payments/stripe.ts` | Milestones / payouts | Sem `STRIPE_*` |
-| E-sign | `integrations/esign/docusign.ts` | Envelopes | Sem `DOCUSIGN_*` |
-| Webhook Stripe | `integrations/webhooks/stripe.ts` | Pagamentos | Sem `STRIPE_WEBHOOK_SECRET` |
-| OAuth social | `integrations/webhooks/social.ts` | Callbacks | Sem app secrets |
+| Integração     | Pasta                             | Status               | Modo mock                   |
+| -------------- | --------------------------------- | -------------------- | --------------------------- |
+| Storage S3     | `integrations/storage/s3.ts`      | Presigned URLs       | Sem `AWS_*`                 |
+| Instagram      | `integrations/social/index.ts`    | Métricas públicas    | Sem access token            |
+| TikTok         | `integrations/social/tiktok.ts`   | Métricas públicas    | Sem `TIKTOK_*`              |
+| YouTube        | `integrations/social/youtube.ts`  | Métricas públicas    | Sem `YOUTUBE_*`             |
+| Analytics GA4  | `integrations/analytics/ga4.ts`   | Eventos + UTM        | Sem `GA4_*`                 |
+| Realtime       | `integrations/realtime/pusher.ts` | Eventos de entrega   | Sem `PUSHER_*`              |
+| Pagamentos     | `integrations/payments/stripe.ts` | Milestones / payouts | Sem `STRIPE_*`              |
+| E-sign         | `integrations/esign/docusign.ts`  | Envelopes            | Sem `DOCUSIGN_*`            |
+| Webhook Stripe | `integrations/webhooks/stripe.ts` | Pagamentos           | Sem `STRIPE_WEBHOOK_SECRET` |
+| OAuth social   | `integrations/webhooks/social.ts` | Callbacks            | Sem app secrets             |
 
 Todos os adaptadores funcionam em **modo mock** por padrão — uploads, métricas, pagamentos e assinaturas simulados são suficientes para dev e E2E.
 
@@ -80,7 +80,11 @@ VITE_GA4_TRACKING=true
 import { trackCampaignEvent, buildUtmUrl } from "../integrations/analytics/ga4";
 
 await trackCampaignEvent({ event: "delivery_approved", campaignId: "c1", tenantId: "t1" });
-const link = buildUtmUrl("https://glowup.app/c/1", { source: "instagram", medium: "creator", campaign: "launch" });
+const link = buildUtmUrl("https://glowup.app/c/1", {
+  source: "instagram",
+  medium: "creator",
+  campaign: "launch",
+});
 ```
 
 ---

@@ -20,7 +20,9 @@ export function ConversationThread({ conversation, messages }: Props) {
           <h2 className="text-lg font-semibold">{String(messages[0].metadata.assunto)}</h2>
           <p className="text-sm text-muted-foreground">De: {messages[0].authorId}</p>
           {messages[0].metadata.para && (
-            <p className="text-sm text-muted-foreground">Para: {String(messages[0].metadata.para)}</p>
+            <p className="text-sm text-muted-foreground">
+              Para: {String(messages[0].metadata.para)}
+            </p>
           )}
         </div>
       )}
@@ -29,7 +31,10 @@ export function ConversationThread({ conversation, messages }: Props) {
           if (m.isInternalNote) {
             return (
               <div key={m.id} className="flex justify-center">
-                <Badge variant="outline" className="bg-amber-50 text-amber-800 border-amber-200 max-w-[90%] whitespace-pre-wrap">
+                <Badge
+                  variant="outline"
+                  className="bg-amber-50 text-amber-800 border-amber-200 max-w-[90%] whitespace-pre-wrap"
+                >
                   Nota interna: {m.body}
                 </Badge>
               </div>

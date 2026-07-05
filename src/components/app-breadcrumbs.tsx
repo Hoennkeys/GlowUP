@@ -27,7 +27,9 @@ export function AppBreadcrumbs({ className }: { className?: string }) {
                 {crumb.label}
               </Link>
             ) : (
-              <span className={isLast ? "font-medium text-foreground" : undefined}>{crumb.label}</span>
+              <span className={isLast ? "font-medium text-foreground" : undefined}>
+                {crumb.label}
+              </span>
             )}
           </span>
         );

@@ -14,7 +14,11 @@ import { buildMockInfluencerForTenant } from "@/modules/influencer/data/mock-inf
 import { createPresignedUploadUrl } from "../../../integrations/storage/s3";
 import { fetchPublicMetrics } from "../../../integrations/social/instagram";
 import { processMilestonePayment } from "../../../integrations/payments/stripe";
-import { publishDeliveryEvent, clearMockEventLog, getMockEventLog } from "../../../integrations/realtime/pusher";
+import {
+  publishDeliveryEvent,
+  clearMockEventLog,
+  getMockEventLog,
+} from "../../../integrations/realtime/pusher";
 
 let passed = 0;
 let failed = 0;
@@ -34,8 +38,20 @@ async function run() {
 
   // Feature flags & roles
   assert(typeof FEATURE_FLAGS.influencerPlatform === "boolean", "feature flags loaded");
-  assert(resolveInfluencerRole({ id: "1", nome: "A", email: "a@t.com", platformRole: "SUPER_ADMIN" }) === "super_admin", "super admin role");
-  assert(resolveInfluencerRole({ id: "1", nome: "A", email: "a@t.com", tenantMemberships: [{ tenantId: "t1", tenantSlug: "demo", role: "OWNER" }] }) === "brand_admin", "owner → brand_admin");
+  assert(
+    resolveInfluencerRole({ id: "1", nome: "A", email: "a@t.com", platformRole: "SUPER_ADMIN" }) ===
+      "super_admin",
+    "super admin role",
+  );
+  assert(
+    resolveInfluencerRole({
+      id: "1",
+      nome: "A",
+      email: "a@t.com",
+      tenantMemberships: [{ tenantId: "t1", tenantSlug: "demo", role: "OWNER" }],
+    }) === "brand_admin",
+    "owner → brand_admin",
+  );
   assert(canApproveDeliveries("brand_admin"), "brand_admin can approve");
 
   // Entrega versioning

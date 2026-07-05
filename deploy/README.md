@@ -6,11 +6,11 @@
 
 ## Ambientes
 
-| Ambiente | Branch | URL (exemplo) | Feature flags |
-| --- | --- | --- | --- |
-| Local | — | `http://localhost:8080` | `.env` |
-| Staging | `main` | `https://staging.glowup.app` | flags parciais |
-| Produção | tag `v*` | `https://app.glowup.app` | rollout gradual |
+| Ambiente | Branch   | URL (exemplo)                | Feature flags   |
+| -------- | -------- | ---------------------------- | --------------- |
+| Local    | —        | `http://localhost:8080`      | `.env`          |
+| Staging  | `main`   | `https://staging.glowup.app` | flags parciais  |
+| Produção | tag `v*` | `https://app.glowup.app`     | rollout gradual |
 
 ---
 
@@ -77,10 +77,10 @@ npx tsx migrations/001-migrate-contacts-to-profiles.ts --dry-run
 
 ## Cron jobs (staging/prod)
 
-| Job | Comando | Frequência |
-| --- | --- | --- |
-| Sync métricas sociais | `npx tsx scripts/sync-social-metrics.ts` | Diário 06:00 UTC |
-| Backup SQLite | `cp data/vendapro.sqlite data/backups/...` | Diário |
+| Job                   | Comando                                    | Frequência       |
+| --------------------- | ------------------------------------------ | ---------------- |
+| Sync métricas sociais | `npx tsx scripts/sync-social-metrics.ts`   | Diário 06:00 UTC |
+| Backup SQLite         | `cp data/vendapro.sqlite data/backups/...` | Diário           |
 
 ---
 

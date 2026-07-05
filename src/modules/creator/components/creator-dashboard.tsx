@@ -1,14 +1,6 @@
 import * as React from "react";
 import { Link, useParams } from "@tanstack/react-router";
-import {
-  Sparkles,
-  Building2,
-  Handshake,
-  Megaphone,
-  Target,
-  Inbox,
-  ArrowRight,
-} from "lucide-react";
+import { Sparkles, Building2, Handshake, Megaphone, Target, Inbox, ArrowRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

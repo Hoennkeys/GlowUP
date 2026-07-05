@@ -54,11 +54,15 @@ export function ProfilePage() {
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {Object.entries(profile.metricasSociais).map(([platform, metrics]) => (
                   <div key={platform} className="rounded-lg border p-3 space-y-1">
-                    <p className="text-xs font-medium capitalize text-muted-foreground">{platform}</p>
+                    <p className="text-xs font-medium capitalize text-muted-foreground">
+                      {platform}
+                    </p>
                     {metrics.seguidores != null ? (
                       <p className="text-lg font-semibold">
                         {formatMetricCount(metrics.seguidores)}{" "}
-                        <span className="text-xs font-normal text-muted-foreground">seguidores</span>
+                        <span className="text-xs font-normal text-muted-foreground">
+                          seguidores
+                        </span>
                       </p>
                     ) : null}
                     {metrics.inscritos != null ? (
@@ -68,7 +72,9 @@ export function ProfilePage() {
                       </p>
                     ) : null}
                     {metrics.engajamento != null ? (
-                      <p className="text-sm text-creator-primary">{metrics.engajamento}% engajamento</p>
+                      <p className="text-sm text-creator-primary">
+                        {metrics.engajamento}% engajamento
+                      </p>
                     ) : null}
                   </div>
                 ))}

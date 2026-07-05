@@ -39,7 +39,17 @@ export async function seedDatabaseIfEmpty() {
     const snapshot =
       tenant.id === "tenant-demo" || tenant.id === "tenant-acme"
         ? buildMockSnapshotForTenant(tenant.id)
-        : { leads: [], tarefas: [], emails: [], conversas: [], propostas: [], chamados: [], faturas: [], pipelineItems: [], usuarios: [] };
+        : {
+            leads: [],
+            tarefas: [],
+            emails: [],
+            conversas: [],
+            propostas: [],
+            chamados: [],
+            faturas: [],
+            pipelineItems: [],
+            usuarios: [],
+          };
 
     db.insert(tenantCrmState)
       .values({

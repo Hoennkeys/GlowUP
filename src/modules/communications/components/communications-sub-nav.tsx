@@ -1,12 +1,5 @@
 import { Link, useParams, useRouterState } from "@tanstack/react-router";
-import {
-  Inbox,
-  Ticket,
-  Radio,
-  Plug,
-  BarChart3,
-  Settings2,
-} from "lucide-react";
+import { Inbox, Ticket, Radio, Plug, BarChart3, Settings2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV = [

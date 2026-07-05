@@ -60,33 +60,33 @@ function FunilIndex() {
                       </CardDescription>
                     </div>
                   </div>
-                {emBreve ? (
-                  <Badge variant="secondary">Em breve</Badge>
+                  {emBreve ? (
+                    <Badge variant="secondary">Em breve</Badge>
+                  ) : (
+                    <Badge variant="secondary">{itemCount} itens</Badge>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  {labelPipelineDescription(pipeline.id, pipeline.descricao)}
+                </p>
+                <p className="text-xs text-muted-foreground">{pipeline.stages.length} etapas</p>
+                {!emBreve ? (
+                  <Button asChild size="sm">
+                    <Link
+                      to="/t/$tenantSlug/app/funil/$pipelineId"
+                      params={{ tenantSlug, pipelineId: pipeline.id }}
+                    >
+                      Abrir kanban
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
                 ) : (
-                  <Badge variant="secondary">{itemCount} itens</Badge>
+                  <Button size="sm" disabled variant="outline">
+                    Indisponível
+                  </Button>
                 )}
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                {labelPipelineDescription(pipeline.id, pipeline.descricao)}
-              </p>
-              <p className="text-xs text-muted-foreground">{pipeline.stages.length} etapas</p>
-              {!emBreve ? (
-                <Button asChild size="sm">
-                  <Link
-                    to="/t/$tenantSlug/app/funil/$pipelineId"
-                    params={{ tenantSlug, pipelineId: pipeline.id }}
-                  >
-                    Abrir kanban
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </Button>
-              ) : (
-                <Button size="sm" disabled variant="outline">
-                  Indisponível
-                </Button>
-              )}
               </CardContent>
             </Card>
           );

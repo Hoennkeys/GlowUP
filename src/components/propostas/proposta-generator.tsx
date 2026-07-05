@@ -122,8 +122,7 @@ export function PropostaGenerator({ leadId, embedded = false, onCreated }: Propo
     const lead = leadId ? leads.find((l) => l.id === leadId) : undefined;
     const nova = adicionarProposta({
       tenantId: whiteLabel.tenantId,
-      clientId:
-        lead?.clientId ?? resolveClientId({ tenantId: whiteLabel.tenantId, cliente, cnpj }),
+      clientId: lead?.clientId ?? resolveClientId({ tenantId: whiteLabel.tenantId, cliente, cnpj }),
       cliente,
       cnpj,
       valor: total,

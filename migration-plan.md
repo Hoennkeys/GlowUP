@@ -31,19 +31,19 @@ Scripts de migração devem ler/escrever este snapshot — não há endpoints RE
 
 ## 2. Tabela de migração por coleção
 
-| Coleção legada | Entidade alvo | Campos-chave | Storage | Prioridade |
-| --- | --- | --- | --- | --- |
-| `leads[]` | PerfilInfluencer + Campanha | contato, email, telefone, valor, etapa, timeline | `TenantCrmSnapshot` | P0 |
-| `tarefas[]` | ChecklistEntrega | titulo, prazo, concluida, leadId | `TenantCrmSnapshot` | P1 |
-| `propostas[]` | Contrato | numero, valor, itens, status, leadId, clientId | `TenantCrmSnapshot` | P1 |
-| `conversas[]`, `emails[]` | InboxUnificada | → `communications.conversations/messages` | dual-write | P0 (parcial) |
-| `chamados[]` | Ticket | → `communications.tickets` via `legacyChamadoId` | dual-write | P0 (feito) |
-| `faturas[]` | Pagamento campanha | valor, vencimento, status, clientId | `TenantCrmSnapshot` | P2 |
-| `pipelineItems[]` | Entrega | stageId, dados, timeline | `TenantCrmSnapshot` | P1 |
-| `CLIENT_REGISTRY` | Marca (Brand) | clientId, empresa, cnpj | static + `creator.brands` | P0 |
-| `creator.*` | Já no formato alvo | estender com `legacy*Id` | embedded | P1 |
-| `usuarios[]` | Membros equipe | papel → roles influencer/manager/brand_admin | `TenantCrmSnapshot` + DB | P2 |
-| `configuracoes` | Workspace settings | metaMensal, empresaNome, smtp | `TenantCrmSnapshot` | P3 |
+| Coleção legada            | Entidade alvo               | Campos-chave                                     | Storage                   | Prioridade   |
+| ------------------------- | --------------------------- | ------------------------------------------------ | ------------------------- | ------------ |
+| `leads[]`                 | PerfilInfluencer + Campanha | contato, email, telefone, valor, etapa, timeline | `TenantCrmSnapshot`       | P0           |
+| `tarefas[]`               | ChecklistEntrega            | titulo, prazo, concluida, leadId                 | `TenantCrmSnapshot`       | P1           |
+| `propostas[]`             | Contrato                    | numero, valor, itens, status, leadId, clientId   | `TenantCrmSnapshot`       | P1           |
+| `conversas[]`, `emails[]` | InboxUnificada              | → `communications.conversations/messages`        | dual-write                | P0 (parcial) |
+| `chamados[]`              | Ticket                      | → `communications.tickets` via `legacyChamadoId` | dual-write                | P0 (feito)   |
+| `faturas[]`               | Pagamento campanha          | valor, vencimento, status, clientId              | `TenantCrmSnapshot`       | P2           |
+| `pipelineItems[]`         | Entrega                     | stageId, dados, timeline                         | `TenantCrmSnapshot`       | P1           |
+| `CLIENT_REGISTRY`         | Marca (Brand)               | clientId, empresa, cnpj                          | static + `creator.brands` | P0           |
+| `creator.*`               | Já no formato alvo          | estender com `legacy*Id`                         | embedded                  | P1           |
+| `usuarios[]`              | Membros equipe              | papel → roles influencer/manager/brand_admin     | `TenantCrmSnapshot` + DB  | P2           |
+| `configuracoes`           | Workspace settings          | metaMensal, empresaNome, smtp                    | `TenantCrmSnapshot`       | P3           |
 
 ---
 
@@ -103,10 +103,10 @@ Proposta.clientId     → Contrato.partes.marcaId
 ```
 
 | Proposta.status | Contrato.assinaturaStatus |
-| --- | --- |
-| Pendente | pendente |
-| Aceita | aceita |
-| Vencida | expirada |
+| --------------- | ------------------------- |
+| Pendente        | pendente                  |
+| Aceita          | aceita                    |
+| Vencida         | expirada                  |
 
 ### 3.5 PipelineItem → Entrega
 
@@ -119,11 +119,11 @@ PipelineItem.clientId → Entrega.influencerId (via Brand→Perfil)
 ```
 
 | Pipeline stage (projetos) | Entrega.statusAprovacao |
-| --- | --- |
-| briefing | rascunho |
-| execucao | pendente |
-| revisao | em_revisao |
-| entregue | aprovado |
+| ------------------------- | ----------------------- |
+| briefing                  | rascunho                |
+| execucao                  | pendente                |
+| revisao                   | em_revisao              |
+| entregue                  | aprovado                |
 
 ### 3.6 Fatura → Pagamento campanha
 
@@ -150,12 +150,12 @@ Conversa.id           → Conversation.legacyConversaId (existente)
 
 ## 4. Feature flags
 
-| Flag | Default | Descrição |
-| --- | --- | --- |
-| `VITE_CREATOR_DOMAIN_READ` | `false` | Ler entidades alvo em vez de legado |
-| `VITE_CREATOR_DOMAIN_WRITE` | `false` | Dual-write ao salvar |
-| `VITE_INFLUENCER_PROFILES` | `false` | Expor perfis de influenciador |
-| `VITE_DELIVERY_TIMELINE` | `false` | Timeline de entregas |
+| Flag                        | Default | Descrição                           |
+| --------------------------- | ------- | ----------------------------------- |
+| `VITE_CREATOR_DOMAIN_READ`  | `false` | Ler entidades alvo em vez de legado |
+| `VITE_CREATOR_DOMAIN_WRITE` | `false` | Dual-write ao salvar                |
+| `VITE_INFLUENCER_PROFILES`  | `false` | Expor perfis de influenciador       |
+| `VITE_DELIVERY_TIMELINE`    | `false` | Timeline de entregas                |
 
 Implementação sugerida: `src/lib/feature-flags.ts`
 
@@ -226,12 +226,12 @@ Checklist por tenant:
 
 ## 8. Riscos e mitigações
 
-| Risco | Impacto | Mitigação |
-| --- | --- | --- |
-| Lead usado como oportunidade E contato | Duplicação | Separar em 2 entidades alvo com `legacyLeadId` |
-| ~170 refs a `clientId` no código | Quebra de portal | Manter `clientId` + adicionar `brandId` |
-| Dual-write inconsistente | Dados divergentes | Transação atômica no saveCrmState |
-| Performance do JSON blob | Lentidão com volume | Indexar por `legacy*Id`; considerar tabelas normalizadas na Fase 4 |
+| Risco                                  | Impacto             | Mitigação                                                          |
+| -------------------------------------- | ------------------- | ------------------------------------------------------------------ |
+| Lead usado como oportunidade E contato | Duplicação          | Separar em 2 entidades alvo com `legacyLeadId`                     |
+| ~170 refs a `clientId` no código       | Quebra de portal    | Manter `clientId` + adicionar `brandId`                            |
+| Dual-write inconsistente               | Dados divergentes   | Transação atômica no saveCrmState                                  |
+| Performance do JSON blob               | Lentidão com volume | Indexar por `legacy*Id`; considerar tabelas normalizadas na Fase 4 |
 
 ---
 

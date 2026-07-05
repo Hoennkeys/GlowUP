@@ -28,7 +28,8 @@ export function InfluencerInboxPage() {
         .filter((m) => m.conversationId === conv.id)
         .sort((a, b) => new Date(b.sentAt).getTime() - new Date(a.sentAt).getTime())[0];
 
-      const participant = conv.participants.find((p) => p.role === "client") ?? conv.participants[0];
+      const participant =
+        conv.participants.find((p) => p.role === "client") ?? conv.participants[0];
 
       return {
         id: conv.id,
@@ -87,9 +88,7 @@ export function InfluencerInboxPage() {
           <GlowCardContent>
             {selected ? (
               <div className="space-y-4">
-                <div className="rounded-lg bg-muted/50 p-4 text-sm">
-                  {selected.lastMessage}
-                </div>
+                <div className="rounded-lg bg-muted/50 p-4 text-sm">{selected.lastMessage}</div>
                 <p className="text-xs text-muted-foreground">
                   Tags: {selected.tags.join(", ")}
                   {selected.channelType ? ` · Canal: ${selected.channelType}` : ""}

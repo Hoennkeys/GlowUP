@@ -1,13 +1,11 @@
 import assert from "node:assert/strict";
-import { mapLegacySearch, mapLegacyChatsSearch, mapLegacyEmailsSearch } from "./routes/legacy-redirect";
 import {
-  migrateLegacyCommunications,
-  conversaToConversation,
-} from "./domain/legacy-adapter";
-import {
-  syncTicketsFromChamados,
-  syncChamadosFromTicket,
-} from "./domain/chamado-ticket-sync";
+  mapLegacySearch,
+  mapLegacyChatsSearch,
+  mapLegacyEmailsSearch,
+} from "./routes/legacy-redirect";
+import { migrateLegacyCommunications, conversaToConversation } from "./domain/legacy-adapter";
+import { syncTicketsFromChamados, syncChamadosFromTicket } from "./domain/chamado-ticket-sync";
 import { mapChamadoStatus, mapTicketStatusToChamado } from "./domain/metrics";
 import type { Conversa, EmailMsg, Chamado } from "@/lib/types";
 import type { Ticket } from "./domain/entities";

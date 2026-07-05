@@ -60,23 +60,29 @@ export function computeMetrics(
     const firstClient = msgs.find((m) => m.authorRole === "client");
     const firstAgent = msgs.find((m) => m.authorRole === "employee" || m.authorRole === "admin");
     if (firstClient && firstAgent) {
-      const delta =
-        new Date(firstAgent.sentAt).getTime() - new Date(firstClient.sentAt).getTime();
+      const delta = new Date(firstAgent.sentAt).getTime() - new Date(firstClient.sentAt).getTime();
       firstResponseTimes.push(delta);
     }
 
     for (let i = 1; i < msgs.length; i++) {
       const prev = msgs[i - 1];
       const curr = msgs[i];
-      if (prev.authorRole === "client" && (curr.authorRole === "employee" || curr.authorRole === "admin")) {
+      if (
+        prev.authorRole === "client" &&
+        (curr.authorRole === "employee" || curr.authorRole === "admin")
+      ) {
         responseTimes.push(new Date(curr.sentAt).getTime() - new Date(prev.sentAt).getTime());
       }
     }
   }
 
   const tickets = snapshot.tickets;
-  const openTickets = tickets.filter((t) => t.status === "open" || t.status === "in_progress").length;
-  const resolvedTickets = tickets.filter((t) => t.status === "resolved" || t.status === "closed").length;
+  const openTickets = tickets.filter(
+    (t) => t.status === "open" || t.status === "in_progress",
+  ).length;
+  const resolvedTickets = tickets.filter(
+    (t) => t.status === "resolved" || t.status === "closed",
+  ).length;
 
   for (const ticket of tickets) {
     if (ticket.status === "resolved" || ticket.status === "closed") {
@@ -119,7 +125,9 @@ export function mapChamadoStatus(status: import("@/lib/types").StatusChamado): T
   }
 }
 
-export function mapTicketStatusToChamado(status: TicketStatus): import("@/lib/types").StatusChamado {
+export function mapTicketStatusToChamado(
+  status: TicketStatus,
+): import("@/lib/types").StatusChamado {
   switch (status) {
     case "open":
       return "Aberto";

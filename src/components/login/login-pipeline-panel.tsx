@@ -1,11 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import {
-  CalendarDays,
-  Megaphone,
-  MessageSquare,
-  Receipt,
-  Building2,
-} from "lucide-react";
+import { CalendarDays, Megaphone, MessageSquare, Receipt, Building2 } from "lucide-react";
 
 const CREATOR_FEATURES = [
   { label: "Comunicação", icon: MessageSquare },
@@ -53,8 +47,7 @@ export function LoginPipelinePanel() {
             Creator Operating System
           </p>
           <h2 className="text-4xl leading-tight font-semibold tracking-tight text-balance">
-            Sua operação profissional,{" "}
-            <span className="text-primary">centralizada.</span>
+            Sua operação profissional, <span className="text-primary">centralizada.</span>
           </h2>
           <p className="max-w-md text-base leading-relaxed text-muted-foreground">
             Gerencie marcas, campanhas e parcerias em um único lugar — do primeiro contato à entrega

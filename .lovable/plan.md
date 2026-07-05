@@ -39,6 +39,7 @@ Sidebar: Painel · Funil de Vendas · Chats · E-mails · Agenda · Propostas ·
 ## Estado e persistência (demo)
 
 `src/lib/crm-store.tsx` — Provider único exposto em `__root.tsx` que mantém:
+
 - `leads`, `tarefas`, `emails`, `conversas`, `propostas`, `usuarios`, `filtroVendedor`
 - Hidrata de `localStorage` no mount; salva via `useEffect` em qualquer mudança
 - Hooks: `useCrm()` e seletores derivados (`useLeadsPorEtapa`, `useMetricasPainel(vendedorId)`)
@@ -47,6 +48,7 @@ Sidebar: Painel · Funil de Vendas · Chats · E-mails · Agenda · Propostas ·
 ## Módulos
 
 ### 1. Painel (Dashboard) — com filtro por vendedor
+
 - **Top bar de filtros**: `Select` "Vendedor" com opções `Todos`, `Mariana Costa`, `Rafael Almeida`, `Juliana Souza`, `Pedro Henrique`. Seleção controlada pelo store (`filtroVendedor`) — todos os KPIs e gráficos reagem.
 - KPIs: Faturamento do Mês (R$), Valor Total do Pipeline, Taxa de Conversão, Meta da Equipe (progresso)
 - Gráficos (recharts):
@@ -57,6 +59,7 @@ Sidebar: Painel · Funil de Vendas · Chats · E-mails · Agenda · Propostas ·
 - Formatação `Intl.NumberFormat('pt-BR', { currency: 'BRL' })`
 
 ### 2. Funil de Vendas (Kanban)
+
 - 5 colunas exatas: **Sem Contato · Em Atendimento · Proposta Enviada · Ganho · Perdido**
 - Drag-and-drop entre colunas e reordenação via `@dnd-kit`
 - Card: cliente, valor R$, data de criação (`dd/MM/yyyy`), tag de prioridade (Alta/Média/Baixa)
@@ -65,6 +68,7 @@ Sidebar: Painel · Funil de Vendas · Chats · E-mails · Agenda · Propostas ·
 - Movimentações persistidas no store
 
 ### 3. Central de Chats (simulação WhatsApp) — com ações de conversão
+
 - Layout 3 colunas: lista de conversas | thread de mensagens | **painel do contato**
 - Mensagens em bolhas estilo WhatsApp, horário, status de leitura, campo de envio
 - Badge multi-agente (vendedor responsável)
@@ -74,6 +78,7 @@ Sidebar: Painel · Funil de Vendas · Chats · E-mails · Agenda · Propostas ·
   - **Botão "Salvar Histórico no CRM"** → anexa as mensagens da conversa atual à timeline do lead vinculado (ou cria um novo se não houver), com toast "Histórico salvo no CRM"
 
 ### 4. Central de E-mails — com modelos prontos
+
 - Layout estilo Gmail/Outlook: pastas (Caixa de Entrada, Enviados, Rascunhos, Lixeira) | lista | leitor
 - Modal **"Escrever"** com campos Para, Assunto, Corpo
 - **Dropdown "Modelos de E-mail"** dentro do modal (`Select`), com auto-preenchimento de Assunto + Corpo:
@@ -86,12 +91,14 @@ Sidebar: Painel · Funil de Vendas · Chats · E-mails · Agenda · Propostas ·
 - Enviar move o e-mail para "Enviados" no store
 
 ### 5. Agenda e Tarefas
+
 - Abas: **Tarefas** e **Calendário**
 - Tarefas: lista com checkbox Pendente/Concluída, prioridade, prazo, lead vinculado (ex.: "Ligar para cliente Marcos Silva", "Enviar proposta para Loja Verão")
 - Calendário mensal com eventos (reuniões, ligações)
 - Status persistido no store
 
 ### 6. Gerador de Propostas — com tabela de propostas recentes
+
 - Formulário: cliente, CNPJ, itens (descrição, qtd, valor unit.), validade, condições de pagamento, observações
 - Pré-visualização ao vivo
 - Ações: **"Gerar link compartilhável"** (copia URL mock) e **"Baixar PDF"** (jsPDF: logo, totais em R$, rodapé)
@@ -100,6 +107,7 @@ Sidebar: Painel · Funil de Vendas · Chats · E-mails · Agenda · Propostas ·
 - Mock inicial com 6–8 propostas de empresas brasileiras
 
 ### 7. Configurações e Canais
+
 - Abas: **Usuários e Permissões · WhatsApp · E-mail (SMTP/IMAP) · Geral**
 - Usuários: tabela com nome, e-mail, papel (**Administrador** / **Vendedor**), status; adicionar/editar
 - WhatsApp: card com **QR Code simulado** (SVG) + instruções

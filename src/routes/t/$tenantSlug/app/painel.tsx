@@ -123,9 +123,7 @@ function Painel() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{NAV_LABELS.revenueDashboard}</h1>
-          <p className="text-sm text-muted-foreground">
-            Acompanhe suas campanhas e parcerias.
-          </p>
+          <p className="text-sm text-muted-foreground">Acompanhe suas campanhas e parcerias.</p>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Membro da equipe:</span>
@@ -191,7 +189,8 @@ function Painel() {
           <CardContent className="h-[280px]">
             {faturamentoMensal.every((m) => m.faturamento === 0) ? (
               <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-                Sem receita registrada. Feche parcerias no {NAV_LABELS.campaignPipeline.toLowerCase()} para ver o gráfico.
+                Sem receita registrada. Feche parcerias no{" "}
+                {NAV_LABELS.campaignPipeline.toLowerCase()} para ver o gráfico.
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">

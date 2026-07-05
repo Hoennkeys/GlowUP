@@ -16,16 +16,16 @@
 
 ## Critérios WCAG 2.1 AA (amostra)
 
-| Critério | Verificação | Status |
-| --- | --- | --- |
-| 1.1.1 Conteúdo não textual | Alt text em avatares e previews | ⬜ |
-| 1.3.1 Info e relações | Headings hierárquicos (h1 → h2) | ⬜ |
-| 1.4.3 Contraste | Texto ≥ 4.5:1, tokens creator | ⬜ |
-| 2.1.1 Teclado | Navegação tab em wizard onboarding | ⬜ |
-| 2.4.3 Ordem de foco | Modal upload, timeline aprovação | ⬜ |
-| 2.4.7 Foco visível | `:focus-visible` nos GlowButton | ⬜ |
-| 3.3.2 Labels | GlowInput com label associado | ⬜ |
-| 4.1.2 Nome, função, valor | Botões com texto ou aria-label | ⬜ |
+| Critério                   | Verificação                        | Status |
+| -------------------------- | ---------------------------------- | ------ |
+| 1.1.1 Conteúdo não textual | Alt text em avatares e previews    | ⬜     |
+| 1.3.1 Info e relações      | Headings hierárquicos (h1 → h2)    | ⬜     |
+| 1.4.3 Contraste            | Texto ≥ 4.5:1, tokens creator      | ⬜     |
+| 2.1.1 Teclado              | Navegação tab em wizard onboarding | ⬜     |
+| 2.4.3 Ordem de foco        | Modal upload, timeline aprovação   | ⬜     |
+| 2.4.7 Foco visível         | `:focus-visible` nos GlowButton    | ⬜     |
+| 3.3.2 Labels               | GlowInput com label associado      | ⬜     |
+| 4.1.2 Nome, função, valor  | Botões com texto ou aria-label     | ⬜     |
 
 ---
 
@@ -39,9 +39,9 @@
 
 ## Registro de issues
 
-| ID | Página | Severidade | Descrição | Correção |
-| --- | --- | --- | --- | --- |
-| A11Y-001 | — | — | — | — |
+| ID       | Página | Severidade | Descrição | Correção |
+| -------- | ------ | ---------- | --------- | -------- |
+| A11Y-001 | —      | —          | —         | —        |
 
 ---
 

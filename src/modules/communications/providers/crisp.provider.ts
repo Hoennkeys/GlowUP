@@ -1,4 +1,8 @@
-import type { CommunicationProvider, CreateConversationInput, SendMessageInput } from "./communication-provider.interface";
+import type {
+  CommunicationProvider,
+  CreateConversationInput,
+  SendMessageInput,
+} from "./communication-provider.interface";
 import type { Conversation, Message, ProviderConfig } from "../domain/entities";
 import { BaseProvider, uid } from "./base-provider";
 import type { LocalCommunicationsRepositories } from "../repositories/local/local-storage.repository";
@@ -73,18 +77,15 @@ export class CrispProvider extends BaseProvider implements CommunicationProvider
     const auth = this.authHeader();
 
     if (websiteId && sessionId && auth) {
-      await fetch(
-        `${CRISP_API}/website/${websiteId}/conversation/${sessionId}/message`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: auth,
-            "Content-Type": "application/json",
-            "X-Crisp-Tier": "plugin",
-          },
-          body: JSON.stringify({ type: "text", content: input.body, from: "operator" }),
+      await fetch(`${CRISP_API}/website/${websiteId}/conversation/${sessionId}/message`, {
+        method: "POST",
+        headers: {
+          Authorization: auth,
+          "Content-Type": "application/json",
+          "X-Crisp-Tier": "plugin",
         },
-      );
+        body: JSON.stringify({ type: "text", content: input.body, from: "operator" }),
+      });
     }
 
     const msg: Message = {

@@ -38,12 +38,12 @@ Abra [http://localhost:8080](http://localhost:8080) (ou a porta indicada no term
 
 ## Scripts
 
-| Comando | Descrição |
-|---------|-----------|
-| `npm run dev` | Servidor de desenvolvimento |
-| `npm run build` | Build de produção |
-| `npm run preview` | Preview do build |
-| `npm run lint` | ESLint |
+| Comando           | Descrição                   |
+| ----------------- | --------------------------- |
+| `npm run dev`     | Servidor de desenvolvimento |
+| `npm run build`   | Build de produção           |
+| `npm run preview` | Preview do build            |
+| `npm run lint`    | ESLint                      |
 
 ## Identidade visual
 
@@ -51,12 +51,12 @@ Paleta **GlowUP**: violeta/rosa creator economy, tipografia Plus Jakarta Sans, v
 
 ## Terminologia (UI)
 
-| Legado | GlowUP |
-|--------|--------|
-| Cliente | Marca |
-| Lead | Oportunidade |
-| Venda | Parceria |
-| Funil de vendas | Pipeline de campanhas |
-| Proposta comercial | Proposta de campanha |
+| Legado             | GlowUP                |
+| ------------------ | --------------------- |
+| Cliente            | Marca                 |
+| Lead               | Oportunidade          |
+| Venda              | Parceria              |
+| Funil de vendas    | Pipeline de campanhas |
+| Proposta comercial | Proposta de campanha  |
 
 Camada central: `src/lib/product-branding.ts` e `src/modules/creator/domain/terminology.ts`.

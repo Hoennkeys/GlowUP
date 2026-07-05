@@ -70,14 +70,10 @@ test("isNavItemActive detecta funil de vendas e projetos separadamente", () => {
   const vendas = commercialNav.find((item) => item.title === NAV_LABELS.campaignPipeline)!;
   const projetos = posVendaNav.find((item) => item.title === NAV_LABELS.projetos)!;
 
-  assert.ok(
-    isNavItemActive(`/t/${TENANT}/app/funil/${SALES_PIPELINE_ID}`, TENANT, vendas),
-  );
+  assert.ok(isNavItemActive(`/t/${TENANT}/app/funil/${SALES_PIPELINE_ID}`, TENANT, vendas));
   assert.ok(!isNavItemActive(`/t/${TENANT}/app/funil/${PROJECTS_PIPELINE_ID}`, TENANT, vendas));
 
-  assert.ok(
-    isNavItemActive(`/t/${TENANT}/app/funil/${PROJECTS_PIPELINE_ID}`, TENANT, projetos),
-  );
+  assert.ok(isNavItemActive(`/t/${TENANT}/app/funil/${PROJECTS_PIPELINE_ID}`, TENANT, projetos));
   assert.ok(!isNavItemActive(`/t/${TENANT}/app/funil/${SALES_PIPELINE_ID}`, TENANT, projetos));
 });
 

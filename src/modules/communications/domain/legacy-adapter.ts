@@ -88,10 +88,7 @@ export function conversaToConversation(
   };
 }
 
-export function mensagensToMessages(
-  conversa: Conversa,
-  conversationId: string,
-): Message[] {
+export function mensagensToMessages(conversa: Conversa, conversationId: string): Message[] {
   return conversa.mensagens.map((m) => ({
     id: `msg_legacy_${m.id}`,
     conversationId,
@@ -105,7 +102,11 @@ export function mensagensToMessages(
   }));
 }
 
-export function emailToConversation(email: EmailMsg, tenantId: string, channelId: string): Conversation {
+export function emailToConversation(
+  email: EmailMsg,
+  tenantId: string,
+  channelId: string,
+): Conversation {
   return {
     id: `conv_email_${email.id}`,
     tenantId,
@@ -157,7 +158,10 @@ export function chamadoToTicket(chamado: Chamado, tenantId: string): Ticket {
     priority: "medium",
     createdAt: chamado.criadoEm,
     updatedAt: chamado.atualizadoEm,
-    resolvedAt: chamado.status === "Resolvido" || chamado.status === "Fechado" ? chamado.atualizadoEm : undefined,
+    resolvedAt:
+      chamado.status === "Resolvido" || chamado.status === "Fechado"
+        ? chamado.atualizadoEm
+        : undefined,
     legacyChamadoId: chamado.id,
   };
 }
@@ -296,6 +300,8 @@ export function ensureCommunicationsSnapshot(
     ...EMPTY_COMMUNICATIONS_SNAPSHOT,
     ...partial,
     providers: partial?.providers?.length ? partial.providers : createDefaultProviders(tenantId),
-    channels: partial?.channels?.length ? partial.channels : createDefaultChannels(createDefaultProviders(tenantId)),
+    channels: partial?.channels?.length
+      ? partial.channels
+      : createDefaultChannels(createDefaultProviders(tenantId)),
   };
 }
