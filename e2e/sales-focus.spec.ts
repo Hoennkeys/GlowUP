@@ -7,13 +7,12 @@ test.describe("Reforma comercial — sidebar e Comunicação", () => {
     await loginAsMember(page);
   });
 
-  test("sidebar comercial prioriza parcerias e oculta Propostas", async ({ page }) => {
+  test("sidebar comercial prioriza campanhas e oculta Propostas", async ({ page }) => {
     const sidebar = appSidebar(page);
 
-    await expect(sidebar.getByText("Parcerias", { exact: true })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Painel de Campanhas" })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Pipeline de Parcerias" })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Comunicação" })).toBeVisible();
+    await expect(sidebar.getByText("Campanhas", { exact: true })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Ganhos" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Colaborações" })).toBeVisible();
     await expect(sidebar.getByRole("link", { name: "Calendário" })).toBeVisible();
 
     await expect(sidebar.getByRole("link", { name: "Chats" })).not.toBeVisible();
@@ -21,22 +20,20 @@ test.describe("Reforma comercial — sidebar e Comunicação", () => {
     await expect(sidebar.getByRole("link", { name: "Propostas" })).not.toBeVisible();
   });
 
-  test("seção Gestão de Conteúdo e Campanhas colapsa e expande com persistência", async ({
-    page,
-  }) => {
+  test("seção Conteúdo colapsa e expande com persistência", async ({ page }) => {
     const sidebar = appSidebar(page);
-    const trigger = sidebar.getByRole("button", { name: /Gestão de Conteúdo e Campanhas/i });
+    const trigger = sidebar.getByRole("button", { name: /Conteúdo/i });
 
     await expect(trigger).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Suporte" })).not.toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Ajuda" })).not.toBeVisible();
 
     await trigger.click();
-    await expect(sidebar.getByRole("link", { name: "Suporte" })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Financeiro" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Ajuda" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Pagamentos" })).toBeVisible();
     await expect(sidebar.getByRole("link", { name: "Projetos" })).toBeVisible();
 
     await page.reload();
-    await expect(sidebar.getByRole("link", { name: "Suporte" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Ajuda" })).toBeVisible();
 
     const persisted = await page.evaluate(
       (key) => localStorage.getItem(key),
@@ -85,6 +82,6 @@ test.describe("Reforma comercial — sidebar e Comunicação", () => {
     const sidebar = appSidebar(page);
 
     await expect(page.getByRole("heading", { name: /Chamados de Suporte/i })).toBeVisible();
-    await expect(sidebar.getByRole("link", { name: "Suporte" })).toBeVisible();
+    await expect(sidebar.getByRole("link", { name: "Ajuda" })).toBeVisible();
   });
 });

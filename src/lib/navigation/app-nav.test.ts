@@ -29,10 +29,10 @@ const TENANT = "demo";
 
 console.log("app-nav — testes unitários\n");
 
-test("creatorNav contém Dashboard, Marcas e Campanhas", () => {
+test("creatorNav contém Início, Portfólio e Campanhas", () => {
   const titles = creatorNav.map((item) => item.title);
-  assert.ok(titles.includes("Dashboard"));
-  assert.ok(titles.includes("Marcas"));
+  assert.ok(titles.includes("Início"));
+  assert.ok(titles.includes("Portfólio"));
   assert.ok(titles.includes("Campanhas"));
   assert.equal(CREATOR_SECTION_LABEL, "GlowUP");
   assert.equal(COMMERCIAL_SECTION_LABEL, SIDEBAR_SECTIONS.commercial);
@@ -50,9 +50,9 @@ test("commercialNav não inclui Comunicação (movido para grupo Comunicações)
   assert.equal(titles.length, 3);
 });
 
-test("communicationsNav contém Inbox, Tickets e Integrações", () => {
+test("communicationsNav contém Mensagens, Tickets e Integrações", () => {
   const titles = communicationsNav.map((item) => item.title);
-  assert.ok(titles.includes("Inbox"));
+  assert.ok(titles.includes("Mensagens"));
   assert.ok(titles.includes("Tickets"));
   assert.ok(titles.includes("Integrações"));
   assert.equal(titles.length, 6);
@@ -86,8 +86,8 @@ test("isCommunicationsNavActive cobre hub e rotas legadas", () => {
   assert.ok(!isCommunicationsNavActive(`/t/${TENANT}/app/agenda`, TENANT));
 });
 
-test("isNavItemActive marca Inbox ativo no hub", () => {
-  const inbox = communicationsNav.find((item) => item.title === "Inbox")!;
+test("isNavItemActive marca Mensagens ativo no hub", () => {
+  const inbox = communicationsNav.find((item) => item.title === "Mensagens")!;
   assert.ok(isNavItemActive(`/t/${TENANT}/app/communications/inbox`, TENANT, inbox));
   assert.ok(!isNavItemActive(`/t/${TENANT}/app/communications/tickets`, TENANT, inbox));
 });

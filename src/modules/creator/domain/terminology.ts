@@ -16,15 +16,28 @@ export const CREATOR_TERMS = {
   admin: "Owner",
   employee: "Membro",
   client: "Marca",
-  lead: "Oportunidade",
+  lead: "Colaboração",
   sale: "Parceria",
-  funnel: "Pipeline de campanhas",
+  funnel: "Campanhas em andamento",
   portal: "Portal da Marca",
   proposal: "Proposta de campanha",
-  company: "Workspace",
-  workspace: "Workspace",
+  company: "Portfólio",
+  workspace: "Início",
   members: "Membros",
   teamMembers: "Membros da Equipe",
+} as const;
+
+/** Creator platform navigation labels */
+export const CREATOR_NAV = {
+  home: "Início",
+  portfolio: "Portfólio",
+  campaigns: "Campanhas",
+  collaborations: "Colaborações",
+  sponsors: "Parceiros",
+  earnings: "Ganhos",
+  messages: "Mensagens",
+  onboarding: "Começar",
+  performance: "Insights",
 } as const;
 
 /** Legacy labels preserved for compatibility shims and tests */
@@ -79,21 +92,21 @@ export function labelCommunicationsRole(role: ParticipantRole): string {
 /** Sidebar section labels */
 export const SIDEBAR_SECTIONS = {
   creator: PRODUCT_NAME,
-  commercial: "Parcerias",
-  communications: "Comunicações",
-  operations: "Gestão de Conteúdo e Campanhas",
+  commercial: "Campanhas",
+  communications: "Mensagens",
+  operations: "Conteúdo",
 } as const;
 
 /** Navigation item labels (GlowUP presentation over legacy routes) */
 export const NAV_LABELS = {
-  dashboard: "Workspace",
-  revenueDashboard: "Painel de Campanhas",
-  campaignPipeline: "Pipeline de Parcerias",
+  dashboard: CREATOR_NAV.home,
+  revenueDashboard: CREATOR_NAV.earnings,
+  campaignPipeline: CREATOR_NAV.collaborations,
   agenda: "Calendário",
-  chamados: "Suporte",
-  faturamento: "Financeiro",
+  chamados: "Ajuda",
+  faturamento: "Pagamentos",
   projetos: "Projetos",
-  reports: "Relatórios",
+  reports: "Insights",
   settings: "Configurações",
   team: "Equipe",
 } as const;
@@ -127,15 +140,17 @@ export type BreadcrumbItem = {
 
 const ROUTE_SEGMENT_LABELS: Record<string, string> = {
   creator: PRODUCT_NAME,
-  brands: "Marcas",
-  agencies: "Agências",
-  sponsors: "Patrocinadores",
-  campaigns: "Campanhas",
+  brands: CREATOR_NAV.portfolio,
+  agencies: CREATOR_NAV.collaborations,
+  sponsors: CREATOR_NAV.sponsors,
+  campaigns: CREATOR_NAV.campaigns,
   painel: NAV_LABELS.revenueDashboard,
   funil: CREATOR_TERMS.funnel,
   agenda: NAV_LABELS.agenda,
   communications: SIDEBAR_SECTIONS.communications,
-  inbox: "Inbox",
+  inbox: CREATOR_NAV.messages,
+  performance: CREATOR_NAV.earnings,
+  onboarding: CREATOR_NAV.onboarding,
   tickets: "Tickets",
   channels: "Canais",
   integrations: "Integrações",

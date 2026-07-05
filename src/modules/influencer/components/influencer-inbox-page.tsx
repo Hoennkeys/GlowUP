@@ -1,10 +1,12 @@
 import * as React from "react";
-import { MessageSquare } from "lucide-react";
-import { InboxUnificada, type InboxThread } from "@/components/Inbox";
-import { GlowCard, GlowCardContent, GlowCardHeader } from "@/ui";
+import { MessageCircle } from "lucide-react";
+import { ChatComposer, InboxUnificada, type InboxThread } from "@/components/Inbox";
+import { GlowAvatar } from "@/ui";
 import { brDateTime } from "@/lib/format";
 import { useCommunicationsUnread } from "@/hooks/use-communications-unread";
 import { useCrm } from "@/lib/crm-store";
+import { CREATOR_NAV } from "@/modules/creator/domain/terminology";
+import { initialsFromName } from "@/modules/creator/lib/visual-utils";
 
 export function InfluencerInboxPage() {
   const crm = useCrm();
@@ -53,52 +55,67 @@ export function InfluencerInboxPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2">
-          <MessageSquare className="h-6 w-6 text-creator-primary" />
-          Inbox Unificada
+        <h1 className="glowup-heading flex items-center gap-2">
+          <MessageCircle className="h-6 w-6 text-emerald-500" />
+          {CREATOR_NAV.messages}
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Conversas 1:1 e por campanha · {unreadTotal} não lidas
+        <p className="glowup-subheading">
+          {unreadTotal > 0
+            ? `${unreadTotal} mensagem${unreadTotal > 1 ? "ns" : ""} não lida${unreadTotal > 1 ? "s" : ""} — responda quando quiser ✨`
+            : "Suas conversas com marcas e parceiros — estilo DM."}
         </p>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[360px_1fr] min-h-[480px]">
-        <GlowCard className="overflow-hidden">
-          <InboxUnificada
-            threads={threads}
-            selectedId={selected?.id}
-            onSelect={setSelectedId}
-            tagFilter={tagFilter}
-            onTagFilterChange={setTagFilter}
-            searchQuery={search}
-            onSearchChange={setSearch}
-            className="h-full"
-          />
-        </GlowCard>
+      <div className="creator-chat-layout grid gap-0 lg:grid-cols-[340px_1fr] min-h-[520px] rounded-2xl border overflow-hidden bg-card">
+        <InboxUnificada
+          threads={threads}
+          selectedId={selected?.id}
+          onSelect={setSelectedId}
+          tagFilter={tagFilter}
+          onTagFilterChange={setTagFilter}
+          searchQuery={search}
+          onSearchChange={setSearch}
+          className="h-full border-r"
+        />
 
-        <GlowCard>
-          <GlowCardHeader>
-            <h2 className="font-semibold">{selected?.subject ?? "Selecione uma conversa"}</h2>
-            {selected ? (
-              <p className="text-xs text-muted-foreground">
-                {selected.participantName} · {brDateTime(selected.lastMessageAt)}
-              </p>
-            ) : null}
-          </GlowCardHeader>
-          <GlowCardContent>
-            {selected ? (
-              <div className="space-y-4">
-                <div className="rounded-lg bg-muted/50 p-4 text-sm">{selected.lastMessage}</div>
-                <p className="text-xs text-muted-foreground">
-                  Tags: {selected.tags.join(", ")}
-                  {selected.channelType ? ` · Canal: ${selected.channelType}` : ""}
-                </p>
+        <div className="flex flex-col min-h-[480px]">
+          {selected ? (
+            <>
+              <header className="flex items-center gap-3 border-b px-4 py-3">
+                <GlowAvatar
+                  alt={selected.participantName}
+                  fallback={initialsFromName(selected.participantName)}
+                  size="md"
+                  ring
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold truncate">{selected.participantName}</p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {selected.subject} · {brDateTime(selected.lastMessageAt)}
+                  </p>
+                </div>
+              </header>
+
+              <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-muted/20">
+                <div className="creator-chat-bubble creator-chat-bubble--incoming max-w-[85%]">
+                  <p className="text-sm">{selected.lastMessage}</p>
+                  <span className="creator-chat-time">{brDateTime(selected.lastMessageAt)}</span>
+                </div>
+                <div className="creator-chat-bubble creator-chat-bubble--outgoing max-w-[85%] ml-auto">
+                  <p className="text-sm">Obrigada! Vou revisar e te retorno em breve 🙌</p>
+                  <span className="creator-chat-time">Agora</span>
+                </div>
               </div>
-            ) : (
-              <p className="text-sm text-muted-foreground">Nenhuma conversa selecionada.</p>
-            )}
-          </GlowCardContent>
-        </GlowCard>
+
+              <ChatComposer />
+            </>
+          ) : (
+            <div className="flex flex-1 flex-col items-center justify-center gap-2 p-8 text-muted-foreground">
+              <MessageCircle className="h-10 w-10 opacity-30" />
+              <p className="text-sm">Selecione uma conversa para começar</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

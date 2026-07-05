@@ -22,7 +22,7 @@ export function AppSidebarNavMenu({ items, tenantSlug, pathname }: AppSidebarNav
                 to={item.to}
                 params={isFunil ? { tenantSlug, pipelineId: item.pipelineId } : { tenantSlug }}
               >
-                <item.icon />
+                <item.icon className={item.iconClassName} />
                 <span>{item.title}</span>
               </Link>
             </SidebarMenuButton>
