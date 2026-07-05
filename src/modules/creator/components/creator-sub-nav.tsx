@@ -3,10 +3,13 @@ import { cn } from "@/lib/utils";
 
 const NAV = [
   { segment: "", label: "Dashboard" },
+  { segment: "onboarding", label: "Onboarding" },
   { segment: "brands", label: "Marcas" },
   { segment: "agencies", label: "Agências" },
   { segment: "sponsors", label: "Patrocinadores" },
   { segment: "campaigns", label: "Campanhas" },
+  { segment: "inbox", label: "Inbox" },
+  { segment: "performance", label: "Performance" },
 ] as const;
 
 export function CreatorSubNav() {
